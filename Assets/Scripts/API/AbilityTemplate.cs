@@ -2,8 +2,22 @@
 using System.Collections;
 using System;
 
-public abstract class AbilityTemplate  {
+internal struct AbilityType
+{
+	public Type Ability;
+	public AbilityTier Tier;
+	public int MinimumPlayerLevel;
 
+	public AbilityType(Type type, AbilityTier tier, int level)
+	{
+		Ability = type;
+		Tier = tier;
+		MinimumPlayerLevel = level;
+	}
+}
+
+public abstract class AbilityTemplate
+{
 	// Displayed name of the ability
 	public abstract string AbilityName
 	{
@@ -27,7 +41,7 @@ public abstract class AbilityTemplate  {
 	{
 		get;
 	}
-	
+
 	public abstract int AbilityLevel
 	{
 		get;
