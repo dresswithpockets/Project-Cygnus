@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
+public enum AbilityTier
+{
+	Basic,
+	Intermediate,
+	Advanced
+}
 
 public enum ItemClassification
 {
