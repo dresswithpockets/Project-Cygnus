@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 public abstract class ModTemplate {
 
@@ -45,14 +46,25 @@ public abstract class ModTemplate {
 	internal Dictionary<string, Type> ItemTemplates = new Dictionary<string, Type>();
 	internal Dictionary<string, Type> WeaponTemplates = new Dictionary<string, Type>();
 	internal Dictionary<string, Type> EquipmentTemplates = new Dictionary<string, Type>();
-	internal Dictionary<string, Type> AbilityTemplates = new Dictionary<string, Type>();
+	internal SortedDictionary<string, AbilityType> BasicAbilities = new SortedDictionary<string, AbilityType>();
+	internal SortedDictionary<string, AbilityType> IntermediateAbilities = new SortedDictionary<string, AbilityType>();
+	internal SortedDictionary<string, AbilityType> AdvancedAbilities = new SortedDictionary<string, AbilityType>();
 	internal Dictionary<string, Type> NPCTemplates = new Dictionary<string, Type>();
 
 	internal Dictionary<string, MeshFilter> LoadedModels = new Dictionary<string, MeshFilter>();
 
+	internal bool m_InModInit = true;
+
+	internal void InternalInit()
+	{
+		BasicAbilities.OrderBy(x => x.Value.MinimumPlayerLevel).ToDictionary(pair => pair.Key, pair => pair.Value);
+		IntermediateAbilities.OrderBy(x => x.Value.MinimumPlayerLevel).ToDictionary(pair => pair.Key, pair => pair.Value);
+		AdvancedAbilities.OrderBy(x => x.Value.MinimumPlayerLevel).ToDictionary(pair => pair.Key, pair => pair.Value);
+	}
+
 	public void SpawnEntity(string entity, Vector3 position)
 	{
-		SpawnEntity(entity, position, new Vector3(0f, 0f, 0f));
+		SpawnEntity(entity, position, Vector3.zero);
 	}
 
 	public void SpawnEntity(string entity, Vector3 position, Vector3 rotation)
@@ -98,6 +110,11 @@ public abstract class ModTemplate {
 
 	public void LoadModel(string ID, string name)
 	{
+		if (!m_InModInit)
+		{
+			Debug.LogError("Models can only be loaded inside Initialize().");
+			return;
+		}
 		MeshFilter m = new MeshFilter();
 
 		string[] vox = File.ReadAllLines(ModPath + "/Models/" + name + ".vox");
@@ -157,6 +174,12 @@ public abstract class ModTemplate {
 
 	public void LoadSound(string ID, string name)
 	{
+		if (!m_InModInit)
+		{
+			Debug.LogError("Sounds can only be loaded inside Initialize().");
+			return;
+		}
+
 		if (LoadedAudoClips.ContainsKey(ID))
 		{
 			Debug.LogError("Cannot import audio file " + name +
@@ -194,6 +217,11 @@ public abstract class ModTemplate {
 
 	public void RegisterTemplate(string ID, Type template)
 	{
+		if (!m_InModInit)
+		{
+			Debug.LogError("Templates can only be registered inside Initialize().");
+			return;
+		}
 		if (typeof(ItemTemplate).IsAssignableFrom(template))
 		{
 			if (ItemTemplates.ContainsKey(ID))
@@ -229,14 +257,7 @@ public abstract class ModTemplate {
 		}
 		else if (typeof(AbilityTemplate).IsAssignableFrom(template))
 		{
-			if (AbilityTemplates.ContainsKey(ID))
-			{
-				Debug.LogError("Cannot register ability with ID: " + ID +
-					" because there is already another item registered with that ID.");
-				return;
-			}
-
-			AbilityTemplates.Add(ID, template);
+			Debug.LogError("Abilities are no longer registered using RegisterTemplate. Register using RegisterAbility.");
 		}
 		else if (typeof(NPCTemplate).IsAssignableFrom(template))
 		{
@@ -254,6 +275,43 @@ public abstract class ModTemplate {
 			Debug.LogError("Cannot import template of type " + template.Name +
 				" because it does not inherit one of the abstract templates in CygnusAPI.");
 			return;
+		}
+	}
+
+	public void RegisterAbility(string ID, Type ability, AbilityTier tier, int minimumPlayerLevel)
+	{
+		switch (tier)
+		{
+			case AbilityTier.Advanced:
+				if (AdvancedAbilities.ContainsKey(ID))
+				{
+					Debug.LogError("Cannot register ability with ID: " + ID +
+						" because there is already another advanced ability registered with that ID.");
+					return;
+				}
+
+				AdvancedAbilities.Add(ID, new AbilityType(ability, tier, minimumPlayerLevel));
+				break;
+			case AbilityTier.Basic:
+				if (BasicAbilities.ContainsKey(ID))
+				{
+					Debug.LogError("Cannot register ability with ID: " + ID +
+						" because there is already another basic ability registered with that ID.");
+					return;
+				}
+
+				BasicAbilities.Add(ID, new AbilityType(ability, tier, minimumPlayerLevel));
+				break;
+			case AbilityTier.Intermediate:
+				if (IntermediateAbilities.ContainsKey(ID))
+				{
+					Debug.LogError("Cannot register ability with ID: " + ID +
+						" because there is already another intermediate ability registered with that ID.");
+					return;
+				}
+
+				IntermediateAbilities.Add(ID, new AbilityType(ability, tier, minimumPlayerLevel));
+				break;
 		}
 	}
 
