@@ -122,8 +122,25 @@ public class PlayerController : MonoBehaviour
 	}
 
 	#endregion
+	
+	public GameObject m_OrbitalCamera = null;
+	internal vp_FPController m_FPController = null;
+	internal InventoryController m_Inventory;
 
 	internal Vector3 m_Home = new Vector3(0f, 0f, 0f);
+
+	public GameObject OrbitalCamera
+	{
+		get
+		{
+			return m_OrbitalCamera;
+		}
+		internal set
+		{
+			m_OrbitalCamera = value;
+		}
+	}
+
 	public Vector3 Home
 	{
 		get
@@ -136,20 +153,94 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	public vp_FPController FPController
+	{
+		get
+		{
+			return m_FPController;
+		}
+		internal set
+		{
+			m_FPController = value;
+		}
+	}
+
+	public InventoryController Inventory
+	{
+		get
+		{
+			return m_Inventory;
+		}
+		internal set
+		{
+			m_Inventory = value;
+		}
+	}
+
+	public Vector3 PlayerVelocity
+	{
+		get
+		{
+			return FPController.m_Velocity;
+		}
+	}
+
+	public bool Moving
+	{
+		get
+		{
+			return PlayerVelocity != Vector3.zero;
+		}
+	}
+
 	void Start()
 	{
-		Spawn(transform.position); 
+		OrbitalCamera = GetComponentInChildren<UltimateOrbitCamera>().gameObject;
+		FPController = GetComponent<vp_FPController>();
+		Inventory = GetComponent<InventoryController>();
+		Spawn(transform.position);
 	}
+
+	#region Update
 
 	void Update()
 	{
 		if (Alive)
 		{
+			UpdateMovement();
 
+			UpdateRotation();
 		}
 
 		GameController.InvokePlayerUpdate();
 	}
+
+	void UpdateMovement()
+	{
+		if (Moving)
+		{
+			GameController.InvokePlayerMoved(transform.position, PlayerVelocity * Time.deltaTime);
+		}
+	}
+
+	void UpdateRotation()
+	{
+		if (Moving || Inventory.CastingAbility) //TODO: Or attacking w/ weapon (mouse 1 or mouse 2 by default)
+		{
+			Vector3 oldCamPos = OrbitalCamera.transform.position;
+			Quaternion oldCamRot = OrbitalCamera.transform.rotation;
+
+			Vector3 newRot = new Vector3(0f, 0f, 0f);
+			newRot.y = OrbitalCamera.transform.eulerAngles.y;
+			transform.eulerAngles = newRot;
+
+			//Fix rotation of camera as it is a child.
+			m_OrbitalCamera.transform.position = oldCamPos;
+			m_OrbitalCamera.transform.rotation = oldCamRot;
+		}
+	}
+
+	#endregion
 
 	void FixedUpdate()
 	{
