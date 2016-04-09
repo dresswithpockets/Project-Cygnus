@@ -67,7 +67,10 @@ public class GameController : MonoBehaviour {
 
 		foreach (ModTemplate mod in Mods)
 		{
+			mod.m_InModInit = true;
 			mod.Initialize();
+			mod.m_InModInit = false;
+			mod.InternalInit();
 		}
 	}
 
@@ -109,7 +112,15 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	internal static void InvokePlayerMoved()
+	internal static void InvokePlayerMoved(Vector3 position, Vector3 delta)
+	{
+		foreach (PlayerEventTemplate pet in PlayerEvents)
+		{
+			pet.Moved(position, delta);
+		}
+	}
+
+	internal static void InvokePlayerJumped()
 	{
 		foreach (PlayerEventTemplate pet in PlayerEvents)
 		{
@@ -149,6 +160,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	/* Items cannot be used anymore.
 	internal static void InvokePlayerUsedItem(Item item)
 	{
 		foreach (PlayerEventTemplate pet in PlayerEvents)
@@ -156,7 +168,7 @@ public class GameController : MonoBehaviour {
 			pet.UsedItem(item);
 		}
 	}
-
+	*/
 	/* Items cannot be added to hotbar.
 	internal static void InvokePlayerAddedItemToHotBar(Item item, int slot)
 	{
