@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class InventoryController : MonoBehaviour
 {
@@ -7,13 +8,16 @@ public class InventoryController : MonoBehaviour
 	internal List<Equipment> m_EquipmentInventory = new List<Equipment>();
 	internal List<Weapon> m_WeaponInventory = new List<Weapon>();
 
-	internal List<AbilityTemplate> m_LearnedAbilities = new List<AbilityTemplate>();
+	internal bool m_CastingAbility = false;
+	internal Dictionary<string, AbilityTemplate> m_LearnedAbilities = new Dictionary<string, AbilityTemplate>();
 	internal AbilityTemplate m_Ability1;
 	internal AbilityTemplate m_Ability2;
 	internal AbilityTemplate m_Ability3;
 	internal AbilityTemplate m_Ability4;
 
 	internal bool m_PlayerInventory = false;
+
+	#region Properties
 
 	public bool PlayerInventory
 	{
@@ -62,6 +66,16 @@ public class InventoryController : MonoBehaviour
 			m_WeaponInventory = value;
 		}
 	}
+
+	public bool CastingAbility
+	{
+		get
+		{
+			return m_CastingAbility;
+		}
+	}
+
+	#endregion
 
 	public void Pickup(Item item)
 	{
@@ -147,6 +161,19 @@ public class InventoryController : MonoBehaviour
 		foreach (MeshRenderer r in renderers)
 		{
 			r.enabled = true;
+		}
+	}
+
+	public bool HasLearned(string abilityID)
+	{
+		return m_LearnedAbilities.ContainsKey(abilityID);
+	}
+
+	internal void LearnAbility(string abilityID, AbilityType ability)
+	{
+		if (!HasLearned(abilityID))
+		{
+			m_LearnedAbilities.Add(abilityID, (AbilityTemplate)Activator.CreateInstance(ability.Ability));
 		}
 	}
 }
