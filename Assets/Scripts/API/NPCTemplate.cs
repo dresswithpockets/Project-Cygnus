@@ -32,13 +32,11 @@ public abstract class NPC_Template {
 
 	public abstract string description { get; }
 
-	public abstract int current_hp { get; }
+	public abstract float current_hp { get; }
 
-	public abstract int current_max_hp { get; }
+	public abstract float current_max_hp { get; }
 
 	public abstract bool use_default_hp_bar { get; }
-
-	public abstract CharacterController character { get; }
 
 	public virtual void spawned() { }
 
