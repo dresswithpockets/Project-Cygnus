@@ -141,87 +141,39 @@ public class Game_Controller : MonoBehaviour {
 		}
 	}
 
-	internal static void invoke_player_dropped(Item item) {
+	internal static void invoke_player_dropped(Item_Template item) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.dropped(item);
 		}
 	}
 
-	internal static void invoke_player_picked_up(Item item) {
+	internal static void invoke_player_picked_up(Item_Template item) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.picked_up(item);
 		}
 	}
 
-	internal static void invoke_player_crafted(Item item) {
+	internal static void invoke_player_crafted(Item_Template item) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.crafted(item);
 		}
 	}
 
-	internal static void invoke_player_used(Weapon weapon) {
+	internal static void invoke_player_used(Item_Template weapon) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.used(weapon);
 		}
 	}
 
-	internal static void invoke_player_equipped(Weapon weapon, int slot) {
+	internal static void invoke_player_equipped(Item_Template weapon, int slot) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.equipped(weapon, slot);
 		}
 	}
 
-	internal static void invoke_player_unequipped(Weapon weapon) {
+	internal static void invoke_player_unequipped(Item_Template weapon) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.unequipped(weapon);
-		}
-	}
-
-	internal static void invoke_player_picked_up(Weapon weapon) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.picked_up(weapon);
-		}
-	}
-
-	internal static void invoke_player_dropped(Weapon weapon) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.dropped(weapon);
-		}
-	}
-
-	internal static void invoke_player_crafted(Weapon weapon) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.crafted(weapon);
-		}
-	}
-
-	internal static void invoke_player_equipped(Equipment equipment, int slot) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.equipped(equipment, slot);
-		}
-	}
-
-	internal static void invoke_player_unequipped(Equipment equipment) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.unequipped(equipment);
-		}
-	}
-
-	internal static void invoke_player_picked_up(Equipment equipment) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.picked_up(equipment);
-		}
-	}
-
-	internal static void invoke_player_dropped(Equipment equipment) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.dropped(equipment);
-		}
-	}
-
-	internal static void invoke_player_crafted(Equipment equipment) {
-		foreach (Player_Event_Template pet in player_event_list) {
-			pet.crafted(equipment);
 		}
 	}
 

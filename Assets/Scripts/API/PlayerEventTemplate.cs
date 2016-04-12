@@ -60,35 +60,17 @@ public abstract class Player_Event_Template {
 
 	public virtual void late_update() { }
 
-	public virtual void used(Item item) { }
+	public virtual void used(Item_Template item) { }
 
-	public virtual void dropped(Item item) { }
+	public virtual void dropped(Item_Template item) { }
 
-	public virtual void picked_up(Item item) { }
+	public virtual void picked_up(Item_Template item) { }
 
-	public virtual void crafted(Item item) { }
+	public virtual void crafted(Item_Template item) { }
 
-	public virtual void used(Weapon item) { }
+	public virtual void equipped(Item_Template weapon, int slot) { }
 
-	public virtual void equipped(Weapon weapon, int slot) { }
-
-	public virtual void unequipped(Weapon weapon) { }
-
-	public virtual void picked_up(Weapon weapon) { }
-
-	public virtual void dropped(Weapon weapon) { }
-
-	public virtual void crafted(Weapon weapon) { }
-
-	public virtual void equipped(Equipment equipment, int slot) { }
-
-	public virtual void unequipped(Equipment equipment) { }
-
-	public virtual void picked_up(Equipment equipment) { }
-
-	public virtual void dropped(Equipment equipment) { }
-
-	public virtual void crafted(Equipment equipment) { }
+	public virtual void unequipped(Item_Template weapon) { }
 
 	public virtual void used(Ability_Template ability) { }
 
