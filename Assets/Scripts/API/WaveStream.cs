@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/*
+
+WaveStream and WAV are 3rd party classes used for processing WAV files.
+
+*/
+
+using UnityEngine;
 using System.Collections;
 using System.IO;
 

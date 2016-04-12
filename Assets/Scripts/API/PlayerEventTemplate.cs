@@ -1,174 +1,98 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class PlayerEventTemplate {
+public abstract class Player_Event_Template {
 
-	internal GameObject m_Owner;
-	public GameObject Owner
-	{
-		get
-		{
-			return m_Owner;
+	private GameObject m_owner;
+	public GameObject owner {
+
+		get {
+
+			return m_owner;
+		}
+		internal set {
+
+			m_owner = value;
 		}
 	}
 
-	internal PlayerController m_Player;
-	public PlayerController Player
-	{
-		get
-		{
-			return m_Player;
+	private Player_Controller m_player;
+	public Player_Controller Player {
+
+		get {
+
+			return m_player;
+		}
+		internal set {
+
+			m_player = value;
 		}
 	}
 
-	internal InventoryController m_PlayerInventory;
-	public InventoryController PlayerInventory
-	{
-		get
-		{
-			return m_PlayerInventory;
+	private Inventory_Controller m_player_inv;
+	public Inventory_Controller player_inv {
+
+		get {
+
+			return m_player_inv;
+		}
+		internal set {
+
+			m_player_inv = value;
 		}
 	}
 
-	public virtual void Spawned()
-	{
+	public virtual void spawned() { }
 
-	}
+	public virtual void died(Entity attacker) { }
 
-	public virtual void Died(Entity attacker)
-	{
+	public virtual void damaged(Damage damage) { }
 
-	}
+	public virtual void moved(Vector3 position, Vector3 delta) { }
 
-	public virtual void Damaged(Damage damage)
-	{
+	public virtual void jumped() { }
 
-	}
+	public virtual void landed() { }
 
-	public virtual void Moved(Vector3 position, Vector3 delta)
-	{
+	public virtual void update() { }
 
-	}
+	public virtual void fixed_update() { }
 
-	public virtual void Jumped()
-	{
+	public virtual void late_update() { }
 
-	}
+	public virtual void used(Item item) { }
 
-	public virtual void Landed()
-	{
+	public virtual void dropped(Item item) { }
 
-	}
+	public virtual void picked_up(Item item) { }
 
-	public virtual void Update()
-	{
+	public virtual void crafted(Item item) { }
 
-	}
+	public virtual void used(Weapon item) { }
 
-	public virtual void FixedUpdate()
-	{
+	public virtual void equipped(Weapon weapon, int slot) { }
 
-	}
+	public virtual void unequipped(Weapon weapon) { }
 
-	public virtual void LateUpdate()
-	{
+	public virtual void picked_up(Weapon weapon) { }
 
-	}
+	public virtual void dropped(Weapon weapon) { }
 
-	public virtual void UsedItem(Item item)
-	{
+	public virtual void crafted(Weapon weapon) { }
 
-	}
+	public virtual void equipped(Equipment equipment, int slot) { }
 
-	/* Items can no longer be added to hotbar.
-	public virtual void AddedItemToHotBar(Item item, int slot)
-	{
+	public virtual void unequipped(Equipment equipment) { }
 
-	}
-	*/
+	public virtual void picked_up(Equipment equipment) { }
 
-	public virtual void DroppedItem(Item item)
-	{
+	public virtual void dropped(Equipment equipment) { }
 
-	}
+	public virtual void crafted(Equipment equipment) { }
 
-	public virtual void PickedUpItem(Item item)
-	{
+	public virtual void used(Ability_Template ability) { }
 
-	}
+	public virtual void learned(Ability_Template ability, int level) { }
 
-	public virtual void CraftedItem(Item item)
-	{
-
-	}
-
-	public virtual void UsedWeapon(Weapon item)
-	{
-
-	}
-
-	public virtual void EquippedWeapon(Weapon weapon, int slot)
-	{
-
-	}
-
-	public virtual void UnequippedWeapon(Weapon weapon)
-	{
-
-	}
-
-	public virtual void PickedUpWeapon(Weapon weapon)
-	{
-
-	}
-
-	public virtual void DroppedWeapon(Weapon weapon)
-	{
-
-	}
-
-	public virtual void CraftedWeapon(Weapon weapon)
-	{
-
-	}
-
-	public virtual void EquippedEquipment(Equipment equipment, int slot)
-	{
-
-	}
-
-	public virtual void UnequippedEquipment(Equipment equipment)
-	{
-
-	}
-
-	public virtual void PickedUpEquipment(Equipment equipment)
-	{
-
-	}
-
-	public virtual void DroppedEquipment(Equipment equipment)
-	{
-
-	}
-
-	public virtual void CraftedEquipment(Equipment equipment)
-	{
-
-	}
-
-	public virtual void UsedAbility(Ability_Template ability)
-	{
-
-	}
-
-	public virtual void LearnedAbility(Ability_Template ability, int level)
-	{
-
-	}
-
-	public virtual void DefeatedOther(Entity other)
-	{
-
-	}
+	public virtual void defeated_other(Entity other) { }
 }

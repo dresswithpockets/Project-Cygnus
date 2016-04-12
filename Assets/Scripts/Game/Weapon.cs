@@ -1,209 +1,227 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Weapon : MonoBehaviour
-{
+public class Weapon : MonoBehaviour {
+	private Weapon_Template m_template = null;
+	private MeshFilter m_filter;
 
-	internal Weapon_Template m_template = null;
-	public Weapon_Template template
-	{
-		get
-		{
+	public Weapon_Template template {
+
+		get {
+
 			return m_template;
 		}
-		internal set
-		{
-			m_template.m_Owner = gameObject;
-			m_template.m_Weapon = this;
+		internal set {
+
+			m_template.owner = gameObject;
+			m_template.weapon = this;
 		}
 	}
 
-	internal MeshFilter mesh_fliter;
+	public MeshFilter filter {
 
-	internal bool BeingUsed = false;
-	internal bool UsageQueued = false;
+		get {
+
+			return m_filter;
+		}
+		internal set {
+
+			m_filter = value;
+		}
+	}
 
 	#region Ownership
 
-	internal GameObject m_NPCTarget = null;
-	internal NPC m_NPCOwner = null;
-	internal PlayerController m_PlayerOwner = null;
+	internal Entity m_NPC_target = null;
+	internal NPC m_NPC_owner = null;
+	internal Player_Controller m_player_owner = null;
 
-	public GameObject NPCTarget
-	{
-		get
-		{
-			return m_NPCTarget;
+	public Entity NPC_target {
+
+		get {
+
+			return m_NPC_target;
 		}
 	}
 
-	public NPC NPCOwner
-	{
-		get
-		{
-			return m_NPCOwner;
+	public NPC NPC_owner {
+
+		get {
+
+			return m_NPC_owner;
 		}
 	}
 
-	public PlayerController PlayerOwner
-	{
-		get
-		{
-			return m_PlayerOwner;
+	public Player_Controller player_owner {
+
+		get {
+
+			return m_player_owner;
 		}
 	}
 
-	public Item_Owner Ownership
-	{
-		get
-		{
-			return (m_NPCOwner == null ? (m_PlayerOwner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
+	public Item_Owner ownership {
+
+		get {
+
+			return (m_NPC_owner == null ? (m_player_owner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
 		}
 	}
 
-	internal void SetOwner(PlayerController player)
-	{
-		m_NPCOwner = null;
-		m_PlayerOwner = player;
+	internal void set_owner(Player_Controller player) {
+
+		m_NPC_owner = null;
+		m_player_owner = player;
 	}
 
-	internal void SetOwner(NPC npc)
-	{
-		m_PlayerOwner = null;
-		m_NPCOwner = npc;
+	internal void set_owner(NPC npc) {
+
+		m_player_owner = null;
+		m_NPC_owner = npc;
 	}
 
-	public void SetNPCTarget(GameObject target)
-	{
-		if (m_NPCOwner == null)
-		{
+	public void set_target(GameObject target) {
+
+		if (m_NPC_owner == null) {
+
 			Debug.LogError("Cannot set item target because this item is not owned by an NPC.");
 			return;
 		}
 
-		m_NPCTarget = target;
+		m_NPC_target = (Entity)target;
+	}
+
+	public void set_target(Entity target) {
+
+		if (m_NPC_owner == null) {
+
+			Debug.LogError("Cannot set item target because this item is not owned by an NPC.");
+			return;
+		}
+
+		m_NPC_target = target;
 	}
 
 	#endregion
-	
-	void Start()
-	{
-		mesh_fliter = GetComponent<MeshFilter>();
-		template.Spawned();
+
+	void Start() {
+
+		filter = GetComponent<MeshFilter>();
+		template.spawned();
 	}
 
-	void Update()
-	{
-		template.ExistsUpdate();
+	void Update() {
+		template.exists_update();
 
-		switch (Ownership)
-		{
+		switch (ownership) {
 			case Item_Owner.NPC:
 
-				template.PassiveUpdate(m_NPCOwner);
+				template.passive_update(m_NPC_owner);
 
 				break;
 			case Item_Owner.PLAYER:
 
-				template.PassiveUpdate(m_PlayerOwner);
+				template.passive_update(m_player_owner);
 
 				break;
 		}
 	}
 
-	void FixedUpdate()
-	{
-		template.FixedUpdate();
+	void FixedUpdate() {
+
+		template.fixed_update();
 	}
 
-	void LateUpdate()
-	{
-		template.LateUpdate();
+	void LateUpdate() {
+
+		template.late_update();
 	}
 
-	void Use()
-	{
-		switch (Ownership)
-		{
+	void use() {
+		switch (ownership) {
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot use weapon because no owner was assigned before the event was completed.", this);
+
 				break;
 			case Item_Owner.NPC:
-				template.Used(m_NPCOwner);
+
+				if (template.AI_can_use_on_target(m_NPC_owner, m_NPC_target))
+					template.used(m_NPC_owner);
+
 				break;
 			case Item_Owner.PLAYER:
-				template.Used(m_PlayerOwner);
+
+				template.used(m_player_owner);
+
 				break;
 		}
 	}
 
-	public void PickUp()
-	{
-		switch (Ownership)
-		{
+	public void pickup() {
+
+		switch (ownership) {
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot pick up weapon because no owner was assigned before the event was completed.", this);
+
 				break;
 			case Item_Owner.NPC:
-				template.PickedUp(m_NPCOwner);
+
+				template.picked_up(m_NPC_owner);
+
 				break;
 			case Item_Owner.PLAYER:
-				template.PickedUp(m_PlayerOwner);
+
+				template.picked_up(m_player_owner);
+
 				break;
 		}
 	}
 
-	public void Drop()
-	{
-		switch (Ownership)
-		{
+	public void drop() {
+		switch (ownership) {
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot drop weapon as no NPC or Player owns this item.", this);
+
 				break;
 			case Item_Owner.NPC:
-				template.Dropped(m_NPCOwner);
+
+				template.dropped(m_NPC_owner);
+
 				break;
 			case Item_Owner.PLAYER:
-				template.Dropped(m_PlayerOwner);
+
+				template.dropped(m_player_owner);
+
 				break;
 		}
 	}
 
-	public void Equip(int slot)
-	{
-		switch (Ownership)
-		{
+	public void equip(int slot) {
+		switch (ownership) {
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot equip weapon as no NPC or Player owns this item.", this);
+
 				break;
 			case Item_Owner.NPC:
-				template.Equipped(m_NPCOwner, slot);
+				
+				template.equipped(m_NPC_owner, slot);
+
 				break;
 			case Item_Owner.PLAYER:
-				template.Equipped(m_PlayerOwner, slot);
+
+				template.equipped(m_player_owner, slot);
+
 				break;
 		}
 	}
 
-	public void OnTriggerEnter(Collider other)
-	{
-		if (template.MeleeInUse())
-		{
-			switch (other.tag)
-			{
-				case "Player":
-					template.MeleeAttackHit(m_PlayerOwner, (Entity)other.gameObject);
-					break;
-				case "NPC":
-					template.MeleeAttackHit(m_NPCOwner, (Entity)other.gameObject);
-					break;
-			}
-		}
-	}
+	public void AssignTemplate(Weapon_Template template, MeshFilter model) {
 
-	public void AssignTemplate(Weapon_Template weaponTemplate, MeshFilter model)
-	{
-		template = weaponTemplate;
-		mesh_fliter.mesh = model.sharedMesh;
+		this.template = template;
+		filter.mesh = model.sharedMesh;
 	}
 }

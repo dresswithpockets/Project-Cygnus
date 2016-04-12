@@ -4,118 +4,64 @@ using System.Collections.Generic;
 public abstract class Equipment_Template  {
 
 	private GameObject m_owner;
-	public GameObject owner
-	{
-		get
-		{
+	public GameObject owner {
+
+		get {
+
 			return m_owner;
 		}
-		internal set
-		{
+		internal set {
+
 			m_owner = value;
 		}
 	}
 
 	private Equipment m_equipment_object;
-	public Equipment equipment_object
-	{
-		get
-		{
+	public Equipment equipment_object {
+
+		get {
+
 			return m_equipment_object;
 		}
-		internal set
-		{
+		internal set {
+
 			m_equipment_object = value;
 		}
 	}
 
-	public abstract string name
-	{
-		get;
-	}
+	public abstract string name { get; }
 
-	public abstract string description
-	{
-		get;
-	}
+	public abstract string description { get; }
 
-	public abstract bool used_by_AI
-	{
-		get;
-	}
+	public abstract bool used_by_AI { get; }
 
-	public abstract Equipment_Classification classification
-	{
-		get;
-	}
+	public abstract Equipment_Classification classification { get; }
 
-	public abstract List<StatModifier> stat_mods
-	{
-		get;
-	}
+	public abstract List<Stat_Modifier> stat_mods { get; }
 
-	public abstract string model_ID
-	{
-		get;
-	}
+	public abstract string model_ID { get; }
 
-	public virtual void spawned()
-	{
+	public virtual void spawned() { }
 
-	}
+	public virtual void exists_update() { }
 
-	public virtual void exists_update()
-	{
+	public virtual void passive_update(Player_Controller player) { }
 
-	}
+	public virtual void passive_update(NPC npc) { }
 
-	public virtual void passive_update(PlayerController player)
-	{
+	public virtual void fixed_update() { }
 
-	}
+	public virtual void late_update() { }
 
-	public virtual void passive_update(NPC npc)
-	{
+	public virtual void picked_up(Player_Controller player) { }
 
-	}
+	public virtual void picked_up(NPC npc) { }
 
-	public virtual void fixed_update()
-	{
+	public virtual void dropped(Player_Controller player) { }
 
-	}
+	public virtual void dropped(NPC npc) { }
 
-	public virtual void late_update()
-	{
+	public virtual void equipped(Player_Controller player, int slot) { }
 
-	}
-
-	public virtual void picked_up(PlayerController player)
-	{
-
-	}
-
-	public virtual void picked_up(NPC npc)
-	{
-
-	}
-
-	public virtual void dropped(PlayerController player)
-	{
-
-	}
-
-	public virtual void dropped(NPC npc)
-	{
-
-	}
-
-	public virtual void equipped(PlayerController player, int slot)
-	{
-
-	}
-
-	public virtual void equipped(NPC npc, int slot)
-	{
-
-	}
+	public virtual void equipped(NPC npc, int slot) { }
 }

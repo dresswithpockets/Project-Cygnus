@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*
+
+UltimateOrbitCamera is a 3rd party component used for Camera game objects that rotate around a target.
+This class provides significant functionality for orbital cameras.
+
+*/
+
+using UnityEngine;
 using System.Collections;
 
 public class UltimateOrbitCamera : MonoBehaviour

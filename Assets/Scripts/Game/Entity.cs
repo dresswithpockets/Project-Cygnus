@@ -1,163 +1,122 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Entity
-{
-	internal GameObject m_Object = null;
-	public GameObject Object
-	{
-		get
-		{
-			return m_Object;
-		}
-		internal set
-		{
-			m_Object = value;
-		}
-	}
+public class Entity {
+	private GameObject m_object = null;
+	public GameObject game_object {
 
-	public Vector3 Position
-	{
-		get
-		{
-			return m_Object.transform.position;
+		get {
+
+			return m_object;
 		}
-		set
-		{
-			m_Object.transform.position = value;
+		internal set {
+
+			m_object = value;
 		}
 	}
 
-	public Vector3 Rotation
-	{
-		get
-		{
-			return m_Object.transform.eulerAngles;
-		}
-		set
-		{
-			m_Object.transform.eulerAngles = value;
-		}
-	}
+	public Vector3 position {
 
-	public bool IsPlayer
-	{
-		get
-		{
-			return (m_Object.GetComponent<PlayerController>() != null);
+		get {
+
+			return m_object.transform.position;
+		}
+		set {
+
+			m_object.transform.position = value;
 		}
 	}
 
-	public bool IsNPC
-	{
-		get
-		{
-			return (m_Object.GetComponent<NPC>() != null);
+	public Vector3 rotation {
+
+		get {
+
+			return m_object.transform.eulerAngles;
+		}
+		set {
+
+			m_object.transform.eulerAngles = value;
 		}
 	}
 
-	public PlayerController GetPlayer()
-	{
-		return m_Object.GetComponent<PlayerController>();
+	public bool is_player {
+
+		get {
+
+			return (m_object.GetComponent<Player_Controller>() != null);
+		}
 	}
 
-	public NPC GetNPC()
-	{
-		return m_Object.GetComponent<NPC>();
+	public bool is_NPC {
+
+		get {
+
+			return (m_object.GetComponent<NPC>() != null);
+		}
 	}
 
-	public void DoDamage(Damage damage)
-	{
-		m_Object.SendMessage("DoDamage", damage);
+	// Returns null if no PlayerController component is attached to the owner object
+	public Player_Controller try_get_player() {
+
+		return m_object.GetComponent<Player_Controller>();
 	}
 
-	public static explicit operator Entity(GameObject go)
-	{
-		return new Entity()
-		{
-			m_Object = go
+	// Returns null if no NPC component is attached to the owner object
+	public NPC try_get_npc() {
+
+		return m_object.GetComponent<NPC>();
+	}
+
+	public void do_damage(Damage damage) {
+
+		m_object.SendMessage("DoDamage", damage);
+	}
+
+	public static explicit operator Entity(GameObject go) {
+
+		return new Entity() {
+
+			m_object = go
 		};
 	}
 
-	public static explicit operator GameObject(Entity ent)
-	{
-		return ent.m_Object;
+	public static explicit operator GameObject(Entity ent) {
+
+		return ent.m_object;
 	}
 }
 
-public class GameEntity : Entity
-{
+public class Game_Entity : Entity {
 
-	public virtual void Awake()
-	{
+	public virtual void awake() { }
 
-	}
+	public virtual void fixed_update() { }
 
-	public virtual void FixedUpdate()
-	{
+	public virtual void late_update() { }
 
-	}
+	public virtual void collision_enter(Collision other) { }
 
-	public virtual void LateUpdate()
-	{
+	public virtual void collision_exit(Collision other) { }
 
-	}
+	public virtual void collision_stay(Collision other) { }
 
-	public virtual void OnCollisionEnter(Collision other)
-	{
+	public virtual void destroyed() { }
 
-	}
+	public virtual void GUI() { }
 
-	public virtual void OnCollisionExit(Collision other)
-	{
+	public virtual void trigger_enter(Collider other) { }
 
-	}
+	public virtual void trigger_exit(Collider other) { }
 
-	public virtual void OnCollisionStay(Collision other)
-	{
+	public virtual void trigger_stay(Collider other) { }
 
-	}
+	public virtual void start() { }
 
-	public virtual void OnDestroy()
-	{
+	public virtual void update() { }
 
-	}
-
-	public virtual void OnGUI()
-	{
-
-	}
-
-	public virtual void OnTriggerEnter(Collider other)
-	{
-
-	}
-
-	public virtual void OnTriggerExit(Collider other)
-	{
-
-	}
-
-	public virtual void OnTriggerStay(Collider other)
-	{
-
-	}
-
-	public virtual void Start()
-	{
-
-	}
-
-	public virtual void Update()
-	{
-
-	}
-
-	public void Instantiate(Vector3 position, Vector3 rotation)
-	{
-		if (m_Object == null)
-		{
-			m_Object = (GameObject)GameObject.Instantiate(GameController.Instance.EntityPrefab, position, Quaternion.Euler(rotation));
+	public void create_instance(Vector3 pos, Vector3 rot) {
+		if (game_object == null) {
+			game_object = (GameObject)GameObject.Instantiate(Game_Controller.instance.ent_prefab, pos, Quaternion.Euler(rot));
 			return;
 		}
 
