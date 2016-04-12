@@ -33,4 +33,24 @@ public static class Util {
 
 		return res.ToArray();
 	}
+
+	public static bool is_weapon(this Item_Template item) {
+		return typeof(Weapon_Template) == item.GetType();
+	}
+
+	public static bool is_material(this Item_Template item) {
+		return typeof(Material_Template) == item.GetType();
+	}
+
+	public static bool is_pet_item(this Item_Template item) {
+		return typeof(Pet_Item_Template) == item.GetType();
+	}
+
+	public static bool is_equipment(this Item_Template item) {
+		return typeof(Equipment_Template) == item.GetType();
+	}
+
+	public static bool is_consumable(this Item_Template item) {
+		return typeof(Consumable_Template) == item.GetType();
+	}
 }
