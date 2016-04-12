@@ -2,113 +2,113 @@
 using System.Collections;
 using System;
 
-internal struct AbilityType
+internal struct Ability_Type
 {
-	public Type Ability;
-	public AbilityTier Tier;
-	public int MinimumPlayerLevel;
+	public Type type;
+	public Ability_Tier tier;
+	public int min_player_level;
 
-	public AbilityType(Type type, AbilityTier tier, int level)
+	public Ability_Type(Type type, Ability_Tier tier, int level)
 	{
-		Ability = type;
-		Tier = tier;
-		MinimumPlayerLevel = level;
+		this.type = type;
+		this.tier = tier;
+		min_player_level = level;
 	}
 }
 
-public abstract class AbilityTemplate
+public abstract class Ability_Template
 {
 	// Displayed name of the ability
-	public abstract string AbilityName
+	public abstract string ability_name
 	{
 		get;
 	}
 
 	// Displayed RichText description of the ability
-	public abstract string AbilityDescription
+	public abstract string ability_description
 	{
 		get;
 	}
 
 	// Whether or not AI can learn and use this ability
-	public abstract bool UsedByAI
+	public abstract bool used_by_AI
 	{
 		get;
 	}
 
 	// The ID of the image that will be used as an avatar for the ability
-	public abstract string AvatarID
+	public abstract string avatar_ID
 	{
 		get;
 	}
 
-	public abstract int AbilityLevel
+	public abstract int ability_level
 	{
 		get;
 	}
 
-	public virtual void Start(PlayerController player)
+	public virtual void start(PlayerController player)
 	{
 
 	}
 
-	public virtual void Start(NPC npc)
+	public virtual void start(NPC npc)
 	{
 
 	}
 
-	public virtual void PassiveUpdate(PlayerController player)
+	public virtual void passive_update(PlayerController player)
 	{
 
 	}
 
-	public virtual void PassiveUpdate(NPC npc)
+	public virtual void passive_update(NPC npc)
 	{
 
 	}
 
-	public virtual void ActiveUpdate(PlayerController player)
+	public virtual void active_update(PlayerController player)
 	{
 
 	}
 
-	public virtual void ActiveUpdate(NPC npc)
+	public virtual void active_update(NPC npc)
 	{
 
 	}
 
-	public virtual void End(PlayerController player)
+	public virtual void end(PlayerController player)
 	{
 
 	}
 
-	public virtual void End(NPC npc)
+	public virtual void end(NPC npc)
 	{
 
 	}
 
-	public virtual bool IsReady()
-	{
-		return true;
-	}
-
-	public virtual bool IsFinished()
+	public virtual bool is_ready()
 	{
 		return true;
 	}
 
-	public virtual void LevelUp()
+	public virtual bool is_finished()
+	{
+		return true;
+	}
+
+	public virtual void level_up()
 	{
 
 	}
 
-	public virtual void Inturrupt()
+	public virtual void interrupt()
 	{
 
 	}
 
 	// Determines whether or not an AI can use this ability on a target
-	public virtual bool AICanUseOnTarget(NPC npc, GameObject target)
+	public virtual bool AI_can_use_on_target(NPC npc, GameObject target)
 	{
 		return false;
 	}

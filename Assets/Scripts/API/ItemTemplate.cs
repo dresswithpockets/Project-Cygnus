@@ -1,67 +1,75 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class ItemTemplate {
+public abstract class Item_Template {
 
-	internal GameObject m_Owner;
-	public GameObject Owner
+	private GameObject m_owner;
+	public GameObject owner
 	{
 		get
 		{
-			return m_Owner;
+			return m_owner;
+		}
+		internal set
+		{
+			m_owner = value;
 		}
 	}
 
-	internal Item m_Item;
-	public Item Item
+	private Item m_item;
+	public Item item
 	{
 		get
 		{
-			return m_Item;
+			return m_item;
+		}
+		internal set
+		{
+			m_item = value;
 		}
 	}
 
-	public abstract string ItemName
+	public abstract string name
 	{
 		get;
 	}
 
-	public abstract string ItemDescription
+	public abstract string description
 	{
 		get;
 	}
 
-	public abstract bool UsedByAI
+	public abstract bool used_by_AI
 	{
 		get;
 	}
 
-	public abstract ItemClassification Classification
+	public abstract Item_Classification classification
 	{
 		get;
 	}
 
-	public abstract string ModelID
+	public abstract string model_ID
 	{
 		get;
 	}
 
-	public virtual void Spawned()
+	public virtual void spanwed()
 	{
 
 	}
 
-	public virtual void ExistsUpdate()
+	public virtual void exists_update()
 	{
 
 	}
 
-	public virtual void PassiveUpdate(PlayerController player)
+	public virtual void passive_update(PlayerController player)
 	{
 
 	}
 
-	public virtual void PassiveUpdate(NPC npc)
+	public virtual void passive_update(NPC npc)
 	{
 
 	}

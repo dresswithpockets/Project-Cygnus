@@ -1,112 +1,120 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class EquipmentTemplate  {
+public abstract class Equipment_Template  {
 
-	internal GameObject m_Owner;
-	public GameObject Owner
+	private GameObject m_owner;
+	public GameObject owner
 	{
 		get
 		{
-			return m_Owner;
+			return m_owner;
+		}
+		internal set
+		{
+			m_owner = value;
 		}
 	}
 
-	internal Equipment m_Equipment;
-	public Equipment Equipment
+	private Equipment m_equipment_object;
+	public Equipment equipment_object
 	{
 		get
 		{
-			return m_Equipment;
+			return m_equipment_object;
+		}
+		internal set
+		{
+			m_equipment_object = value;
 		}
 	}
 
-	public abstract string EquipmentName
+	public abstract string name
 	{
 		get;
 	}
 
-	public abstract string EquipmentDescription
+	public abstract string description
 	{
 		get;
 	}
 
-	public abstract bool UsedByAI
+	public abstract bool used_by_AI
 	{
 		get;
 	}
 
-	public abstract EquipmentClassification Classification
+	public abstract Equipment_Classification classification
 	{
 		get;
 	}
 
-	public abstract List<StatModifier> EquippedStatModifiers
+	public abstract List<StatModifier> stat_mods
 	{
 		get;
 	}
 
-	public abstract string ModelID
+	public abstract string model_ID
 	{
 		get;
 	}
 
-	public virtual void Spawned()
+	public virtual void spawned()
 	{
 
 	}
 
-	public virtual void ExistsUpdate()
+	public virtual void exists_update()
 	{
 
 	}
 
-	public virtual void PassiveUpdate(PlayerController player)
+	public virtual void passive_update(PlayerController player)
 	{
 
 	}
 
-	public virtual void PassiveUpdate(NPC npc)
+	public virtual void passive_update(NPC npc)
 	{
 
 	}
 
-	public virtual void FixedUpdate()
+	public virtual void fixed_update()
 	{
 
 	}
 
-	public virtual void LateUpdate()
+	public virtual void late_update()
 	{
 
 	}
 
-	public virtual void PickedUp(PlayerController player)
+	public virtual void picked_up(PlayerController player)
 	{
 
 	}
 
-	public virtual void PickedUp(NPC npc)
+	public virtual void picked_up(NPC npc)
 	{
 
 	}
 
-	public virtual void Dropped(PlayerController player)
+	public virtual void dropped(PlayerController player)
 	{
 
 	}
 
-	public virtual void Dropped(NPC npc)
+	public virtual void dropped(NPC npc)
 	{
 
 	}
 
-	public virtual void Equipped(PlayerController player, int slot)
+	public virtual void equipped(PlayerController player, int slot)
 	{
 
 	}
 
-	public virtual void Equipped(NPC npc, int slot)
+	public virtual void equipped(NPC npc, int slot)
 	{
 
 	}

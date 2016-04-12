@@ -4,8 +4,8 @@ using System.Collections;
 
 public class Item : MonoBehaviour
 {
-	internal ItemTemplate m_Template = null;
-	public ItemTemplate Template
+	internal Item_Template m_Template = null;
+	public Item_Template Template
 	{
 		get
 		{
@@ -13,8 +13,8 @@ public class Item : MonoBehaviour
 		}
 		internal set
 		{
-			m_Template.m_Owner = gameObject;
-			m_Template.m_Item = this;
+			m_Template.owner = gameObject;
+			m_Template.item = this;
 		}
 	}
 
@@ -45,11 +45,11 @@ public class Item : MonoBehaviour
 		}
 	}
 
-	public ItemOwner Ownership
+	public Item_Owner Ownership
 	{
 		get
 		{
-			return (m_NPCOwner == null ? (m_PlayerOwner == null ? ItemOwner.None : ItemOwner.Player) : ItemOwner.NPC);
+			return (m_NPCOwner == null ? (m_PlayerOwner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
 		}
 	}
 
@@ -70,18 +70,18 @@ public class Item : MonoBehaviour
 	void Start()
 	{
 		Filter = GetComponent<MeshFilter>();
-		Template.Spawned();
+		Template.spanwed();
 	}
 
 	void Update()
 	{
-		Template.ExistsUpdate();
+		Template.exists_update();
 
 		switch (Ownership)
 		{
-			case ItemOwner.NPC:
+			case Item_Owner.NPC:
 
-				Template.PassiveUpdate(m_NPCOwner);
+				Template.passive_update(m_NPCOwner);
 
 				/* Items can no longer be used.
 				if (BeingUsed && Template.IsReady() && Template.AICanUseOnTarget(m_NPCOwner, (Entity)m_NPCTarget))
@@ -103,9 +103,9 @@ public class Item : MonoBehaviour
 				*/
 
 				break;
-			case ItemOwner.Player:
+			case Item_Owner.PLAYER:
 
-				Template.PassiveUpdate(m_PlayerOwner);
+				Template.passive_update(m_PlayerOwner);
 
 				/* Items can no longer be used.
 				if (BeingUsed && Template.IsReady())
@@ -142,7 +142,7 @@ public class Item : MonoBehaviour
 
 	public void Use()
 	{
-		if (Ownership == ItemOwner.None)
+		if (Ownership == Item_Owner.NONE)
 		{
 			Debug.LogError("Cannot use item because no owner was assigned before the event was complete.", this);
 			return;
@@ -154,13 +154,13 @@ public class Item : MonoBehaviour
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot pick up item because no owner was assigned before the event was completed.", this);
 				break;
-			case ItemOwner.NPC:
+			case Item_Owner.NPC:
 				Template.PickedUp(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
+			case Item_Owner.PLAYER:
 				Template.PickedUp(m_PlayerOwner);
 				break;
 		}
@@ -170,13 +170,13 @@ public class Item : MonoBehaviour
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot drop item as no NPC or Player owns this item.", this);
 				break;
-			case ItemOwner.NPC:
+			case Item_Owner.NPC:
 				Template.Dropped(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
+			case Item_Owner.PLAYER:
 				Template.Dropped(m_PlayerOwner);
 				break;
 		}
@@ -196,7 +196,7 @@ public class Item : MonoBehaviour
 	}
 	*/
 
-	public void AssignTemplate(ItemTemplate itemTemplate, MeshFilter model)
+	public void AssignTemplate(Item_Template itemTemplate, MeshFilter model)
 	{
 		Template = itemTemplate;
 		Filter.mesh = model.sharedMesh;

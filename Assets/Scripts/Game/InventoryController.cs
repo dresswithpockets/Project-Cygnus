@@ -9,11 +9,11 @@ public class InventoryController : MonoBehaviour
 	internal List<Weapon> m_WeaponInventory = new List<Weapon>();
 
 	internal bool m_CastingAbility = false;
-	internal Dictionary<string, AbilityTemplate> m_LearnedAbilities = new Dictionary<string, AbilityTemplate>();
-	internal AbilityTemplate m_Ability1;
-	internal AbilityTemplate m_Ability2;
-	internal AbilityTemplate m_Ability3;
-	internal AbilityTemplate m_Ability4;
+	internal Dictionary<string, Ability_Template> m_LearnedAbilities = new Dictionary<string, Ability_Template>();
+	internal Ability_Template m_Ability1;
+	internal Ability_Template m_Ability2;
+	internal Ability_Template m_Ability3;
+	internal Ability_Template m_Ability4;
 
 	internal bool m_PlayerInventory = false;
 
@@ -125,13 +125,13 @@ public class InventoryController : MonoBehaviour
 		}
     }
 
-	public void Drop(InventoryCategory tab, int slot)
+	public void Drop(Inventory_Category tab, int slot)
 	{
 		GameObject droppedItem = null;
 
 		switch (tab)
 		{
-			case InventoryCategory.Equipment:
+			case Inventory_Category.EQUIPMENT:
 				droppedItem = EquipmentInventory[slot].gameObject;
 
 				if (PlayerInventory)
@@ -139,7 +139,7 @@ public class InventoryController : MonoBehaviour
 					GameController.InvokePlayerDroppedEquipment(EquipmentInventory[slot]);
 		        }
 				break;
-			case InventoryCategory.Item:
+			case Inventory_Category.ITEM:
 				droppedItem = ItemInventory[slot].gameObject;
 
 				if (PlayerInventory)
@@ -147,7 +147,7 @@ public class InventoryController : MonoBehaviour
 					GameController.InvokePlayerDroppedItem(ItemInventory[slot]);
 				}
 				break;
-			case InventoryCategory.Weapon:
+			case Inventory_Category.WEAPON:
 				droppedItem = WeaponInventory[slot].gameObject;
 
 				if (PlayerInventory)
@@ -169,11 +169,11 @@ public class InventoryController : MonoBehaviour
 		return m_LearnedAbilities.ContainsKey(abilityID);
 	}
 
-	internal void LearnAbility(string abilityID, AbilityType ability)
+	internal void LearnAbility(string abilityID, Ability_Type ability)
 	{
 		if (!HasLearned(abilityID))
 		{
-			m_LearnedAbilities.Add(abilityID, (AbilityTemplate)Activator.CreateInstance(ability.Ability));
+			m_LearnedAbilities.Add(abilityID, (Ability_Template)Activator.CreateInstance(ability.type));
 		}
 	}
 }

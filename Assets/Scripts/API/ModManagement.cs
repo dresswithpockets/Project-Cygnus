@@ -46,9 +46,9 @@ public abstract class ModTemplate {
 	internal Dictionary<string, Type> ItemTemplates = new Dictionary<string, Type>();
 	internal Dictionary<string, Type> WeaponTemplates = new Dictionary<string, Type>();
 	internal Dictionary<string, Type> EquipmentTemplates = new Dictionary<string, Type>();
-	internal SortedDictionary<string, AbilityType> BasicAbilities = new SortedDictionary<string, AbilityType>();
-	internal SortedDictionary<string, AbilityType> IntermediateAbilities = new SortedDictionary<string, AbilityType>();
-	internal SortedDictionary<string, AbilityType> AdvancedAbilities = new SortedDictionary<string, AbilityType>();
+	internal SortedDictionary<string, Ability_Type> BasicAbilities = new SortedDictionary<string, Ability_Type>();
+	internal SortedDictionary<string, Ability_Type> IntermediateAbilities = new SortedDictionary<string, Ability_Type>();
+	internal SortedDictionary<string, Ability_Type> AdvancedAbilities = new SortedDictionary<string, Ability_Type>();
 	internal Dictionary<string, Type> NPCTemplates = new Dictionary<string, Type>();
 
 	internal Dictionary<string, MeshFilter> LoadedModels = new Dictionary<string, MeshFilter>();
@@ -57,9 +57,9 @@ public abstract class ModTemplate {
 
 	internal void InternalInit()
 	{
-		BasicAbilities.OrderBy(x => x.Value.MinimumPlayerLevel).ToDictionary(pair => pair.Key, pair => pair.Value);
-		IntermediateAbilities.OrderBy(x => x.Value.MinimumPlayerLevel).ToDictionary(pair => pair.Key, pair => pair.Value);
-		AdvancedAbilities.OrderBy(x => x.Value.MinimumPlayerLevel).ToDictionary(pair => pair.Key, pair => pair.Value);
+		BasicAbilities.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
+		IntermediateAbilities.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
+		AdvancedAbilities.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
 	}
 
 	public void SpawnEntity(string entity, Vector3 position)
@@ -77,8 +77,8 @@ public abstract class ModTemplate {
 			case "item":
 				GameObject item = (GameObject)GameObject.Instantiate(GameController.Instance.ItemPrefab, position, Quaternion.Euler(rotation));
 
-				ItemTemplate templateItem = (ItemTemplate)Activator.CreateInstance(ItemTemplates[entityID]);
-				modelID = (templateItem.ModelID == null ? "Cygnus.default" : templateItem.ModelID);
+				Item_Template templateItem = (Item_Template)Activator.CreateInstance(ItemTemplates[entityID]);
+				modelID = (templateItem.model_ID == null ? "Cygnus.default" : templateItem.model_ID);
 
 				item.GetComponent<Item>().AssignTemplate(templateItem, LoadedModels[modelID]);
 
@@ -86,7 +86,7 @@ public abstract class ModTemplate {
 			case "weapon":
 				GameObject weapon = (GameObject)GameObject.Instantiate(GameController.Instance.WeaponPrefab, position, Quaternion.Euler(rotation));
 
-				WeaponTemplate templateWeapon = (WeaponTemplate)Activator.CreateInstance(WeaponTemplates[entityID]);
+				Weapon_Template templateWeapon = (Weapon_Template)Activator.CreateInstance(WeaponTemplates[entityID]);
 				modelID = (templateWeapon.ModelID == null ? "Cygnus.default" : templateWeapon.ModelID);
 
 				weapon.GetComponent<Weapon>().AssignTemplate(templateWeapon, LoadedModels[modelID]);
@@ -95,8 +95,8 @@ public abstract class ModTemplate {
 			case "equipment":
 				GameObject equipment = (GameObject)GameObject.Instantiate(GameController.Instance.EquipmentPrefab, position, Quaternion.Euler(rotation));
 
-				EquipmentTemplate templateEquipment = (EquipmentTemplate)Activator.CreateInstance(EquipmentTemplates[entityID]);
-				modelID = (templateEquipment.ModelID == null ? "Cygnus.default" : templateEquipment.ModelID);
+				Equipment_Template templateEquipment = (Equipment_Template)Activator.CreateInstance(EquipmentTemplates[entityID]);
+				modelID = (templateEquipment.model_ID == null ? "Cygnus.default" : templateEquipment.model_ID);
 
 				equipment.GetComponent<Equipment>().AssignTemplate(templateEquipment, LoadedModels[modelID]);
 
@@ -222,7 +222,7 @@ public abstract class ModTemplate {
 			Debug.LogError("Templates can only be registered inside Initialize().");
 			return;
 		}
-		if (typeof(ItemTemplate).IsAssignableFrom(template))
+		if (typeof(Item_Template).IsAssignableFrom(template))
 		{
 			if (ItemTemplates.ContainsKey(ID))
 			{
@@ -233,7 +233,7 @@ public abstract class ModTemplate {
 
 			ItemTemplates.Add(ID, template);
 		}
-		else if (typeof(WeaponTemplate).IsAssignableFrom(template))
+		else if (typeof(Weapon_Template).IsAssignableFrom(template))
 		{
 			if (WeaponTemplates.ContainsKey(ID))
 			{
@@ -244,7 +244,7 @@ public abstract class ModTemplate {
 
 			WeaponTemplates.Add(ID, template);
 		}
-		else if (typeof(EquipmentTemplate).IsAssignableFrom(template))
+		else if (typeof(Equipment_Template).IsAssignableFrom(template))
 		{
 			if (EquipmentTemplates.ContainsKey(ID))
 			{
@@ -255,7 +255,7 @@ public abstract class ModTemplate {
 
 			EquipmentTemplates.Add(ID, template);
 		}
-		else if (typeof(AbilityTemplate).IsAssignableFrom(template))
+		else if (typeof(Ability_Template).IsAssignableFrom(template))
 		{
 			Debug.LogError("Abilities are no longer registered using RegisterTemplate. Register using RegisterAbility.");
 		}
@@ -278,11 +278,11 @@ public abstract class ModTemplate {
 		}
 	}
 
-	public void RegisterAbility(string ID, Type ability, AbilityTier tier, int minimumPlayerLevel)
+	public void RegisterAbility(string ID, Type ability, Ability_Tier tier, int minimumPlayerLevel)
 	{
 		switch (tier)
 		{
-			case AbilityTier.Advanced:
+			case Ability_Tier.ADVANCED:
 				if (AdvancedAbilities.ContainsKey(ID))
 				{
 					Debug.LogError("Cannot register ability with ID: " + ID +
@@ -290,9 +290,9 @@ public abstract class ModTemplate {
 					return;
 				}
 
-				AdvancedAbilities.Add(ID, new AbilityType(ability, tier, minimumPlayerLevel));
+				AdvancedAbilities.Add(ID, new Ability_Type(ability, tier, minimumPlayerLevel));
 				break;
-			case AbilityTier.Basic:
+			case Ability_Tier.BASIC:
 				if (BasicAbilities.ContainsKey(ID))
 				{
 					Debug.LogError("Cannot register ability with ID: " + ID +
@@ -300,9 +300,9 @@ public abstract class ModTemplate {
 					return;
 				}
 
-				BasicAbilities.Add(ID, new AbilityType(ability, tier, minimumPlayerLevel));
+				BasicAbilities.Add(ID, new Ability_Type(ability, tier, minimumPlayerLevel));
 				break;
-			case AbilityTier.Intermediate:
+			case Ability_Tier.INTERMEDIATE:
 				if (IntermediateAbilities.ContainsKey(ID))
 				{
 					Debug.LogError("Cannot register ability with ID: " + ID +
@@ -310,7 +310,7 @@ public abstract class ModTemplate {
 					return;
 				}
 
-				IntermediateAbilities.Add(ID, new AbilityType(ability, tier, minimumPlayerLevel));
+				IntermediateAbilities.Add(ID, new Ability_Type(ability, tier, minimumPlayerLevel));
 				break;
 		}
 	}

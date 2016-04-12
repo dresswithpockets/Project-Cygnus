@@ -157,12 +157,12 @@ public abstract class PlayerEventTemplate {
 
 	}
 
-	public virtual void UsedAbility(AbilityTemplate ability)
+	public virtual void UsedAbility(Ability_Template ability)
 	{
 
 	}
 
-	public virtual void LearnedAbility(AbilityTemplate ability, int level)
+	public virtual void LearnedAbility(Ability_Template ability, int level)
 	{
 
 	}

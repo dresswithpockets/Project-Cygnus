@@ -291,7 +291,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	internal static void InvokePlayerUsedAbility(AbilityTemplate ability)
+	internal static void InvokePlayerUsedAbility(Ability_Template ability)
 	{
 		foreach (PlayerEventTemplate pet in PlayerEvents)
 		{
@@ -299,7 +299,7 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-	internal static void InvokePlayerLearnedAbility(AbilityTemplate ability, int level)
+	internal static void InvokePlayerLearnedAbility(Ability_Template ability, int level)
 	{
 		foreach (PlayerEventTemplate pet in PlayerEvents)
 		{
