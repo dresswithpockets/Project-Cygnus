@@ -82,7 +82,7 @@ public abstract class Mod_Template {
 
 				model_ID = (template_weapon.model_ID == null ? "default" : template_weapon.model_ID);
 
-				weapon.GetComponent<Weapon>().AssignTemplate(template_weapon, models[model_ID]);
+				weapon.GetComponent<Weapon>().assign_template(template_weapon, models[model_ID]);
 
 				break;
 			case "equipment":
