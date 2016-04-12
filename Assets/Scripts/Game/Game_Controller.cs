@@ -9,11 +9,13 @@ public class Game_Controller : MonoBehaviour {
 
 	#region Prefabs
 
-	public GameObject item_prefab;
+	public GameObject material_prefab;
 	public GameObject weapon_prefab;
 	public GameObject equipment_prefab;
 	public GameObject NPC_prefab;
 	public GameObject player_prefab;
+	public GameObject consumable_prefab;
+	public GameObject pet_item_prefab;
 	public GameObject ent_prefab;
 
 	#endregion
