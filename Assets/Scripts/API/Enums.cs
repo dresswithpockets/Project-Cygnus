@@ -75,6 +75,7 @@ public enum Inventory_Category {
 
 	WEAPON = 0,
 	EQUIPMENT,
+	MATERIAL,
 	CONSUMABLE,
 	PET_ITEM
 }
