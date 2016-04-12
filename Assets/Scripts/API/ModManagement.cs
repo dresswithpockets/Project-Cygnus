@@ -33,6 +33,8 @@ public abstract class Mod_Template {
 	internal Dictionary<string, Type> item_templates = new Dictionary<string, Type>();
 	internal Dictionary<string, Type> weapon_templates = new Dictionary<string, Type>();
 	internal Dictionary<string, Type> equipment_templates = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> consumable_templates = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> pet_item_templates = new Dictionary<string, Type>();
 	internal SortedDictionary<string, Ability_Type> basic_abilities = new SortedDictionary<string, Ability_Type>();
 	internal SortedDictionary<string, Ability_Type> inter_abilities = new SortedDictionary<string, Ability_Type>();
 	internal SortedDictionary<string, Ability_Type> advanced_abilities = new SortedDictionary<string, Ability_Type>();
@@ -61,14 +63,15 @@ public abstract class Mod_Template {
 		string model_ID = "";
 		switch (ent_prefix) {
 
-			case "item":
+			case "material":
 
-				GameObject item = (GameObject)GameObject.Instantiate(Game_Controller.instance.item_prefab, pos, Quaternion.Euler(rot));
+				GameObject item = (GameObject)GameObject.Instantiate(Game_Controller.instance.material_prefab, pos, Quaternion.Euler(rot));
 
-				Item_Template template_item = (Item_Template)Activator.CreateInstance(item_templates[ent_ID]);
-				model_ID = (template_item.model_ID == null ? "Cygnus.default" : template_item.model_ID);
+				Material_Template template_item = (Material_Template)Activator.CreateInstance(item_templates[ent_ID]);
 
-				item.GetComponent<Item>().assign_template(template_item, models[model_ID]);
+				model_ID = (template_item.model_ID == null ? "default" : template_item.model_ID);
+
+				item.GetComponent<Material>().assign_template(template_item, models[model_ID]);
 
 				break;
 			case "weapon":
@@ -76,7 +79,8 @@ public abstract class Mod_Template {
 				GameObject weapon = (GameObject)GameObject.Instantiate(Game_Controller.instance.weapon_prefab, pos, Quaternion.Euler(rot));
 
 				Weapon_Template template_weapon = (Weapon_Template)Activator.CreateInstance(weapon_templates[ent_ID]);
-				model_ID = (template_weapon.model_ID == null ? "Cygnus.default" : template_weapon.model_ID);
+
+				model_ID = (template_weapon.model_ID == null ? "default" : template_weapon.model_ID);
 
 				weapon.GetComponent<Weapon>().AssignTemplate(template_weapon, models[model_ID]);
 
@@ -86,9 +90,44 @@ public abstract class Mod_Template {
 				GameObject equipment = (GameObject)GameObject.Instantiate(Game_Controller.instance.equipment_prefab, pos, Quaternion.Euler(rot));
 
 				Equipment_Template template_equipment = (Equipment_Template)Activator.CreateInstance(equipment_templates[ent_ID]);
-				model_ID = (template_equipment.model_ID == null ? "Cygnus.default" : template_equipment.model_ID);
+
+				model_ID = (template_equipment.model_ID == null ? "default" : template_equipment.model_ID);
 
 				equipment.GetComponent<Equipment>().assign_template(template_equipment, models[model_ID]);
+
+				break;
+			case "consumable":
+
+				GameObject consumable = (GameObject)GameObject.Instantiate(Game_Controller.instance.consumable_prefab, pos, Quaternion.Euler(rot));
+
+				Consumable_Template template_consumable = (Consumable_Template)Activator.CreateInstance(consumable_templates[ent_ID]);
+
+				model_ID = (template_consumable.model_ID == null ? "default" : template_consumable.model_ID);
+
+				consumable.GetComponent<Consumable>().assign_template(template_consumable, models[model_ID]);
+
+				break;
+			case "petitem":
+
+				GameObject pet_item = (GameObject)GameObject.Instantiate(Game_Controller.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
+
+				Pet_Item_Template template_pet_item = (Pet_Item_Template)Activator.CreateInstance(pet_item_templates[ent_ID]);
+
+				model_ID = (template_pet_item.model_ID == null ? "default" : template_pet_item.model_ID);
+
+				pet_item.GetComponent<Pet_Item>().assign_template(template_pet_item, models[model_ID]);
+
+				break;
+			case "pet":
+
+				GameObject pet = (GameObject)GameObject.Instantiate(Game_Controller.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
+
+				Pet_Item_Template template_pet = (Pet_Item_Template)Activator.CreateInstance(pet_item_templates[ent_ID]);
+
+				model_ID = (template_pet.model_ID == null ? "default" : template_pet.model_ID);
+
+				pet.GetComponent<Pet_Item>().assign_template(template_pet, models[model_ID]);
+				pet.GetComponent<Pet_Item>().is_item = false;
 
 				break;
 			case "npc":
@@ -207,7 +246,7 @@ public abstract class Mod_Template {
 			Debug.LogError("Templates can only be registered inside Initialize().");
 			return;
 		}
-		if (typeof(Item_Template).IsAssignableFrom(template)) {
+		if (typeof(Material_Template).IsAssignableFrom(template)) {
 
 			if (item_templates.ContainsKey(ID)) {
 
@@ -239,6 +278,28 @@ public abstract class Mod_Template {
 			}
 
 			equipment_templates.Add(ID, template);
+		}
+		else if (typeof(Consumable_Template).IsAssignableFrom(template)) {
+
+			if (consumable_templates.ContainsKey(ID)) {
+
+				Debug.LogError("Cannot register consumable with ID: " + ID +
+					" because there is already another item registered with that ID.");
+				return;
+			}
+
+			consumable_templates.Add(ID, template);
+		}
+		else if (typeof(Pet_Item_Template).IsAssignableFrom(template)) {
+
+			if (pet_item_templates.ContainsKey(ID)) {
+
+				Debug.LogError("Cannot register pet item with ID: " + ID +
+					" because there is already another item registered with that ID.");
+				return;
+			}
+
+			pet_item_templates.Add(ID, template);
 		}
 		else if (typeof(Ability_Template).IsAssignableFrom(template)) Debug.LogError("Abilities are no longer registered using RegisterTemplate. Register using RegisterAbility.");
 		else if (typeof(NPC_Template).IsAssignableFrom(template)) {
