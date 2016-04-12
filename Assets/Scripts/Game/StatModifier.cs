@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public struct StatModifier
+public struct Stat_Modifier
 {
-	public Char_Stat modifiedStat;
-	public Stat_Modifier_Type modifierType;
+	public Char_Stat stat;
+	public Stat_Modifier_Type type;
 	public float amount;
 }

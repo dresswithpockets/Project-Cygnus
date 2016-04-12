@@ -1,34 +1,34 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum Ability_Tier
-{
+public enum Ability_Tier {
+
 	BASIC = 0,
 	INTERMEDIATE,
 	ADVANCED
 }
 
-public enum Item_Classification
-{
+public enum Item_Classification {
+
 	CONSUMABLE = 0,
 	MATERIAL
 }
-	
-public enum Weapon_Classification
-{
+
+public enum Weapon_Classification {
+
 	MELEE = 0,
 	RANGED_PROJECTILE,
 	RANGED_HITSCAN
 }
 
-public enum Weapon_Handiness
-{
+public enum Weapon_Handiness {
+
 	ONE_HANDED = 0,
 	TWO_HANDED
 }
 
-public enum Equipment_Classification
-{
+public enum Equipment_Classification {
+
 	HEAD = 0,
 	TORSO,
 	LEGS,
@@ -41,22 +41,22 @@ public enum Equipment_Classification
 	FLIGHT
 }
 
-public enum Item_Owner
-{
+public enum Item_Owner {
+
 	NPC = 0,
 	PLAYER,
 	NONE
 }
 
-public enum Damage_Type
-{
+public enum Damage_Type {
+
 	PHYSICAL = 0,
 	MAGIC,
 	PURE
 }
 
-public enum Char_Stat
-{
+public enum Char_Stat {
+
 	ARMOR = 0, // Resistance to physical
 	RESI, // Resistance to magic
 	HP, // Total health modifier
@@ -65,15 +65,22 @@ public enum Char_Stat
 	REG // HP Regen per second
 }
 
-public enum Stat_Modifier_Type
-{
+public enum Stat_Modifier_Type {
+
 	PRODUCT = 0,
 	SUM
 }
 
-public enum Inventory_Category
-{
+public enum Inventory_Category {
+
 	WEAPON = 0,
 	ITEM,
 	EQUIPMENT
+}
+
+public enum Model_Section {
+
+	VERTS = 0,
+	COLS,
+	TRIS
 }

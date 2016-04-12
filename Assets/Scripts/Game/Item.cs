@@ -2,203 +2,182 @@
 using System;
 using System.Collections;
 
-public class Item : MonoBehaviour
-{
-	internal Item_Template m_Template = null;
-	public Item_Template Template
-	{
-		get
-		{
-			return m_Template;
+public class Item : MonoBehaviour {
+
+	public MeshFilter filter;
+
+	private Item_Template m_template = null;
+
+	private bool m_is_being_used = false;
+	private bool m_usage_queued = false;
+
+	public Item_Template template {
+
+		get {
+
+			return m_template;
 		}
-		internal set
-		{
-			m_Template.owner = gameObject;
-			m_Template.item = this;
+		internal set {
+
+			m_template.owner = gameObject;
+			m_template.item = this;
 		}
 	}
 
-	internal MeshFilter Filter;
+	public bool is_being_used {
 
-	internal bool BeingUsed = false;
-	internal bool UsageQueued = false;
+		get {
+
+			return m_is_being_used;
+		}
+		internal set {
+
+			m_is_being_used = value;
+		}
+	}
 
 	#region Ownership
-	
-	internal NPC m_NPCOwner = null;
-	internal PlayerController m_PlayerOwner = null;
-	
 
-	public NPC NPCOwner
-	{
-		get
-		{
-			return m_NPCOwner;
+	private NPC m_NPC_owner = null;
+	private Player_Controller m_player_owner = null;
+
+
+	public NPC NPC_owner {
+
+		get {
+
+			return m_NPC_owner;
+		}
+		internal set {
+
+			m_NPC_owner = value;
 		}
 	}
 
-	public PlayerController PlayerOwner
-	{
-		get
-		{
-			return m_PlayerOwner;
+	public Player_Controller player_owner {
+
+		get {
+
+			return m_player_owner;
+		}
+		internal set {
+
+			m_player_owner = value;
 		}
 	}
 
-	public Item_Owner Ownership
-	{
-		get
-		{
-			return (m_NPCOwner == null ? (m_PlayerOwner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
+	public Item_Owner ownership {
+
+		get {
+
+			return (NPC_owner == null ? (player_owner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
 		}
 	}
 
-	internal void SetOwner(PlayerController player)
-	{
-		m_NPCOwner = null;
-		m_PlayerOwner = player;
+	internal void set_owner(Player_Controller player) {
+
+		NPC_owner = null;
+		player_owner = player;
 	}
 
-	internal void SetOwner(NPC npc)
-	{
-		m_PlayerOwner = null;
-		m_NPCOwner = npc;
+	internal void set_owner(NPC npc) {
+
+		player_owner = null;
+		NPC_owner = npc;
 	}
 
 	#endregion
 
-	void Start()
-	{
-		Filter = GetComponent<MeshFilter>();
-		Template.spanwed();
+	void Start() {
+
+		filter = GetComponent<MeshFilter>();
+		template.spanwed();
 	}
 
-	void Update()
-	{
-		Template.exists_update();
+	void Update() {
 
-		switch (Ownership)
-		{
+		template.exists_update();
+
+		switch (ownership) {
 			case Item_Owner.NPC:
 
-				Template.passive_update(m_NPCOwner);
-
-				/* Items can no longer be used.
-				if (BeingUsed && Template.IsReady() && Template.AICanUseOnTarget(m_NPCOwner, (Entity)m_NPCTarget))
-				{
-					Template.ActiveUpdate(m_NPCOwner);
-
-					if (Template.IsFinished())
-					{
-						Template.End(m_NPCOwner);
-						BeingUsed = false;
-					}
-				}
-				else if (UsageQueued && Template.AICanUseOnTarget(m_NPCOwner, (Entity)m_NPCTarget))
-				{
-					Template.Start(m_NPCOwner);
-					BeingUsed = true;
-					UsageQueued = false;
-				}
-				*/
+				template.passive_update(NPC_owner);
 
 				break;
 			case Item_Owner.PLAYER:
 
-				Template.passive_update(m_PlayerOwner);
-
-				/* Items can no longer be used.
-				if (BeingUsed && Template.IsReady())
-				{
-					Template.ActiveUpdate(m_PlayerOwner);
-
-					if (Template.IsFinished())
-					{
-						Template.End(m_PlayerOwner);
-						BeingUsed = false;
-					}
-				}
-				else if (UsageQueued)
-				{
-					Template.Start(m_PlayerOwner);
-					BeingUsed = true;
-					UsageQueued = false;
-				}
-				*/
+				template.passive_update(player_owner);
 
 				break;
 		}
 	}
 
-	void FixedUpdate()
-	{
-		Template.FixedUpdate();
+	void FixedUpdate() {
+
+		template.fixed_update();
 	}
 
-	void LateUpdate()
-	{
-		Template.LateUpdate();
+	void LateUpdate() {
+
+		template.late_update();
 	}
 
-	public void Use()
-	{
-		if (Ownership == Item_Owner.NONE)
-		{
+	public void use() {
+
+		if (ownership == Item_Owner.NONE) {
+
 			Debug.LogError("Cannot use item because no owner was assigned before the event was complete.", this);
 			return;
 		}
-		UsageQueued = true;
+
+		m_usage_queued = true;
 	}
 
-	public void PickUp()
-	{
-		switch (Ownership)
-		{
+	public void pickup() {
+
+		switch (ownership) {
+
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot pick up item because no owner was assigned before the event was completed.", this);
+
 				break;
 			case Item_Owner.NPC:
-				Template.PickedUp(m_NPCOwner);
+
+				template.picked_up(NPC_owner);
+
 				break;
 			case Item_Owner.PLAYER:
-				Template.PickedUp(m_PlayerOwner);
+				template.picked_up(player_owner);
 				break;
 		}
 	}
 
-	public void Drop()
-	{
-		switch (Ownership)
-		{
+	public void drop() {
+
+		switch (ownership) {
+
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot drop item as no NPC or Player owns this item.", this);
+
 				break;
 			case Item_Owner.NPC:
-				Template.Dropped(m_NPCOwner);
+
+				template.dropped(NPC_owner);
+
 				break;
 			case Item_Owner.PLAYER:
-				Template.Dropped(m_PlayerOwner);
+
+				template.dropped(player_owner);
+
 				break;
 		}
 	}
 
-	/* Items can no longer be used.
-	public void Inturrupt()
-	{
-		Template.Inturrupt();
-	}
-	*/
+	public void assign_template(Item_Template template, MeshFilter model) {
 
-	/* Items can no longer be added to hotbar.
-	public void AddToHotBar(int slot)
-	{
-		Template.AddedToHotBar(slot);
-	}
-	*/
-
-	public void AssignTemplate(Item_Template itemTemplate, MeshFilter model)
-	{
-		Template = itemTemplate;
-		Filter.mesh = model.sharedMesh;
+		this.template = template;
+		filter.mesh = model.sharedMesh;
 	}
 }

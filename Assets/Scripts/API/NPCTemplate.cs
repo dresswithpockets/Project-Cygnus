@@ -1,88 +1,64 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class NPCTemplate {
+public abstract class NPC_Template {
 
-	internal GameObject m_Owner;
-	public GameObject Owner
-	{
-		get
-		{
-			return m_Owner;
+	private GameObject m_owner;
+	public GameObject owner {
+
+		get {
+
+			return m_owner;
+		}
+		internal set {
+
+			m_owner = value;
 		}
 	}
 
-	internal NPC m_NPC;
-	public NPC NPC
-	{
-		get
-		{
+	private NPC m_NPC;
+	public NPC NPC {
+		get {
+
 			return m_NPC;
 		}
+		internal set {
+
+			m_NPC = value;
+		}
 	}
 
-	public abstract string NPCName
-	{
-		get;
+	public abstract string name { get; }
+
+	public abstract string description { get; }
+
+	public abstract int current_hp { get; }
+
+	public abstract int current_max_hp { get; }
+
+	public abstract bool use_default_hp_bar { get; }
+
+	public abstract CharacterController character { get; }
+
+	public virtual void spawned() { }
+
+	public virtual void died(GameObject attacker) { }
+
+	public virtual void update() { }
+
+	public virtual void fixed_update() { }
+
+	public virtual void late_update() { }
+
+	public virtual void do_damage(Damage damage) { }
+
+	public virtual void goto_pos(Vector3 location, bool pathfind = true) {
+
+		// TODO: Implement default pathfind and goto features for AI.
 	}
 
-	public abstract string NPCDescription
-	{
-		get;
-	}
+	public virtual void follow(Transform target, bool pathfind = true) {
 
-	public abstract int CurrentHealth
-	{
-		get;
-	}
-
-	public abstract int CurrentMaxHealth
-	{
-		get;
-	}
-
-	public abstract bool DisplayDefaultHealthbar
-	{
-		get;
-	}
-
-	public abstract CharacterController Character
-	{
-		get;
-	}
-
-	public virtual void Spawned()
-	{
-
-	}
-
-	public virtual void Died(GameObject attacker)
-	{
-
-	}
-
-	public virtual void Update()
-	{
-
-	}
-
-	public virtual void FixedUpdate()
-	{
-
-	}
-
-	public virtual void LateUpdate()
-	{
-
-	}
-
-	public virtual void DoDamage(Damage damage)
-	{
-
-	}
-
-	public virtual void Goto(Vector3 location, bool pathfind = true)
-	{
-		//TODO: Implement default pathfind and goto functions.
+		// TODO: implement default pathfind and follow-target features for AI.
 	}
 }

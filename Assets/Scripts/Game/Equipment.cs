@@ -3,151 +3,160 @@ using System.Collections;
 
 public class Equipment : MonoBehaviour {
 
-	internal Equipment_Template m_Template = null;
-	public Equipment_Template Template
-	{
-		get
-		{
-			return m_Template;
+	private Equipment_Template m_template = null;
+	public Equipment_Template template {
+
+		get {
+
+			return m_template;
 		}
-		internal set
-		{
-			m_Template.owner = gameObject;
-			m_Template.equipment_object = this;
+		internal set {
+
+			m_template.owner = gameObject;
+			m_template.equipment_object = this;
 		}
 	}
 
-	internal MeshFilter Filter;
+	internal MeshFilter filter;
 
 	#region Ownership
-	
-	internal NPC m_NPCOwner = null;
-	internal PlayerController m_PlayerOwner = null;
-	
-	public NPC NPCOwner
-	{
-		get
-		{
-			return m_NPCOwner;
+
+	internal NPC m_NPC_owner = null;
+	internal Player_Controller m_player_owner = null;
+
+	public NPC NPC_owner {
+
+		get {
+
+			return m_NPC_owner;
 		}
 	}
 
-	public PlayerController PlayerOwner
-	{
-		get
-		{
-			return m_PlayerOwner;
+	public Player_Controller player_owner {
+
+		get {
+
+			return m_player_owner;
 		}
 	}
 
-	public Item_Owner Ownership
-	{
-		get
-		{
-			return (m_NPCOwner == null ? (m_PlayerOwner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
+	public Item_Owner ownership {
+
+		get {
+
+			return (m_NPC_owner == null ? (m_player_owner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
 		}
 	}
 
-	internal void SetOwner(PlayerController player)
-	{
-		m_NPCOwner = null;
-		m_PlayerOwner = player;
+	internal void set_owner(Player_Controller player) {
+
+		m_NPC_owner = null;
+		m_player_owner = player;
 	}
 
-	internal void SetOwner(NPC npc)
-	{
-		m_PlayerOwner = null;
-		m_NPCOwner = npc;
+	internal void set_owner(NPC npc) {
+		m_player_owner = null;
+		m_NPC_owner = npc;
 	}
 
 	#endregion
 
-	void Start()
-	{
-		Filter = GetComponent<MeshFilter>();
-		Template.spawned();
+	void Start() {
+
+		filter = GetComponent<MeshFilter>();
+		template.spawned();
 	}
 
-	void Update()
-	{
-		Template.exists_update();
+	void Update() {
 
-		switch (Ownership)
-		{
+		template.exists_update();
+
+		switch (ownership) {
 			case Item_Owner.NPC:
 
-				Template.passive_update(m_NPCOwner);
+				template.passive_update(m_NPC_owner);
 
 				break;
 			case Item_Owner.PLAYER:
 
-				Template.passive_update(m_PlayerOwner);
+				template.passive_update(m_player_owner);
 
 				break;
 		}
 	}
 
-	void FixedUpdate()
-	{
-		Template.fixed_update();
+	void FixedUpdate() {
+
+		template.fixed_update();
 	}
 
-	void LateUpdate()
-	{
-		Template.late_update();
+	void LateUpdate() {
+		template.late_update();
 	}
 
-	public void PickUp()
-	{
-		switch (Ownership)
-		{
+	public void pick_up() {
+
+		switch (ownership) {
+
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot pick up weapon because no owner was assigned before the event was completed.", this);
+
 				break;
 			case Item_Owner.NPC:
-				Template.picked_up(m_NPCOwner);
+
+				template.picked_up(m_NPC_owner);
+
 				break;
 			case Item_Owner.PLAYER:
-				Template.picked_up(m_PlayerOwner);
+
+				template.picked_up(m_player_owner);
+
 				break;
 		}
 	}
 
-	public void Drop()
-	{
-		switch (Ownership)
-		{
+	public void drop() {
+
+		switch (ownership) {
+
 			case Item_Owner.NONE:
 				Debug.LogError("Cannot drop weapon as no NPC or Player owns this item.", this);
 				break;
 			case Item_Owner.NPC:
-				Template.dropped(m_NPCOwner);
+				template.dropped(m_NPC_owner);
 				break;
 			case Item_Owner.PLAYER:
-				Template.dropped(m_PlayerOwner);
+				template.dropped(m_player_owner);
 				break;
 		}
 	}
 
-	public void Equip(int slot)
-	{
-		switch (Ownership)
-		{
+	public void equip(int slot) {
+
+		switch (ownership) {
+
 			case Item_Owner.NONE:
+
 				Debug.LogError("Cannot equip weapon as no NPC or Player owns this item.", this);
+
 				break;
 			case Item_Owner.NPC:
-				Template.equipped(m_NPCOwner, slot);
+
+				template.equipped(m_NPC_owner, slot);
+
 				break;
 			case Item_Owner.PLAYER:
-				Template.equipped(m_PlayerOwner, slot);
+
+				template.equipped(m_player_owner, slot);
+
 				break;
 		}
 	}
 
-	public void AssignTemplate(Equipment_Template equipmentTemplate, MeshFilter model)
-	{
-		Template = equipmentTemplate;
-		Filter.mesh = model.sharedMesh;
+	public void assign_template(Equipment_Template template, MeshFilter model) {
+
+		this.template = template;
+		filter.mesh = model.sharedMesh;
 	}
 }

@@ -4,133 +4,75 @@ using System.Collections;
 
 public abstract class Weapon_Template {
 
-	internal GameObject m_Owner;
-	public GameObject Owner
-	{
-		get
-		{
-			return m_Owner;
+	private GameObject m_owner;
+	public GameObject owner {
+
+		get {
+
+			return owner;
 		}
-	}
-	
-	internal Weapon m_Weapon;
-	public Weapon Weapon
-	{
-		get
-		{
-			return m_Weapon;
+		internal set {
+
+			m_owner = value;
 		}
 	}
 
-	public abstract string WeaponName
-	{
-		get;
+	private Weapon m_weapon;
+	public Weapon weapon {
+
+		get {
+
+			return m_weapon;
+		}
+		internal set {
+
+			m_weapon = value;
+		}
 	}
 
-	public abstract string WeaponDescription
-	{
-		get;
-	}
+	public abstract string name { get; }
 
-	public abstract bool UsedByAI
-	{
-		get;
-	}
+	public abstract string description { get; }
 
-	public abstract Weapon_Classification Classification
-	{
-		get;
-	}
+	public abstract bool used_by_AI { get; }
 
-	public abstract Weapon_Handiness Handiness
-	{
-		get;
-	}
+	public abstract Weapon_Classification classification { get; }
 
-	public abstract List<StatModifier> EquippedStatModifiers
-	{
-		get;
-	}
+	public abstract Weapon_Handiness handiness { get; }
 
-	public abstract string ModelID
-	{
-		get;
-	}
+	public abstract List<Stat_Modifier> stat_mods { get; }
 
-	public virtual void Spawned()
-	{
+	public abstract string model_ID { get; }
 
-	}
+	public virtual void spawned() { }
 
-	public virtual void Used(PlayerController player)
-	{
+	public virtual void used(Player_Controller player) { }
 
-	}
+	public virtual void used(NPC npc) { }
 
-	public virtual void Used(NPC npc)
-	{
+	public virtual void exists_update() { }
 
-	}
+	public virtual void passive_update(Player_Controller player) { }
 
-	public virtual void ExistsUpdate()
-	{
+	public virtual void passive_update(NPC npc) { }
 
-	}
+	public virtual void fixed_update() { }
 
-	public virtual void PassiveUpdate(PlayerController player)
-	{
+	public virtual void late_update() { }
 
-	}
+	public virtual void picked_up(Player_Controller player) { }
 
-	public virtual void PassiveUpdate(NPC npc)
-	{
+	public virtual void picked_up(NPC npc) { }
 
-	}
+	public virtual void dropped(Player_Controller player) { }
 
-	public virtual void FixedUpdate()
-	{
+	public virtual void dropped(NPC npc) { }
 
-	}
+	public virtual void equipped(Player_Controller player, int slot) { }
 
-	public virtual void LateUpdate()
-	{
+	public virtual void equipped(NPC npc, int slot) { }
 
-	}
-
-	public virtual void PickedUp(PlayerController player)
-	{
-
-	}
-
-	public virtual void PickedUp(NPC npc)
-	{
-
-	}
-
-	public virtual void Dropped(PlayerController player)
-	{
-
-	}
-
-	public virtual void Dropped(NPC npc)
-	{
-
-	}
-
-	public virtual void Equipped(PlayerController player, int slot)
-	{
-
-	}
-
-	public virtual void Equipped(NPC npc, int slot)
-	{
-
-	}
-
-	//Used for AI, only called if the AI in question has a target and the item can be used by AI
-	//See: UsedByAI
-	public virtual bool AICanUseOnTarget(NPC npc, Entity target)
-	{
-		return false;
-	}
+	// Used for AI, only called if the AI in question has a target and the item can be used by AI
+	// @See UsedByAI
+	public virtual bool AI_can_use_on_target(NPC npc, Entity target) { return false; }
 }
