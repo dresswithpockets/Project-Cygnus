@@ -74,8 +74,9 @@ public enum Stat_Modifier_Type {
 public enum Inventory_Category {
 
 	WEAPON = 0,
-	ITEM,
-	EQUIPMENT
+	EQUIPMENT,
+	CONSUMABLE,
+	PET_ITEM
 }
 
 public enum Model_Section {
