@@ -296,7 +296,7 @@ public class PlayerController : MonoBehaviour
 		float dmgMult = 1f;
 		switch (damage.damageType)
 		{
-			case DamageType.Magic:
+			case Damage_Type.MAGIC:
 				if (MagicResistance > 0f || Mathf.Approximately(MagicResistance, 0f))
 				{
 					dmgMult = 100 / (100 + MagicResistance);
@@ -306,7 +306,7 @@ public class PlayerController : MonoBehaviour
 					dmgMult = 2f - (100 / (100 - MagicResistance));
 				}
 				break;
-			case DamageType.Physical:
+			case Damage_Type.PHYSICAL:
 				if (Armor > 0f || Mathf.Approximately(Armor, 0f))
 				{
 					dmgMult = 100 / (100 + Armor);
@@ -328,24 +328,24 @@ public class PlayerController : MonoBehaviour
 
 	public void Kill(Entity killer)
 	{
-		DoDamage(new Damage(Health + 1f, killer, DamageType.Pure));// +1 ensures that the damage done is more than the health the player has.
+		DoDamage(new Damage(Health + 1f, killer, Damage_Type.PURE));// +1 ensures that the damage done is more than the health the player has.
 	}
 
-	public float GetStat(Stat stat)
+	public float GetStat(Char_Stat stat)
 	{
 		switch (stat)
 		{
-			case Stat.Armor:
+			case Char_Stat.ARMOR:
 				return Armor;
-			case Stat.Crit:
+			case Char_Stat.CRIT:
 				return CritChance;
-			case Stat.HP:
+			case Char_Stat.HP:
 				return MaxHealth;
-			case Stat.Reg:
+			case Char_Stat.REG:
 				return HealthRegen;
-			case Stat.Resi:
+			case Char_Stat.RESI:
 				return MagicResistance;
-			case Stat.Tempo:
+			case Char_Stat.TEMPO:
 				return AttackTempo;
 		}
 

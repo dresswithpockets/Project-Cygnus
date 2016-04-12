@@ -3,8 +3,8 @@ using System.Collections;
 
 public class Equipment : MonoBehaviour {
 
-	internal EquipmentTemplate m_Template = null;
-	public EquipmentTemplate Template
+	internal Equipment_Template m_Template = null;
+	public Equipment_Template Template
 	{
 		get
 		{
@@ -12,8 +12,8 @@ public class Equipment : MonoBehaviour {
 		}
 		internal set
 		{
-			m_Template.m_Owner = gameObject;
-			m_Template.m_Equipment = this;
+			m_Template.owner = gameObject;
+			m_Template.equipment_object = this;
 		}
 	}
 
@@ -40,11 +40,11 @@ public class Equipment : MonoBehaviour {
 		}
 	}
 
-	public ItemOwner Ownership
+	public Item_Owner Ownership
 	{
 		get
 		{
-			return (m_NPCOwner == null ? (m_PlayerOwner == null ? ItemOwner.None : ItemOwner.Player) : ItemOwner.NPC);
+			return (m_NPCOwner == null ? (m_PlayerOwner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
 		}
 	}
 
@@ -65,23 +65,23 @@ public class Equipment : MonoBehaviour {
 	void Start()
 	{
 		Filter = GetComponent<MeshFilter>();
-		Template.Spawned();
+		Template.spawned();
 	}
 
 	void Update()
 	{
-		Template.ExistsUpdate();
+		Template.exists_update();
 
 		switch (Ownership)
 		{
-			case ItemOwner.NPC:
+			case Item_Owner.NPC:
 
-				Template.PassiveUpdate(m_NPCOwner);
+				Template.passive_update(m_NPCOwner);
 
 				break;
-			case ItemOwner.Player:
+			case Item_Owner.PLAYER:
 
-				Template.PassiveUpdate(m_PlayerOwner);
+				Template.passive_update(m_PlayerOwner);
 
 				break;
 		}
@@ -89,26 +89,26 @@ public class Equipment : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		Template.FixedUpdate();
+		Template.fixed_update();
 	}
 
 	void LateUpdate()
 	{
-		Template.LateUpdate();
+		Template.late_update();
 	}
 
 	public void PickUp()
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot pick up weapon because no owner was assigned before the event was completed.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.PickedUp(m_NPCOwner);
+			case Item_Owner.NPC:
+				Template.picked_up(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
-				Template.PickedUp(m_PlayerOwner);
+			case Item_Owner.PLAYER:
+				Template.picked_up(m_PlayerOwner);
 				break;
 		}
 	}
@@ -117,14 +117,14 @@ public class Equipment : MonoBehaviour {
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot drop weapon as no NPC or Player owns this item.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.Dropped(m_NPCOwner);
+			case Item_Owner.NPC:
+				Template.dropped(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
-				Template.Dropped(m_PlayerOwner);
+			case Item_Owner.PLAYER:
+				Template.dropped(m_PlayerOwner);
 				break;
 		}
 	}
@@ -133,19 +133,19 @@ public class Equipment : MonoBehaviour {
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot equip weapon as no NPC or Player owns this item.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.Equipped(m_NPCOwner, slot);
+			case Item_Owner.NPC:
+				Template.equipped(m_NPCOwner, slot);
 				break;
-			case ItemOwner.Player:
-				Template.Equipped(m_PlayerOwner, slot);
+			case Item_Owner.PLAYER:
+				Template.equipped(m_PlayerOwner, slot);
 				break;
 		}
 	}
 
-	public void AssignTemplate(EquipmentTemplate equipmentTemplate, MeshFilter model)
+	public void AssignTemplate(Equipment_Template equipmentTemplate, MeshFilter model)
 	{
 		Template = equipmentTemplate;
 		Filter.mesh = model.sharedMesh;

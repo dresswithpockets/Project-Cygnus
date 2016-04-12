@@ -4,21 +4,21 @@ using System.Collections;
 public class Weapon : MonoBehaviour
 {
 
-	internal WeaponTemplate m_Template = null;
-	public WeaponTemplate Template
+	internal Weapon_Template m_template = null;
+	public Weapon_Template template
 	{
 		get
 		{
-			return m_Template;
+			return m_template;
 		}
 		internal set
 		{
-			m_Template.m_Owner = gameObject;
-			m_Template.m_Weapon = this;
+			m_template.m_Owner = gameObject;
+			m_template.m_Weapon = this;
 		}
 	}
 
-	internal MeshFilter Filter;
+	internal MeshFilter mesh_fliter;
 
 	internal bool BeingUsed = false;
 	internal bool UsageQueued = false;
@@ -53,11 +53,11 @@ public class Weapon : MonoBehaviour
 		}
 	}
 
-	public ItemOwner Ownership
+	public Item_Owner Ownership
 	{
 		get
 		{
-			return (m_NPCOwner == null ? (m_PlayerOwner == null ? ItemOwner.None : ItemOwner.Player) : ItemOwner.NPC);
+			return (m_NPCOwner == null ? (m_PlayerOwner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
 		}
 	}
 
@@ -88,24 +88,24 @@ public class Weapon : MonoBehaviour
 	
 	void Start()
 	{
-		Filter = GetComponent<MeshFilter>();
-		Template.Spawned();
+		mesh_fliter = GetComponent<MeshFilter>();
+		template.Spawned();
 	}
 
 	void Update()
 	{
-		Template.ExistsUpdate();
+		template.ExistsUpdate();
 
 		switch (Ownership)
 		{
-			case ItemOwner.NPC:
+			case Item_Owner.NPC:
 
-				Template.PassiveUpdate(m_NPCOwner);
+				template.PassiveUpdate(m_NPCOwner);
 
 				break;
-			case ItemOwner.Player:
+			case Item_Owner.PLAYER:
 
-				Template.PassiveUpdate(m_PlayerOwner);
+				template.PassiveUpdate(m_PlayerOwner);
 
 				break;
 		}
@@ -113,26 +113,26 @@ public class Weapon : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		Template.FixedUpdate();
+		template.FixedUpdate();
 	}
 
 	void LateUpdate()
 	{
-		Template.LateUpdate();
+		template.LateUpdate();
 	}
 
 	void Use()
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot use weapon because no owner was assigned before the event was completed.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.Used(m_NPCOwner);
+			case Item_Owner.NPC:
+				template.Used(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
-				Template.Used(m_PlayerOwner);
+			case Item_Owner.PLAYER:
+				template.Used(m_PlayerOwner);
 				break;
 		}
 	}
@@ -141,14 +141,14 @@ public class Weapon : MonoBehaviour
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot pick up weapon because no owner was assigned before the event was completed.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.PickedUp(m_NPCOwner);
+			case Item_Owner.NPC:
+				template.PickedUp(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
-				Template.PickedUp(m_PlayerOwner);
+			case Item_Owner.PLAYER:
+				template.PickedUp(m_PlayerOwner);
 				break;
 		}
 	}
@@ -157,14 +157,14 @@ public class Weapon : MonoBehaviour
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot drop weapon as no NPC or Player owns this item.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.Dropped(m_NPCOwner);
+			case Item_Owner.NPC:
+				template.Dropped(m_NPCOwner);
 				break;
-			case ItemOwner.Player:
-				Template.Dropped(m_PlayerOwner);
+			case Item_Owner.PLAYER:
+				template.Dropped(m_PlayerOwner);
 				break;
 		}
 	}
@@ -173,37 +173,37 @@ public class Weapon : MonoBehaviour
 	{
 		switch (Ownership)
 		{
-			case ItemOwner.None:
+			case Item_Owner.NONE:
 				Debug.LogError("Cannot equip weapon as no NPC or Player owns this item.", this);
 				break;
-			case ItemOwner.NPC:
-				Template.Equipped(m_NPCOwner, slot);
+			case Item_Owner.NPC:
+				template.Equipped(m_NPCOwner, slot);
 				break;
-			case ItemOwner.Player:
-				Template.Equipped(m_PlayerOwner, slot);
+			case Item_Owner.PLAYER:
+				template.Equipped(m_PlayerOwner, slot);
 				break;
 		}
 	}
 
 	public void OnTriggerEnter(Collider other)
 	{
-		if (Template.MeleeInUse())
+		if (template.MeleeInUse())
 		{
 			switch (other.tag)
 			{
 				case "Player":
-					Template.MeleeAttackHit(m_PlayerOwner, (Entity)other.gameObject);
+					template.MeleeAttackHit(m_PlayerOwner, (Entity)other.gameObject);
 					break;
 				case "NPC":
-					Template.MeleeAttackHit(m_NPCOwner, (Entity)other.gameObject);
+					template.MeleeAttackHit(m_NPCOwner, (Entity)other.gameObject);
 					break;
 			}
 		}
 	}
 
-	public void AssignTemplate(WeaponTemplate weaponTemplate, MeshFilter model)
+	public void AssignTemplate(Weapon_Template weaponTemplate, MeshFilter model)
 	{
-		Template = weaponTemplate;
-		Filter.mesh = model.sharedMesh;
+		template = weaponTemplate;
+		mesh_fliter.mesh = model.sharedMesh;
 	}
 }

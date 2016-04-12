@@ -1,79 +1,79 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum AbilityTier
+public enum Ability_Tier
 {
-	Basic,
-	Intermediate,
-	Advanced
+	BASIC = 0,
+	INTERMEDIATE,
+	ADVANCED
 }
 
-public enum ItemClassification
+public enum Item_Classification
 {
-	Consumable,
-	Material
+	CONSUMABLE = 0,
+	MATERIAL
+}
+	
+public enum Weapon_Classification
+{
+	MELEE = 0,
+	RANGED_PROJECTILE,
+	RANGED_HITSCAN
 }
 
-public enum WeaponClassification
+public enum Weapon_Handiness
 {
-	Melee,
-	RangedProjectile,
-	RangedHitscan
+	ONE_HANDED = 0,
+	TWO_HANDED
 }
 
-public enum WeaponHandiness
+public enum Equipment_Classification
 {
-	OneHanded,
-	TwoHanded
+	HEAD = 0,
+	TORSO,
+	LEGS,
+	SHOULDERS,
+	HANDS,
+	FEET,
+	NECK,
+	PET,
+	BOAT,
+	FLIGHT
 }
 
-public enum EquipmentClassification
+public enum Item_Owner
 {
-	Head,
-	Torso,
-	Legs,
-	Shoulders,
-	Hands,
-	Feet,
-	Neck,
-	Pet,
-	Boat,
-	Flight
+	NPC = 0,
+	PLAYER,
+	NONE
 }
 
-public enum ItemOwner
+public enum Damage_Type
 {
-	NPC,
-	Player,
-	None
+	PHYSICAL = 0,
+	MAGIC,
+	PURE
 }
 
-public enum DamageType
+public enum Char_Stat
 {
-	Physical,
-	Magic,
-	Pure
-}
-
-public enum Stat
-{
-	Armor, // Resistance to physical
-	Resi, // Resistance to magic
+	ARMOR = 0, // Resistance to physical
+	RESI, // Resistance to magic
 	HP, // Total health modifier
-	Crit, // Chance of getting a crit hit. Percentage
-	Tempo, // Speed multiplier for attacks. Percentage
-	Reg // HP Regen per second
+	CRIT, // Chance of getting a crit hit. Percentage
+	TEMPO, // Speed multiplier for attacks. Percentage
+	REG // HP Regen per second
 }
 
-public enum StatModifierType
+public enum Stat_Modifier_Type
 {
-	Product,
-	Sum
+	PRODUCT = 0,
+	SUM
 }
 
-public enum InventoryCategory
+public enum Inventory_Category
 {
-	Weapon,
-	Item,
-	Equipment
+	WEAPON = 0,
+	ITEM,
+	EQUIPMENT
 }

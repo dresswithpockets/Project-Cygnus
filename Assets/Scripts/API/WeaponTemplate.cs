@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections;
 
-public abstract class WeaponTemplate {
+public abstract class Weapon_Template {
 
 	internal GameObject m_Owner;
 	public GameObject Owner
@@ -37,12 +37,12 @@ public abstract class WeaponTemplate {
 		get;
 	}
 
-	public abstract WeaponClassification Classification
+	public abstract Weapon_Classification Classification
 	{
 		get;
 	}
 
-	public abstract WeaponHandiness Handiness
+	public abstract Weapon_Handiness Handiness
 	{
 		get;
 	}
@@ -125,21 +125,6 @@ public abstract class WeaponTemplate {
 	public virtual void Equipped(NPC npc, int slot)
 	{
 
-	}
-
-	public virtual void MeleeAttackHit(PlayerController player, Entity other)
-	{
-
-	}
-
-	public virtual void MeleeAttackHit(NPC npc, Entity other)
-	{
-
-	}
-
-	public virtual bool MeleeInUse()
-	{
-		return false;
 	}
 
 	//Used for AI, only called if the AI in question has a target and the item can be used by AI

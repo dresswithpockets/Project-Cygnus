@@ -3,7 +3,7 @@ using System.Collections;
 
 public struct StatModifier
 {
-	public Stat modifiedStat;
-	public StatModifierType modifierType;
+	public Char_Stat modifiedStat;
+	public Stat_Modifier_Type modifierType;
 	public float amount;
 }
