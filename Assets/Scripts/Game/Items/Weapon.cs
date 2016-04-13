@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Weapon : MonoBehaviour {
+public sealed class Weapon : MonoBehaviour {
 	private Weapon_Template m_template = null;
 	private MeshFilter m_filter;
 
@@ -13,7 +13,8 @@ public class Weapon : MonoBehaviour {
 		}
 		internal set {
 
-			m_template.owner = gameObject;
+			m_template = value;
+			m_template.game_object = gameObject;
 			m_template.weapon_object = this;
 		}
 	}
@@ -50,6 +51,10 @@ public class Weapon : MonoBehaviour {
 
 			return m_NPC_owner;
 		}
+		internal set {
+
+			m_NPC_owner = value;
+		}
 	}
 
 	public Player_Controller player_owner {
@@ -57,6 +62,10 @@ public class Weapon : MonoBehaviour {
 		get {
 
 			return m_player_owner;
+		}
+		internal set {
+
+			m_player_owner = value;
 		}
 	}
 
@@ -100,6 +109,12 @@ public class Weapon : MonoBehaviour {
 		}
 
 		m_NPC_target = target;
+	}
+
+	internal void drop_owner() {
+
+		player_owner = null;
+		NPC_owner = null;
 	}
 
 	#endregion
@@ -158,7 +173,7 @@ public class Weapon : MonoBehaviour {
 		}
 	}
 
-	public void pickup() {
+	public void pick_up() {
 
 		switch (ownership) {
 			case Item_Owner.NONE:
@@ -222,6 +237,8 @@ public class Weapon : MonoBehaviour {
 	public void assign_template(Weapon_Template template, MeshFilter model) {
 
 		this.template = template;
-		filter.mesh = model.sharedMesh;
+		if (model != null) {
+			filter.mesh = model.sharedMesh;
+		}
 	}
 }

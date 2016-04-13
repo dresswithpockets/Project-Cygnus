@@ -2,7 +2,7 @@
 using System;
 using System.Collections;
 
-public class Material : MonoBehaviour {
+public sealed class Material : MonoBehaviour {
 
 	public MeshFilter filter;
 
@@ -16,7 +16,8 @@ public class Material : MonoBehaviour {
 		}
 		internal set {
 
-			m_template.owner = gameObject;
+			m_template = value;
+			m_template.game_object = gameObject;
 			m_template.material_object = this;
 		}
 	}
@@ -71,6 +72,12 @@ public class Material : MonoBehaviour {
 		NPC_owner = npc;
 	}
 
+	internal void drop_owner() {
+
+		player_owner = null;
+		NPC_owner = null;
+	}
+
 	#endregion
 
 	void Start() {
@@ -107,7 +114,7 @@ public class Material : MonoBehaviour {
 		template.late_update();
 	}
 
-	public void pickup() {
+	public void pick_up() {
 
 		switch (ownership) {
 
@@ -152,6 +159,8 @@ public class Material : MonoBehaviour {
 	public void assign_template(Material_Template template, MeshFilter model) {
 
 		this.template = template;
-		filter.mesh = model.sharedMesh;
+		if (model != null) {
+			filter.mesh = model.sharedMesh;
+		}
 	}
 }

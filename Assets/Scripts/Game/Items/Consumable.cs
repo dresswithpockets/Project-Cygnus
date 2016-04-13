@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Consumable : MonoBehaviour {
+public sealed class Consumable : MonoBehaviour {
 
 	public MeshFilter filter;
 
@@ -15,7 +15,8 @@ public class Consumable : MonoBehaviour {
 		}
 		internal set {
 
-			m_template.owner = gameObject;
+			m_template = value;
+			m_template.game_object = gameObject;
 			m_template.consumable_object = this;
 		}
 	}
@@ -70,6 +71,12 @@ public class Consumable : MonoBehaviour {
 		NPC_owner = npc;
 	}
 
+	internal void drop_owner() {
+
+		player_owner = null;
+		NPC_owner = null;
+	}
+
 	#endregion
 
 	void Start() {
@@ -106,7 +113,7 @@ public class Consumable : MonoBehaviour {
 		template.late_update();
 	}
 
-	public void pickup() {
+	public void pick_up() {
 
 		switch (ownership) {
 
@@ -151,6 +158,8 @@ public class Consumable : MonoBehaviour {
 	public void assign_template(Consumable_Template template, MeshFilter model) {
 
 		this.template = template;
-		filter.mesh = model.sharedMesh;
+		if (model != null) {
+			filter.mesh = model.sharedMesh;
+		}
 	}
 }
