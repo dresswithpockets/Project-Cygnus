@@ -205,12 +205,54 @@ public class Player_Controller : MonoBehaviour {
 
 	void Update() {
 		if (is_alive) {
+			update_input();
+
 			update_movement();
 
 			update_rotation();
 		}
 
 		Game_Controller.invoke_player_update();
+	}
+
+	void update_input() {
+
+		if (vp_Input.GetButtonDown("Attack1")) {
+			if (inventory.active_weapon_list[0] != null) {
+				inventory.active_weapon_list[0].template.primary_used(this);
+			}
+
+		}
+		else if (vp_Input.GetButtonDown("Attack2")) {
+			if (inventory.active_weapon_list[0] != null) {
+				inventory.active_weapon_list[0].template.alternate_used(this);
+			}
+
+		}
+		else if (vp_Input.GetButtonDown("Ability1")) {
+			if (inventory.active_ability_list[0] != null) {
+				inventory.active_ability_list[0].active_update(this);
+			}
+
+		}
+		else if (vp_Input.GetButtonDown("Ability2")) {
+			if (inventory.active_ability_list[1] != null) {
+				inventory.active_ability_list[1].active_update(this);
+			}
+
+		}
+		else if (vp_Input.GetButtonDown("Ability3")) {
+			if (inventory.active_ability_list[2] != null) {
+				inventory.active_ability_list[2].active_update(this);
+			}
+
+		}
+		else if (vp_Input.GetButtonDown("Ability4")) {
+			if (inventory.active_ability_list[3] != null) {
+				inventory.active_ability_list[3].active_update(this);
+			}
+
+		}
 	}
 
 	void update_movement() {
