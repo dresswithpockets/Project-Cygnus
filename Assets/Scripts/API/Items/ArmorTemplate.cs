@@ -1,22 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public abstract class Equipment_Template : Item_Template  {
+public abstract class Armor_Template : Item_Template  {
 
-	private Equipment m_equipment_object;
-	public Equipment equipment_object {
+	private Armor m_armor_object;
+	public Armor armor_object {
 
 		get {
 
-			return m_equipment_object;
+			return m_armor_object;
 		}
 		internal set {
 
-			m_equipment_object = value;
+			m_armor_object = value;
 		}
 	}
 
-	public abstract Equipment_Classification classification { get; }
+	public abstract Armor_Class classification { get; }
 
 	public abstract List<Stat_Modifier> stat_mods { get; }
 

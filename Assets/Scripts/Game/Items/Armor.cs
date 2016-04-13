@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Equipment : MonoBehaviour {
+public sealed class Armor : MonoBehaviour {
 
-	private Equipment_Template m_template = null;
-	public Equipment_Template template {
+	private Armor_Template m_template = null;
+	public Armor_Template template {
 
 		get {
 
@@ -12,8 +12,9 @@ public class Equipment : MonoBehaviour {
 		}
 		internal set {
 
-			m_template.owner = gameObject;
-			m_template.equipment_object = this;
+			m_template = value;
+			m_template.game_object = gameObject;
+			m_template.armor_object = this;
 		}
 	}
 
@@ -30,6 +31,10 @@ public class Equipment : MonoBehaviour {
 
 			return m_NPC_owner;
 		}
+		internal set {
+
+			m_NPC_owner = value;
+		}
 	}
 
 	public Player_Controller player_owner {
@@ -37,6 +42,10 @@ public class Equipment : MonoBehaviour {
 		get {
 
 			return m_player_owner;
+		}
+		internal set {
+
+			m_player_owner = value;
 		}
 	}
 
@@ -57,6 +66,12 @@ public class Equipment : MonoBehaviour {
 	internal void set_owner(NPC npc) {
 		m_player_owner = null;
 		m_NPC_owner = npc;
+	}
+
+	internal void drop_owner() {
+
+		player_owner = null;
+		NPC_owner = null;
 	}
 
 	#endregion
@@ -154,9 +169,11 @@ public class Equipment : MonoBehaviour {
 		}
 	}
 
-	public void assign_template(Equipment_Template template, MeshFilter model) {
+	public void assign_template(Armor_Template template, MeshFilter model) {
 
 		this.template = template;
-		filter.mesh = model.sharedMesh;
+		if (model != null) {
+			filter.mesh = model.sharedMesh;
+		}
 	}
 }
