@@ -2,7 +2,7 @@
 using System.Collections;
 
 // an "Item" is the base class for all inventory-able entities.
-// equipment, weapons, materials, consumables, pet foods and pet items all fall under this category.
+// armor, weapons, materials, consumables, pet foods and pet items all fall under this category.
 // entities such as projectiles, NPCs, players, and pets do not fall under this category.
 // however, a pet's inventory representation (pet item) does fall under this category.
 //
@@ -10,16 +10,16 @@ using System.Collections;
 //
 public abstract class Item_Template  {
 
-	private GameObject m_owner;
-	public GameObject owner {
+	private GameObject m_game_object;
+	public GameObject game_object {
 
 		get {
 
-			return m_owner;
+			return m_game_object;
 		}
 		internal set {
 
-			m_owner = value;
+			m_game_object = value;
 		}
 	}
 
@@ -50,4 +50,24 @@ public abstract class Item_Template  {
 	public virtual void dropped(Player_Controller player) { }
 
 	public virtual void dropped(NPC npc) { }
+
+	public bool is_weapon() {
+		return typeof(Weapon_Template) == this.GetType();
+	}
+
+	public bool is_material() {
+		return typeof(Material_Template) == this.GetType();
+	}
+
+	public bool is_pet_item() {
+		return typeof(Pet_Item_Template) == this.GetType();
+	}
+
+	public bool is_armor() {
+		return typeof(Armor_Template) == this.GetType();
+	}
+
+	public bool is_consumable() {
+		return typeof(Consumable_Template) == this.GetType();
+	}
 }

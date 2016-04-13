@@ -4,29 +4,44 @@ using System.Reflection;
 using System.Collections.Generic;
 
 public static class Util {
-	
-	public static string color_to_hex(this Color color) {
+
+	internal static string to_hex(this Color color) {
 
 		string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2") + color.a.ToString("X2");
 		return hex;
 	}
 
-	public static Color hex_to_color(this string hex) {
+	internal static Color to_color(this string hex) {
 
-		byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-		byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-		byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-		if (hex.Length > 6) {
-			return new Color32(r, g, b, byte.Parse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber));
+		try {
+			byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+			byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+			byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+			if (hex.Length > 6) {
+				return new Color(r, g, b, byte.Parse(hex.Substring(6, 2), System.Globalization.NumberStyles.HexNumber));
+			}
+			return new Color(r, g, b, 255);
 		}
-		return new Color32(r, g, b, 255);
+		catch (ArgumentNullException ane) {
+
+			Debug.LogError("Attempted to parse a null string to Color.\n\n ~Exception Below~ \n" + ane.Message);
+			return Color.black;
+		}
+		catch (FormatException fe) {
+			
+			Debug.LogError("Attempted to parse malformed hex string:" + hex + " to Color.\n\n ~Exception Below~ \n" + fe.Message);
+			return Color.black;
+		}
 	}
 
-	public static Type[] get_all_types_with_inheriting_type(this Assembly assembly, Type inheritingType) {
+	internal static Type[] get_all_types_with_inheriting_type(this Assembly assembly, Type inherit_type) {
+
 		List<Type> res = new List<Type>();
 
 		foreach (Type t in assembly.GetTypes()) {
-			if (t.BaseType == inheritingType) {
+
+			if (t.BaseType == inherit_type) {
+
 				res.Add(t);
 			}
 		}
@@ -34,23 +49,48 @@ public static class Util {
 		return res.ToArray();
 	}
 
-	public static bool is_weapon(this Item_Template item) {
-		return typeof(Weapon_Template) == item.GetType();
+	internal static Dictionary<GameObject, Renderer[]> renderer_dict = new Dictionary<GameObject, Renderer[]>();
+
+	// TODO: Figure out a way to hide and show meshes on game items.
+
+	internal static void set_render(this MonoBehaviour mb, bool render) {
+		/*Renderer[] renderers;
+		if (mb.GetComponentsInChildren<Renderer>() == null) {
+			renderers = renderer_dict[mb.gameObject];
+		} else {
+			renderers = mb.GetComponentsInChildren<Renderer>();
+			if (!renderer_dict.ContainsKey(mb.gameObject)) {
+				renderer_dict.Add(mb.gameObject, renderers);
+			}
+		}
+		foreach (Renderer r in renderers) {
+			r.enabled = render;
+		}
+
+		Renderer[] renderers = mb.GetComponentsInChildren<Renderer>(true);
+		foreach (Renderer r in renderers) {
+			r.enabled = render;
+		}*/
 	}
 
-	public static bool is_material(this Item_Template item) {
-		return typeof(Material_Template) == item.GetType();
-	}
+	internal static void set_render(this GameObject go, bool render) {
+		/*Renderer[] renderers;
+		if (go.GetComponentsInChildren<Renderer>() == null) {
+			renderers = renderer_dict[go.gameObject];
+		}
+		else {
+			renderers = go.GetComponentsInChildren<Renderer>();
+			if (!renderer_dict.ContainsKey(go)) {
+				renderer_dict.Add(go, renderers);
+			}
+		}
+		foreach (Renderer r in renderers) {
+			r.enabled = render;
+		}
 
-	public static bool is_pet_item(this Item_Template item) {
-		return typeof(Pet_Item_Template) == item.GetType();
-	}
-
-	public static bool is_equipment(this Item_Template item) {
-		return typeof(Equipment_Template) == item.GetType();
-	}
-
-	public static bool is_consumable(this Item_Template item) {
-		return typeof(Consumable_Template) == item.GetType();
+		Renderer[] renderers = go.GetComponentsInChildren<Renderer>(true);
+		foreach (Renderer r in renderers) {
+			r.enabled = render;
+		}*/
 	}
 }
