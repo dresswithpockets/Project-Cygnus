@@ -5,13 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-public class Game_Controller : MonoBehaviour {
+public sealed class Game_Controller : MonoBehaviour {
 
 	#region Prefabs
 
 	public GameObject material_prefab;
 	public GameObject weapon_prefab;
-	public GameObject equipment_prefab;
+	public GameObject armor_prefab;
 	public GameObject NPC_prefab;
 	public GameObject player_prefab;
 	public GameObject consumable_prefab;
@@ -23,7 +23,7 @@ public class Game_Controller : MonoBehaviour {
 	internal static List<Mod_Template> mod_list = new List<Mod_Template>();
 	internal static List<Player_Event_Template> player_event_list = new List<Player_Event_Template>();
 
-	public static Player_Controller player {
+	public Player_Controller player {
 
 		get {
 
@@ -31,7 +31,7 @@ public class Game_Controller : MonoBehaviour {
 		}
 	}
 
-	public static NPC[] NPC_list {
+	public NPC[] NPC_list {
 
 		get {
 
