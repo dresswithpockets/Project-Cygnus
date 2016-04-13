@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-internal struct Ability_Type {
+public struct Ability_Type {
 	public Type type;
 	public Ability_Tier tier;
 	public int min_player_level;
