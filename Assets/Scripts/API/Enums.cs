@@ -27,18 +27,15 @@ public enum Weapon_Handiness {
 	TWO_HANDED
 }
 
-public enum Equipment_Classification {
+public enum Armor_Class {
 
 	HEAD = 0,
-	TORSO,
-	LEGS,
 	SHOULDERS,
+	TORSO,
 	HANDS,
+	LEGS,
 	FEET,
 	NECK,
-	PET,
-	BOAT,
-	FLIGHT
 }
 
 public enum Item_Owner {
@@ -74,7 +71,7 @@ public enum Stat_Modifier_Type {
 public enum Inventory_Category {
 
 	WEAPON = 0,
-	EQUIPMENT,
+	ARMOR,
 	MATERIAL,
 	CONSUMABLE,
 	PET_ITEM
@@ -85,4 +82,18 @@ public enum Model_Section {
 	VERTS = 0,
 	COLS,
 	TRIS
+}
+
+public enum Weapon_Slot {
+
+	RIGHT_HAND = 0,
+	LEFT_HAND,
+}
+
+public enum Ability_Slot {
+
+	SLOT_1 = 0,
+	SLOT_2,
+	SLOT_3,
+	SLOT_4
 }
