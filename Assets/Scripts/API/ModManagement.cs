@@ -362,6 +362,15 @@ public abstract class Mod_Template {
 				inter_abilities.Add(ID, new Ability_Type(ability, tier, min_player_level));
 				break;
 		}
+
+		Debug.LogError("Couldn't register ability for an unknown reason.");
+	}
+
+	public Ability_Type get_ability(string ability_ID) {
+		if (advanced_ability_dict.ContainsKey(ability_ID)) return advanced_ability_dict[ability_ID];
+		else if (inter_ability_dict.ContainsKey(ability_ID)) return inter_ability_dict[ability_ID];
+		else if (basic_ability_dict.ContainsKey(ability_ID)) return basic_ability_dict[ability_ID];
+		else return new Ability_Type(null, Ability_Tier.BASIC, -1);
 	}
 
 	public Player_Controller get_player() { return Game_Controller.player; }
