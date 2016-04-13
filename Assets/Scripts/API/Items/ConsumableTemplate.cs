@@ -16,11 +16,11 @@ public abstract class Consumable_Template : Item_Template {
 		}
 	}
 
-	public abstract bool pets_can_eat { get; }
+	public abstract bool is_pet_food { get; } // A consumable can either be player/npc food or it can be pet food.
 
 	public virtual void consume(Player_Controller player) { }
 
 	public virtual void consume(NPC npc) { }
 
-	public virtual void consume(Pet_Item_Template pet) { } // TODO: Once Pet_Item MonoBehaviour is implemented, change this param type to Pet_Item.
+	public virtual void consume(Pet_Item pet) { }
 }
