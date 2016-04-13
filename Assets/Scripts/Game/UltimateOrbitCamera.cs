@@ -8,7 +8,7 @@ This class provides significant functionality for orbital cameras.
 using UnityEngine;
 using System.Collections;
 
-public class UltimateOrbitCamera : MonoBehaviour
+public sealed class UltimateOrbitCamera : MonoBehaviour
 {
 
 	public Transform target;
