@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Entity_Controller : MonoBehaviour {
+public sealed class Entity_Controller : MonoBehaviour {
 
 	internal Game_Entity ent = null;
 
