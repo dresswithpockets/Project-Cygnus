@@ -316,7 +316,18 @@ public abstract class Mod_Template {
 		else Debug.LogError("Cannot import template of type " + template.Name + " because it does not inherit one of the abstract templates in CygnusAPI.");
 	}
 
-	public void register_ability(string ID, Type ability, Ability_Tier tier, int min_player_level) {
+	public void register_ability(string ID, Type ability_type, Ability_Tier tier, int min_player_level) {
+
+		if (advanced_ability_dict.ContainsKey(ID) ||
+			inter_ability_dict.ContainsKey(ID) ||
+			basic_ability_dict.ContainsKey(ID)) {
+
+			Debug.LogError("Cannot register ability with ID: " + ID +
+						" because there is already another ability registered with that ID.");
+			return;
+		}
+
+		Debug.Log("Registering ability with ID: " + ID + ", of tier: " + Enum.GetName(typeof(Ability_Tier), tier) + ", with mind level of: " + min_player_level.ToString());
 
 		switch (tier) {
 
