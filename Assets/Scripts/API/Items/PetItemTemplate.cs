@@ -9,8 +9,8 @@ using System.Collections;
 //
 public abstract class Pet_Item_Template : Item_Template {
 
-	private Pet_Item_Template m_pet_item_object;
-	public Pet_Item_Template pet_item_object {
+	private Pet_Item m_pet_item_object;
+	public Pet_Item pet_item_object {
 
 		get {
 
