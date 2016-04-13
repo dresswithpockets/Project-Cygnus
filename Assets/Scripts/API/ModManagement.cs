@@ -28,108 +28,153 @@ public abstract class Mod_Template {
 		}
 	}
 
-	internal Dictionary<string, AudioClip> audio_clips = new Dictionary<string, AudioClip>();
+	internal Dictionary<string, AudioClip> audio_clip_dict = new Dictionary<string, AudioClip>();
 
-	internal Dictionary<string, Type> item_templates = new Dictionary<string, Type>();
-	internal Dictionary<string, Type> weapon_templates = new Dictionary<string, Type>();
-	internal Dictionary<string, Type> equipment_templates = new Dictionary<string, Type>();
-	internal Dictionary<string, Type> consumable_templates = new Dictionary<string, Type>();
-	internal Dictionary<string, Type> pet_item_templates = new Dictionary<string, Type>();
-	internal SortedDictionary<string, Ability_Type> basic_abilities = new SortedDictionary<string, Ability_Type>();
-	internal SortedDictionary<string, Ability_Type> inter_abilities = new SortedDictionary<string, Ability_Type>();
-	internal SortedDictionary<string, Ability_Type> advanced_abilities = new SortedDictionary<string, Ability_Type>();
-	internal Dictionary<string, Type> NPC_templates = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> item_template_dict = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> weapon_template_dict = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> armor_template_dict = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> consumable_template_dict = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> pet_item_template_dict = new Dictionary<string, Type>();
+	internal SortedDictionary<string, Ability_Type> basic_ability_dict = new SortedDictionary<string, Ability_Type>();
+	internal SortedDictionary<string, Ability_Type> inter_ability_dict = new SortedDictionary<string, Ability_Type>();
+	internal SortedDictionary<string, Ability_Type> advanced_ability_dict = new SortedDictionary<string, Ability_Type>();
+	internal Dictionary<string, Type> NPC_template_dict = new Dictionary<string, Type>();
 
-	internal Dictionary<string, MeshFilter> models = new Dictionary<string, MeshFilter>();
+	internal Dictionary<string, MeshFilter> model_dict = new Dictionary<string, MeshFilter>();
 
 	internal bool inside_mod_initer = true;
 
 	internal void internal_init() {
 		
-		basic_abilities.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
-		inter_abilities.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
-		advanced_abilities.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
+		basic_ability_dict.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
+		inter_ability_dict.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
+		advanced_ability_dict.OrderBy(x => x.Value.min_player_level).ToDictionary(pair => pair.Key, pair => pair.Value);
 	}
 
-	public void spawn_ent(string entity, Vector3 position) {
+	public object spawn_ent(string ent, Vector3 pos) {
 
-		spawn_ent(entity, position, Vector3.zero);
+		return spawn_ent(ent, pos, Vector3.zero);
 	}
 
-	public void spawn_ent(string ent, Vector3 pos, Vector3 rot) {
+	public object spawn_ent(string ent, Vector3 pos, Vector3 rot) {
+
+		object spawned_ent = null;
 
 		string ent_prefix = ent.Split('.')[0].ToLower();
 		string ent_ID = ent.Split('.')[1];
 		string model_ID = "";
+		MeshFilter filter = null;
 		switch (ent_prefix) {
 
 			case "material":
 
 				GameObject item = (GameObject)GameObject.Instantiate(Game_Controller.instance.material_prefab, pos, Quaternion.Euler(rot));
 
-				Material_Template template_item = (Material_Template)Activator.CreateInstance(item_templates[ent_ID]);
+				Material_Template template_item = (Material_Template)Activator.CreateInstance(item_template_dict[ent_ID]);
 
 				model_ID = (template_item.model_ID == null ? "default" : template_item.model_ID);
 
-				item.GetComponent<Material>().assign_template(template_item, models[model_ID]);
+				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
+					filter = null;
+				}
+				else {
+					filter = model_dict[model_ID];
+				}
 
-				break;
+				item.GetComponent<Material>().assign_template(template_item, filter);
+
+				return template_item;
 			case "weapon":
 
 				GameObject weapon = (GameObject)GameObject.Instantiate(Game_Controller.instance.weapon_prefab, pos, Quaternion.Euler(rot));
 
-				Weapon_Template template_weapon = (Weapon_Template)Activator.CreateInstance(weapon_templates[ent_ID]);
+				Weapon_Template template_weapon = (Weapon_Template)Activator.CreateInstance(weapon_template_dict[ent_ID]);
 
 				model_ID = (template_weapon.model_ID == null ? "default" : template_weapon.model_ID);
 
-				weapon.GetComponent<Weapon>().assign_template(template_weapon, models[model_ID]);
+				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
+					filter = null;
+				}
+				else {
+					filter = model_dict[model_ID];
+				}
 
-				break;
-			case "equipment":
+				weapon.GetComponent<Weapon>().assign_template(template_weapon, filter);
 
-				GameObject equipment = (GameObject)GameObject.Instantiate(Game_Controller.instance.equipment_prefab, pos, Quaternion.Euler(rot));
+				return template_weapon;
+			case "armor":
 
-				Equipment_Template template_equipment = (Equipment_Template)Activator.CreateInstance(equipment_templates[ent_ID]);
+				GameObject armor = (GameObject)GameObject.Instantiate(Game_Controller.instance.armor_prefab, pos, Quaternion.Euler(rot));
 
-				model_ID = (template_equipment.model_ID == null ? "default" : template_equipment.model_ID);
+				Armor_Template template_armor = (Armor_Template)Activator.CreateInstance(armor_template_dict[ent_ID]);
 
-				equipment.GetComponent<Equipment>().assign_template(template_equipment, models[model_ID]);
+				model_ID = (template_armor.model_ID == null ? "default" : template_armor.model_ID);
 
-				break;
+				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
+					filter = null;
+				}
+				else {
+					filter = model_dict[model_ID];
+				}
+
+				armor.GetComponent<Armor>().assign_template(template_armor, filter);
+
+				return template_armor;
 			case "consumable":
 
 				GameObject consumable = (GameObject)GameObject.Instantiate(Game_Controller.instance.consumable_prefab, pos, Quaternion.Euler(rot));
 
-				Consumable_Template template_consumable = (Consumable_Template)Activator.CreateInstance(consumable_templates[ent_ID]);
+				Consumable_Template template_consumable = (Consumable_Template)Activator.CreateInstance(consumable_template_dict[ent_ID]);
 
 				model_ID = (template_consumable.model_ID == null ? "default" : template_consumable.model_ID);
 
-				consumable.GetComponent<Consumable>().assign_template(template_consumable, models[model_ID]);
+				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
+					filter = null;
+				}
+				else {
+					filter = model_dict[model_ID];
+				}
 
-				break;
+				consumable.GetComponent<Consumable>().assign_template(template_consumable, filter);
+
+				return template_consumable;
 			case "petitem":
 
 				GameObject pet_item = (GameObject)GameObject.Instantiate(Game_Controller.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
 
-				Pet_Item_Template template_pet_item = (Pet_Item_Template)Activator.CreateInstance(pet_item_templates[ent_ID]);
+				Pet_Item_Template template_pet_item = (Pet_Item_Template)Activator.CreateInstance(pet_item_template_dict[ent_ID]);
 
 				model_ID = (template_pet_item.model_ID == null ? "default" : template_pet_item.model_ID);
+				
+				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
+					filter = null;
+				}
+				else {
+					filter = model_dict[model_ID];
+				}
 
-				pet_item.GetComponent<Pet_Item>().assign_template(template_pet_item, models[model_ID]);
+				pet_item.GetComponent<Pet_Item>().assign_template(template_pet_item, filter);
 
-				break;
+				return template_pet_item;
 			case "pet":
 
 				GameObject pet = (GameObject)GameObject.Instantiate(Game_Controller.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
 
-				Pet_Item_Template template_pet = (Pet_Item_Template)Activator.CreateInstance(pet_item_templates[ent_ID]);
+				Pet_Item_Template template_pet = (Pet_Item_Template)Activator.CreateInstance(pet_item_template_dict[ent_ID]);
 
 				model_ID = (template_pet.model_ID == null ? "default" : template_pet.model_ID);
 
-				pet.GetComponent<Pet_Item>().assign_template(template_pet, models[model_ID]);
+				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
+					filter = null;
+				}
+				else {
+					filter = model_dict[model_ID];
+				}
+
+				pet.GetComponent<Pet_Item>().assign_template(template_pet, filter);
 				pet.GetComponent<Pet_Item>().is_item = false;
 
-				break;
+				return template_pet;
 			case "npc":
 
 				Debug.Log("NPC Spawning has not been implemented.");
@@ -138,6 +183,8 @@ public abstract class Mod_Template {
 
 				break;
 		}
+
+		return spawned_ent;
 	}
 
 	public void load_model(string ID, string name) {
@@ -176,7 +223,7 @@ public abstract class Mod_Template {
 						break;
 					case Model_Section.COLS:
 
-						cols.Add(line.hex_to_color());
+						cols.Add(line.to_color());
 
 						break;
 					case Model_Section.TRIS:
@@ -194,7 +241,7 @@ public abstract class Mod_Template {
 
 		filter.mesh.RecalculateNormals();
 
-		models.Add(ID, filter);
+		model_dict.Add(ID, filter);
 	}
 
 	public void load_sound(string ID, string name) {
@@ -205,7 +252,7 @@ public abstract class Mod_Template {
 			return;
 		}
 
-		if (audio_clips.ContainsKey(ID)) {
+		if (audio_clip_dict.ContainsKey(ID)) {
 
 			Debug.LogError("Cannot import audio file " + name +
 				" because the ID provided \"" + ID +
@@ -236,84 +283,90 @@ public abstract class Mod_Template {
 
 		clip.SetData(wav_data, 0);
 
-		audio_clips.Add(ID, clip);
+		audio_clip_dict.Add(ID, clip);
 	}
 
-	public void register_template(string ID, Type template) {
+	public void register_item(string ID, Type item_type) {
 
 		if (!inside_mod_initer) {
 
 			Debug.LogError("Templates can only be registered inside Initialize().");
 			return;
 		}
-		if (typeof(Material_Template).IsAssignableFrom(template)) {
+		if (typeof(Material_Template).IsAssignableFrom(item_type)) {
 
-			if (item_templates.ContainsKey(ID)) {
+			if (item_template_dict.ContainsKey(ID)) {
 
 				Debug.LogError("Cannot register item with ID: " + ID +
 					" because there is already another item registered with that ID.");
 				return;
 			}
 
-			item_templates.Add(ID, template);
+			item_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Weapon_Template).IsAssignableFrom(template)) {
+		else if (typeof(Weapon_Template).IsAssignableFrom(item_type)) {
 
-			if (weapon_templates.ContainsKey(ID)) {
+			if (weapon_template_dict.ContainsKey(ID)) {
 
 				Debug.LogError("Cannot register weapon with ID: " + ID +
 					" because there is already another item registered with that ID.");
 				return;
 			}
 
-			weapon_templates.Add(ID, template);
+			weapon_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Equipment_Template).IsAssignableFrom(template)) {
+		else if (typeof(Armor_Template).IsAssignableFrom(item_type)) {
 
-			if (equipment_templates.ContainsKey(ID)) {
+			if (armor_template_dict.ContainsKey(ID)) {
 
-				Debug.LogError("Cannot register equipment with ID: " + ID +
+				Debug.LogError("Cannot register armor with ID: " + ID +
 					" because there is already another item registered with that ID.");
 				return;
 			}
 
-			equipment_templates.Add(ID, template);
+			armor_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Consumable_Template).IsAssignableFrom(template)) {
+		else if (typeof(Consumable_Template).IsAssignableFrom(item_type)) {
 
-			if (consumable_templates.ContainsKey(ID)) {
+			if (consumable_template_dict.ContainsKey(ID)) {
 
 				Debug.LogError("Cannot register consumable with ID: " + ID +
 					" because there is already another item registered with that ID.");
 				return;
 			}
 
-			consumable_templates.Add(ID, template);
+			consumable_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Pet_Item_Template).IsAssignableFrom(template)) {
+		else if (typeof(Pet_Item_Template).IsAssignableFrom(item_type)) {
 
-			if (pet_item_templates.ContainsKey(ID)) {
+			if (pet_item_template_dict.ContainsKey(ID)) {
 
 				Debug.LogError("Cannot register pet item with ID: " + ID +
 					" because there is already another item registered with that ID.");
 				return;
 			}
 
-			pet_item_templates.Add(ID, template);
+			pet_item_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Ability_Template).IsAssignableFrom(template)) Debug.LogError("Abilities are no longer registered using RegisterTemplate. Register using RegisterAbility.");
-		else if (typeof(NPC_Template).IsAssignableFrom(template)) {
+		else if (typeof(Ability_Template).IsAssignableFrom(item_type)) Debug.LogError("Abilities are no longer registered using register_item. Register using register_ability.");
+		else if (typeof(NPC_Template).IsAssignableFrom(item_type)) Debug.LogError("NPCs are no longer registered using register_item. REgister using register_npc.");
+		else Debug.LogError("Cannot import template of type " + item_type.Name + " because it does not inherit one of the abstract item templates in CygnusAPI.");
+	}
 
-			if (NPC_templates.ContainsKey(ID)) {
+	public void register_npc(string ID, Type npc_type) {
+		if (typeof(NPC_Template).IsAssignableFrom(npc_type)) {
+
+			if (NPC_template_dict.ContainsKey(ID)) {
 
 				Debug.LogError("Cannot register npc with ID: " + ID +
 					" because there is already another item registered with that ID.");
 				return;
 			}
 
-			NPC_templates.Add(ID, template);
+			NPC_template_dict.Add(ID, npc_type);
+			return;
 		}
-		else Debug.LogError("Cannot import template of type " + template.Name + " because it does not inherit one of the abstract templates in CygnusAPI.");
+		Debug.LogError("Cannot import template of type " + npc_type.Name + " because it does not inherit from the abstract npc template in CygnusAPI");
 	}
 
 	public void register_ability(string ID, Type ability_type, Ability_Tier tier, int min_player_level) {
@@ -332,35 +385,26 @@ public abstract class Mod_Template {
 		switch (tier) {
 
 			case Ability_Tier.ADVANCED:
-				if (advanced_abilities.ContainsKey(ID)) {
 
-					Debug.LogError("Cannot register ability with ID: " + ID +
-						" because there is already another advanced ability registered with that ID.");
-					return;
-				}
+				Debug.Log("Registering ability to advanced ability dictionary...");
+				advanced_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
+				Debug.Log("Registered ability to advanced ability dictionary.");
 
-				advanced_abilities.Add(ID, new Ability_Type(ability, tier, min_player_level));
-				break;
+				return;
 			case Ability_Tier.BASIC:
-				if (basic_abilities.ContainsKey(ID)) {
 
-					Debug.LogError("Cannot register ability with ID: " + ID +
-						" because there is already another basic ability registered with that ID.");
-					return;
-				}
+				Debug.Log("Registering ability to basic ability dictionary...");
+				basic_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
+				Debug.Log("Registered ability to basic ability dictionary.");
 
-				basic_abilities.Add(ID, new Ability_Type(ability, tier, min_player_level));
-				break;
+				return;
 			case Ability_Tier.INTERMEDIATE:
-				if (inter_abilities.ContainsKey(ID)) {
 
-					Debug.LogError("Cannot register ability with ID: " + ID +
-						" because there is already another intermediate ability registered with that ID.");
-					return;
-				}
+				Debug.Log("Registering ability to intermediate ability dictionary...");
+				inter_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
+				Debug.Log("Registered ability to intermediate ability dictionary.");
 
-				inter_abilities.Add(ID, new Ability_Type(ability, tier, min_player_level));
-				break;
+				return;
 		}
 
 		Debug.LogError("Couldn't register ability for an unknown reason.");
@@ -373,9 +417,9 @@ public abstract class Mod_Template {
 		else return new Ability_Type(null, Ability_Tier.BASIC, -1);
 	}
 
-	public Player_Controller get_player() { return Game_Controller.player; }
+	public Player_Controller get_player() { return Player_Controller.instance; }
 
-	public NPC[] get_NPC_list() { return Game_Controller.NPC_list; }
+	public NPC[] get_NPC_list() { return Game_Controller.instance.NPC_list; }
 
 	public Game_Controller get_game() { return Game_Controller.instance; }
 }
