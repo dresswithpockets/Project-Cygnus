@@ -169,6 +169,17 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 	#endregion
 
+	public void Update() {
+		foreach (Weapon weapon in active_weapon_list) {
+			// active_weapon_list is filled with null values, duh
+			if (weapon != null) weapon.active_update();
+		}
+		foreach (Armor armor in active_armor_list) {
+			if (armor != null) armor.active_update();
+		}
+		// Note: abilities do not have active updates for when they are "equipped".
+	}
+
 	public void pickup(Material material) {
 
 		material_list.Add(material);
@@ -267,47 +278,37 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 	public void drop(Inventory_Category tab, int slot) {
 
-		Item_Template dropped_item = null;
+		Item dropped_item = null;
 
 		switch (tab) {
 
 			case Inventory_Category.ARMOR:
 
-				dropped_item = armor_list[slot].template;
-
-				armor_list[slot].drop_owner();
+				dropped_item = armor_list[slot];
 				armor_list.RemoveAt(slot);
 
 				break;
 			case Inventory_Category.MATERIAL:
 
-				dropped_item = material_list[slot].template;
-
-				material_list[slot].drop_owner();
+				dropped_item = material_list[slot];
 				material_list.RemoveAt(slot);
 
 				break;
 			case Inventory_Category.WEAPON:
 
-				dropped_item = weapon_list[slot].template;
-
-				weapon_list[slot].drop_owner();
+				dropped_item = weapon_list[slot];
 				weapon_list.RemoveAt(slot);
 
 				break;
 			case Inventory_Category.CONSUMABLE:
 
-				dropped_item = consumable_list[slot].template;
-
-				consumable_list[slot].drop_owner();
+				dropped_item = consumable_list[slot];
 				consumable_list.RemoveAt(slot);
 				
 				break;
 			case Inventory_Category.PET_ITEM:
 
-				dropped_item = pet_item_list[slot].template;
-
-				pet_item_list[slot].drop_owner();
+				dropped_item = pet_item_list[slot];
 				pet_item_list.RemoveAt(slot);
 
 				break;
@@ -315,11 +316,11 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		if (is_player_inventory) {
 			
-			Game_Controller.invoke_player_dropped(dropped_item);
-			dropped_item.dropped(player);
+			Game_Controller.invoke_player_dropped(dropped_item.template);
+			dropped_item.drop();
 		}
 
-		dropped_item.game_object.set_render(true);
+		dropped_item.set_render(true);
 
 		Debug.Log("Dropped item of type: " + Enum.GetName(typeof(Inventory_Category), tab) + " with name: " + dropped_item.name);
 	}
@@ -354,7 +355,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		//
 		//		- TH 4/13/2016
 		//
-		else if (weapon_to_equip.template.handiness == Weapon_Handiness.TWO_HANDED) {
+		else if (weapon_to_equip.weapon_template.handiness == Weapon_Handiness.TWO_HANDED) {
 			if (left_wep != null) {
 				weapon_list[inv_slot] = left_wep;
 				weapon_list[inv_slot].set_render(false);
@@ -381,7 +382,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			equip_slot = Weapon_Slot.RIGHT_HAND;
 		}
 		else { // One handed weapon to equip
-			if (right_wep != null && right_wep.template.handiness == Weapon_Handiness.TWO_HANDED) {
+			if (right_wep != null && right_wep.weapon_template.handiness == Weapon_Handiness.TWO_HANDED) {
 				if (moved_inv_slot) {
 					weapon_list.Add(right_wep);
 					weapon_list[weapon_list.Count - 1].set_render(false);
@@ -442,7 +443,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		Debug.Log("Equipped weapon with name: " + weapon_to_equip.template.name + ", at slot: " + ((int)equip_slot).ToString());
 	}
 
-	internal void equip_armor(int slot, int equip_slot) {
+	internal void equip_armor(int slot, Armor_Class equip_slot) {
 
 		if (armor_list.Count < slot + 1) {
 
@@ -452,9 +453,9 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		Armor armor_to_equip = armor_list[slot];
 
-		if (active_armor_list[equip_slot] != null) {
+		if (active_armor_list[(int)equip_slot] != null) {
 
-			armor_list[slot] = active_armor_list[equip_slot];
+			armor_list[slot] = active_armor_list[(int)equip_slot];
 
 			armor_list[slot].set_render(false);
 
@@ -466,21 +467,38 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		if (armor_list[slot] == null) armor_list.RemoveAt(slot);
 
 		armor_to_equip.set_render(true);
-		active_armor_list[equip_slot] = armor_to_equip;
+		active_armor_list[(int)equip_slot] = armor_to_equip;
 
 		if (is_player_inventory) player.update_stats();
 
 		Debug.Log("Equipped armor with name: " + armor_to_equip.template.name);
 	}
 
-	public void equip_armor(int slot, Armor_Class equip_slot) {
-
-		equip_armor(slot, (int)equip_slot);
-	}
-
 	public void equip_pet_item(int slot) {
 
 		// TODO: Implement equipping pet items
+	}
+
+	public void unequip_weapon(Weapon_Slot unequip_slot) {
+		Weapon weapon = active_weapon_list[(int)unequip_slot];
+		if (weapon != null) {
+			weapon_list.Add(weapon);
+			active_weapon_list[(int)unequip_slot] = null;
+			weapon.unequip();
+		}
+
+		Debug.Log("Unequipped weapon with name: " + weapon.template.name);
+	}
+
+	public void unequip_armor(Armor_Class unequip_slot) {
+		Armor armor = active_armor_list[(int)unequip_slot];
+		if (armor != null) {
+			armor_list.Add(armor);
+			active_armor_list[(int)unequip_slot] = null;
+			armor.unequip();
+
+			Debug.Log("Unequipped armor with name: " + armor.template.name);
+		}
 	}
 
 	public bool has_learned(string ability_ID) {
