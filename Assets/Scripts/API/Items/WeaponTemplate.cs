@@ -47,9 +47,13 @@ public abstract class Weapon_Template : Item_Template {
 
 	public virtual void alternate_interrupted(NPC npc) { }
 
-	public virtual void equipped(Player_Controller player, int slot) { }
+	public virtual void equipped(Player_Controller player, Weapon_Slot slot) { }
 
-	public virtual void equipped(NPC npc, int slot) { }
+	public virtual void equipped(NPC npc, Weapon_Slot slot) { }
+
+	public virtual void unequipped(Player_Controller player) { }
+
+	public virtual void unequipped(NPC npc) { }
 
 	// Used for AI, only called if the AI in question has a target and the item can be used by AI
 	// @See UsedByAI

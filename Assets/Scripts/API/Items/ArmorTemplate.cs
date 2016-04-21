@@ -20,7 +20,15 @@ public abstract class Armor_Template : Item_Template  {
 
 	public abstract List<Stat_Modifier> stat_mods { get; }
 
+	public virtual void active_update(Player_Controller player) { }
+
+	public virtual void active_update(NPC npc) { }
+
 	public virtual void equipped(Player_Controller player, int slot) { }
 
 	public virtual void equipped(NPC npc, int slot) { }
+
+	public virtual void unequipped(Player_Controller player) { }
+
+	public virtual void unequipped(NPC npc) { }
 }
