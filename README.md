@@ -22,6 +22,9 @@ If you're interested in fixing bugs, introducing planned features, or proposing 
   * All member, variable and type names should be easy to read and understand. Local variable names are less important.
   * The english language only, please. Changes made that aren't in english probably won't be accepted in an official build.
 
+#### Issue Tracking
+I use Atlassian Jira to track my personal progress on the project.
+
 ## Licensing
 I, ***REMOVED***, hereby grant individuals and entities the right to use the code and content found in Project Cygnus for personal, educational and non-commercial use, free of charge, free of royalties.
 
