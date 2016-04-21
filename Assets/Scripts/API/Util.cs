@@ -93,4 +93,15 @@ public static class Util {
 			r.enabled = render;
 		}*/
 	}
+
+	internal static string to_line_string(this string[] data) {
+		string end = "";
+
+		for (int i = 0; i < data.Length; i++) {
+			if (i == data.Length - 1 && end.EndsWith("\n")) end = end.Substring(0, end.Length);
+			else end += data[i] + "\n";
+		}
+
+		return end;
+	}
 }
