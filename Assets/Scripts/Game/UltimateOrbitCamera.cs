@@ -165,7 +165,7 @@ public sealed class UltimateOrbitCamera : MonoBehaviour
 				yVelocity -= Input.GetTouch(0).deltaPosition.y * ySpeed * invertYValue * 0.2f;
 			}
 #else
-			if (mouseControl)
+			if (mouseControl && !Player_Controller.instance.game_paused)
 			{
 				if (!clickToRotate || ((leftClickToRotate && Input.GetMouseButton(0)) || (rightClickToRotate && Input.GetMouseButton(1))))
 				{
@@ -211,6 +211,7 @@ public sealed class UltimateOrbitCamera : MonoBehaviour
 			#endregion
 
 			#region Apply_Rotation_And_Position
+			
 			if (limitX)
 			{
 				if (x + xVelocity < xMinLimit + xLimitOffset)
