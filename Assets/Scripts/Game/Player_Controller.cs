@@ -155,9 +155,13 @@ public sealed class Player_Controller : MonoBehaviour {
 
 	public GameObject m_orbit_camera = null;
 	private vp_FPController m_fp_controller = null;
+	private vp_FPInput m_fp_input = null;
 	private Inventory_Controller m_inv;
+	internal Collider body_collider;
 
 	internal Vector3 m_home_pos = new Vector3(0f, 0f, 0f);
+
+	private bool m_game_paused = false;
 
 	public GameObject orbit_camera {
 
@@ -195,6 +199,15 @@ public sealed class Player_Controller : MonoBehaviour {
 		}
 	}
 
+	public vp_FPInput fp_input {
+		get {
+			return m_fp_input;
+		}
+		internal set {
+			m_fp_input = value;
+		}
+	}
+
 	public Inventory_Controller inventory {
 
 		get {
@@ -223,16 +236,31 @@ public sealed class Player_Controller : MonoBehaviour {
 		}
 	}
 
+	public bool game_paused {
+		get {
+			return m_game_paused;
+		}
+		internal set {
+			m_game_paused = value;
+			fp_input.AllowGameplayInput = !game_paused;
+			//vp_Utility.LockCursor = !value;
+		}
+	}
+
 	void Start() {
 
 		orbit_camera = GetComponentInChildren<UltimateOrbitCamera>().gameObject;
 		fp_controller = GetComponent<vp_FPController>();
+		fp_input = GetComponent<vp_FPInput>();
 		inventory = GetComponent<Inventory_Controller>();
+		body_collider = GetComponent<Collider>();
 
 		inventory.is_player_inventory = true;
 		inventory.player = this;
 
 		spawn(transform.position);
+
+		game_paused = true;
 	}
 
 	#region Update
@@ -251,39 +279,41 @@ public sealed class Player_Controller : MonoBehaviour {
 
 	void update_input() {
 
+		if (vp_Input.GetButtonDown("Menu")) game_paused = !game_paused;
+
 		if (vp_Input.GetButtonDown("Attack1")) {
 			if (inventory.active_weapon_list[0] != null) {
-				inventory.active_weapon_list[0].template.primary_used(this);
+				inventory.active_weapon_list[0].weapon_template.primary_used(this);
 			}
 
 		}
 		else if (vp_Input.GetButtonDown("Attack2")) {
 			if (inventory.active_weapon_list[0] != null) {
-				inventory.active_weapon_list[0].template.alternate_used(this);
+				inventory.active_weapon_list[0].weapon_template.alternate_used(this);
 			}
 
 		}
 		else if (vp_Input.GetButtonDown("Ability1")) {
 			if (inventory.active_ability_list[0] != null) {
-				inventory.active_ability_list[0].active_update(this);
+				inventory.active_ability_list[0].ability_update(this);
 			}
 
 		}
 		else if (vp_Input.GetButtonDown("Ability2")) {
 			if (inventory.active_ability_list[1] != null) {
-				inventory.active_ability_list[1].active_update(this);
+				inventory.active_ability_list[1].ability_update(this);
 			}
 
 		}
 		else if (vp_Input.GetButtonDown("Ability3")) {
 			if (inventory.active_ability_list[2] != null) {
-				inventory.active_ability_list[2].active_update(this);
+				inventory.active_ability_list[2].ability_update(this);
 			}
 
 		}
 		else if (vp_Input.GetButtonDown("Ability4")) {
 			if (inventory.active_ability_list[3] != null) {
-				inventory.active_ability_list[3].active_update(this);
+				inventory.active_ability_list[3].ability_update(this);
 			}
 
 		}
@@ -420,17 +450,23 @@ public sealed class Player_Controller : MonoBehaviour {
 
 		// TODO: determine a more realistic interval for increasing hp.
 		hp = (max_hp = (hp_level * 20) + default_max_hp);
-		
-		foreach (Armor armor in inventory.active_armor_list) {
-			if (armor != null) {
-				foreach (Stat_Modifier stat_mod in armor.template.stat_mods) {
+
+		armor = 0f;
+		crit_chance = 0f;
+		hp_regen = 0f;
+		magic_resi = 0f;
+		attack_tempo = 0f;
+
+		foreach (Armor arm in inventory.active_armor_list) {
+			if (arm != null) {
+				foreach (Stat_Modifier stat_mod in arm.armor_template.stat_mods) {
 					process_stat_mod(stat_mod);
 				}
 			}
 		}
 		foreach (Weapon weapon in inventory.active_weapon_list) {
 			if (weapon != null ) {
-				foreach (Stat_Modifier stat_mod in weapon.template.stat_mods) {
+				foreach (Stat_Modifier stat_mod in weapon.weapon_template.stat_mods) {
 					process_stat_mod(stat_mod);
 				}
 			}
