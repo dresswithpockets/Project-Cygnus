@@ -40,7 +40,9 @@ public abstract class Mod_Template {
 	internal SortedDictionary<string, Ability_Type> advanced_ability_dict = new SortedDictionary<string, Ability_Type>();
 	internal Dictionary<string, Type> NPC_template_dict = new Dictionary<string, Type>();
 
-	internal Dictionary<string, MeshFilter> model_dict = new Dictionary<string, MeshFilter>();
+	internal Dictionary<string, Vox_Data> model_dict = new Dictionary<string, Vox_Data>();
+
+	internal Dictionary<string, Texture2D> image_dict = new Dictionary<string, Texture2D>();
 
 	internal bool inside_mod_initer = true;
 
@@ -63,7 +65,7 @@ public abstract class Mod_Template {
 		string ent_prefix = ent.Split('.')[0].ToLower();
 		string ent_ID = ent.Split('.')[1];
 		string model_ID = "";
-		MeshFilter filter = null;
+		Vox_Data vox = new Vox_Data();
 		switch (ent_prefix) {
 
 			case "material":
@@ -75,13 +77,14 @@ public abstract class Mod_Template {
 				model_ID = (template_item.model_ID == null ? "default" : template_item.model_ID);
 
 				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
-					filter = null;
+					//filter = null;
 				}
 				else {
-					filter = model_dict[model_ID];
+					//filter = model_dict[model_ID];
+					vox = model_dict[model_ID];
 				}
 
-				item.GetComponent<Material>().assign_template(template_item, filter);
+				item.GetComponent<Material>().assign_template(template_item, vox);
 
 				return template_item;
 			case "weapon":
@@ -93,13 +96,13 @@ public abstract class Mod_Template {
 				model_ID = (template_weapon.model_ID == null ? "default" : template_weapon.model_ID);
 
 				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
-					filter = null;
+					//vox = null;
 				}
 				else {
-					filter = model_dict[model_ID];
+					vox = model_dict[model_ID];
 				}
 
-				weapon.GetComponent<Weapon>().assign_template(template_weapon, filter);
+				weapon.GetComponent<Weapon>().assign_template(template_weapon, vox);
 
 				return template_weapon;
 			case "armor":
@@ -111,13 +114,13 @@ public abstract class Mod_Template {
 				model_ID = (template_armor.model_ID == null ? "default" : template_armor.model_ID);
 
 				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
-					filter = null;
+					//vox = null;
 				}
 				else {
-					filter = model_dict[model_ID];
+					vox = model_dict[model_ID];
 				}
 
-				armor.GetComponent<Armor>().assign_template(template_armor, filter);
+				armor.GetComponent<Armor>().assign_template(template_armor, vox);
 
 				return template_armor;
 			case "consumable":
@@ -129,13 +132,13 @@ public abstract class Mod_Template {
 				model_ID = (template_consumable.model_ID == null ? "default" : template_consumable.model_ID);
 
 				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
-					filter = null;
+					//vox = null;
 				}
 				else {
-					filter = model_dict[model_ID];
+					vox = model_dict[model_ID];
 				}
 
-				consumable.GetComponent<Consumable>().assign_template(template_consumable, filter);
+				consumable.GetComponent<Consumable>().assign_template(template_consumable, vox);
 
 				return template_consumable;
 			case "petitem":
@@ -147,13 +150,13 @@ public abstract class Mod_Template {
 				model_ID = (template_pet_item.model_ID == null ? "default" : template_pet_item.model_ID);
 				
 				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
-					filter = null;
+					//vox = null;
 				}
 				else {
-					filter = model_dict[model_ID];
+					vox = model_dict[model_ID];
 				}
 
-				pet_item.GetComponent<Pet_Item>().assign_template(template_pet_item, filter);
+				pet_item.GetComponent<Pet_Item>().assign_template(template_pet_item, vox);
 
 				return template_pet_item;
 			case "pet":
@@ -165,13 +168,13 @@ public abstract class Mod_Template {
 				model_ID = (template_pet.model_ID == null ? "default" : template_pet.model_ID);
 
 				if (model_ID == "default" || !model_dict.ContainsKey(model_ID)) {
-					filter = null;
+					//vox = null;
 				}
 				else {
-					filter = model_dict[model_ID];
+					vox = model_dict[model_ID];
 				}
 
-				pet.GetComponent<Pet_Item>().assign_template(template_pet, filter);
+				pet.GetComponent<Pet_Item>().assign_template(template_pet, vox);
 				pet.GetComponent<Pet_Item>().is_item = false;
 
 				return template_pet;
@@ -187,7 +190,7 @@ public abstract class Mod_Template {
 		return spawned_ent;
 	}
 
-	public void load_model(string ID, string name) {
+	public void load_model(string ID, string file_name) {
 
 		if (!inside_mod_initer) {
 
@@ -195,56 +198,30 @@ public abstract class Mod_Template {
 			return;
 		}
 
-		MeshFilter filter = new MeshFilter();
+		Debug.Log("Loading model with ID: " + ID + ", from filename: " + file_name);
 
-		string[] vox = File.ReadAllLines(mod_path + "/Models/" + name + ".vox");
+		model_dict.Add(ID, new Vox_Data(ID, File.ReadAllLines(mod_path + "/Models/" + file_name + ".vox")));
 
-		List<Vector3> verts = new List<Vector3>();
-		List<Color> cols = new List<Color>();
-		List<int> tris = new List<int>();
-		Model_Section model_section = Model_Section.VERTS;
-
-		for (int i = 0; i < vox.Length; i++) {
-
-			string line = vox[i].Trim();
-
-			if (line == "[verts]") model_section = Model_Section.VERTS;
-			else if (line == "[cols]") model_section = Model_Section.COLS;
-			else if (line == "[tris]") model_section = Model_Section.TRIS;
-			else {
-
-				switch (model_section) {
-
-					case Model_Section.VERTS:
-
-						string[] axes = line.Split(' ');
-						verts.Add(new Vector3(float.Parse(axes[0]), float.Parse(axes[1]), float.Parse(axes[3])));
-
-						break;
-					case Model_Section.COLS:
-
-						cols.Add(line.to_color());
-
-						break;
-					case Model_Section.TRIS:
-
-						tris.Add(int.Parse(line));
-
-						break;
-				}
-			}
-		}
-
-		filter.mesh.vertices = verts.ToArray();
-		filter.mesh.colors = cols.ToArray();
-		filter.mesh.triangles = tris.ToArray();
-
-		filter.mesh.RecalculateNormals();
-
-		model_dict.Add(ID, filter);
+		Debug.Log("Finished loading model.");
 	}
 
-	public void load_sound(string ID, string name) {
+	public void load_image(string ID, string file_name, Image_Type image_type) {
+
+		if (image_dict.ContainsKey(ID)) {
+			Debug.LogError("Cannot import image file " + file_name +
+				" because the ID provided \"" + ID +
+				"\" has already been assigned to another image file.");
+			return;
+		}
+
+		Texture2D image = new Texture2D(2, 2);
+		byte[] data = File.ReadAllBytes(mod_path + "/Images/" + file_name + "." + Enum.GetName(typeof(Image_Type), image_type));
+		image.LoadImage(data);
+
+		image_dict.Add(ID, image);
+	}
+
+	public void load_sound(string ID, string file_name) {
 
 		if (!inside_mod_initer) {
 
@@ -254,13 +231,13 @@ public abstract class Mod_Template {
 
 		if (audio_clip_dict.ContainsKey(ID)) {
 
-			Debug.LogError("Cannot import audio file " + name +
+			Debug.LogError("Cannot import audio file " + file_name +
 				" because the ID provided \"" + ID +
 				"\" has already been assigned to another audio file.");
 			return;
 		}
 
-		string path = mod_path + "/Sounds/" + name + ".wav";
+		string path = mod_path + "/Sounds/" + file_name + ".wav";
 
 		Debug.Log("Importing WAV: " + path + " with ID: " + ID);
 
@@ -268,7 +245,7 @@ public abstract class Mod_Template {
 
 		Debug.Log("Imported WAV: " + wav.ToString());
 
-		AudioClip clip = AudioClip.Create(name, wav.SampleCount, wav.ChannelCount, wav.Frequency, false);
+		AudioClip clip = AudioClip.Create(file_name, wav.SampleCount, wav.ChannelCount, wav.Frequency, false);
 
 		float[] wav_data = new float[wav.LeftChannel.Length + wav.RightChannel.Length];
 		for (int i = 0; i < wav_data.Length; i++) {
