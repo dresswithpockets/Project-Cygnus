@@ -23,7 +23,7 @@ If you're interested in fixing bugs, introducing planned features, or proposing 
   * The english language only, please. Changes made that aren't in english probably won't be accepted in an official build.
 
 #### Issue Tracking
-I use Atlassian Jira to track my personal progress on the project.
+I use Atlassian Jira to track my personal progress on the project. Every week I will update the issues page to be concurrent with my current issues in Jira. 
 
 ## Licensing
 I, Tristen Horton, hereby grant individuals and entities the right to use the code and content found in Project Cygnus for personal, educational and non-commercial use, free of charge, free of royalties.
