@@ -38,9 +38,9 @@ public abstract class Ability_Template {
 
 	public virtual void passive_update(NPC npc) { }
 
-	public virtual void active_update(Player_Controller player) { }
+	public virtual void ability_update(Player_Controller player) { }
 
-	public virtual void active_update(NPC npc) { }
+	public virtual void ability_update(NPC npc) { }
 
 	public virtual void end(Player_Controller player) { }
 
