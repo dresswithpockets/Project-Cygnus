@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -241,15 +240,11 @@ public sealed class Game_Controller : MonoBehaviour {
 
 			Type[] eventTypes = plugin.get_all_types_with_inheriting_type(typeof(Player_Event_Template));
 
-			foreach (Type t in eventTypes) {
-
-				player_event_list.Add((Player_Event_Template)Activator.CreateInstance(t));
-			}
+			foreach (Type t in eventTypes) player_event_list.Add((Player_Event_Template)Activator.CreateInstance(t));
 
 			Debug.Log("Successfuly loaded Player Event types.");
 		}
 	}
-
 
 	#endregion
 }
