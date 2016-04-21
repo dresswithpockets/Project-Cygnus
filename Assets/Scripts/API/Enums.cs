@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public enum Ability_Tier {
@@ -96,4 +97,25 @@ public enum Ability_Slot {
 	SLOT_2,
 	SLOT_3,
 	SLOT_4
+}
+
+public enum Image_Type {
+
+	PNG = 0,
+	JPG
+}
+
+[Flags]
+public enum Scd_Flags {
+
+	CHANGES_POSITION = 0x0,
+	CHANGES_ROTATION = 0x1,
+	CHANGES_SCALE = 0x2,
+}
+
+public enum Interp_Type {
+
+	SUDDEN = 0, // Assign
+	LINEAR, // Lerp
+	SPHERICAL // Slerp
 }
