@@ -6,9 +6,26 @@ If you're interested in using any of the code or content found in this project, 
 
 Also, the name "Project Cygnus" is by no means final, and is due to change in the near future, before the game is released.
 
+#### Discord
+I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/0y0wUVxU3om1tBCK
+
+1. Check the FAQ **before** joining and bugging me about the problem.
+  * I will probably ignore you if its a question answered on the FAQ.
+
+2. You will be muted or even banned for being annoying.
+3. Don't join the discord if you want to report a bug. Read the "New Features and Bugs" section below.
+4. Don't join the discord if you want to request or suggest a new feature. Read the "New Features and Bugs" section below.
+
+
 #### New Features and Bugs
 I'm a one-man army. Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
 If you're interested in fixing bugs, introducing planned features, or proposing new ones, please read the "Fork Rules" section.
+
+If you're interested in reporting bugs, fill out a bug report on the Issues page. You MUST have a video attached or linked which shows every step to reproduce the bug at least two times in a row. 
+
+If you're interested in requesting or suggesting new features:
+  * At the moment, only forked changes and feature suggestions will be considered.
+  * If you don't have programming experience or the time to develop your idea, then wait until we have a considerable forum and community in order to manage threads for new ideas and concepts.
 
 #### Fork Rules
 1. All code that is not immediately comprehensible, meaning it doesn't read with ease, should be explained in a comment.
