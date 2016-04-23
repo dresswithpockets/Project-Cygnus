@@ -49,3 +49,4 @@ I, Tristen Horton, hereby grant individuals and entities the right to use the co
 If the intention of use of the content found in Project Cygnus is not personal or educational, then the usage of said content falls under [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 
 If you would like to commercialize modified distributions of Project Cygnus or any code base that uses my code, please contact me at [tristen@tristenhorton.com](mailto:tristen@tristenhorton.com)
+
