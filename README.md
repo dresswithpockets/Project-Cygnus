@@ -19,11 +19,12 @@ I run a discord for anyone to join and chat. If you need help/support and you're
 
 #### New Features and Bugs
 I'm a one-man army. Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
-If you're interested in fixing bugs, introducing planned features, or proposing new ones, please read the "Fork Rules" section.
 
-If you're interested in reporting bugs, fill out a bug report on the Issues page. You MUST have a video attached or linked which shows every step to reproduce the bug at least two times in a row. 
+* If you're interested in fixing bugs, introducing planned features, or proposing new ones, please read the "Fork Rules" section.
 
-If you're interested in requesting or suggesting new features:
+* If you're interested in reporting bugs, fill out a bug report on the Issues page. You MUST have a video attached or linked which shows every step to reproduce the bug at least two times in a row. 
+
+* If you're interested in requesting or suggesting new features:
   * At the moment, only forked changes and feature suggestions will be considered.
   * If you don't have programming experience or the time to develop your idea, then wait until we have a considerable forum and community in order to manage threads for new ideas and concepts.
 
