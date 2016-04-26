@@ -396,7 +396,7 @@ public abstract class Mod_Template {
 
 	public Player_Controller get_player() { return Player_Controller.instance; }
 
-	public NPC[] get_NPC_list() { return Game_Controller.instance.NPC_list; }
+	public NPC_Controller[] get_NPC_list() { return Game_Controller.instance.NPC_list; }
 
 	public Game_Controller get_game() { return Game_Controller.instance; }
 }

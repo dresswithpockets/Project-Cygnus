@@ -30,11 +30,11 @@ public sealed class Game_Controller : MonoBehaviour {
 		}
 	}
 
-	public NPC[] NPC_list {
+	public NPC_Controller[] NPC_list {
 
 		get {
 
-			return FindObjectsOfType<NPC>();
+			return FindObjectsOfType<NPC_Controller>();
 		}
 	}
 

@@ -20,7 +20,7 @@ public abstract class Consumable_Template : Item_Template {
 
 	public virtual void consume(Player_Controller player) { }
 
-	public virtual void consume(NPC npc) { }
+	public virtual void consume(NPC_Controller npc) { }
 
 	public virtual void consume(Pet_Item pet) { }
 }

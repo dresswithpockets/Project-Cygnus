@@ -30,5 +30,5 @@ public abstract class Pet_Item_Template : Item_Template {
 
 	public virtual void active_update(Player_Controller player) { }
 
-	public virtual void active_update(NPC npc) { }
+	public virtual void active_update(NPC_Controller npc) { }
 }

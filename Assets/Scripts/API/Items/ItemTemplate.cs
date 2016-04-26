@@ -37,7 +37,7 @@ public abstract class Item_Template  {
 
 	public virtual void passive_update(Player_Controller player) { }
 
-	public virtual void passive_update(NPC npc) { }
+	public virtual void passive_update(NPC_Controller npc) { }
 
 	public virtual void fixed_update() { }
 
@@ -45,11 +45,11 @@ public abstract class Item_Template  {
 
 	public virtual void picked_up(Player_Controller player) { }
 
-	public virtual void picked_up(NPC npc) { }
+	public virtual void picked_up(NPC_Controller npc) { }
 
 	public virtual void dropped(Player_Controller player) { }
 
-	public virtual void dropped(NPC npc) { }
+	public virtual void dropped(NPC_Controller npc) { }
 
 	public bool is_weapon() {
 		return typeof(Weapon_Template) == this.GetType();

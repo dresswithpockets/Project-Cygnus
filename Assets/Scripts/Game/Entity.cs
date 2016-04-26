@@ -51,7 +51,7 @@ public class Entity {
 
 		get {
 
-			return (m_object.GetComponent<NPC>() != null);
+			return (m_object.GetComponent<NPC_Controller>() != null);
 		}
 	}
 
@@ -62,9 +62,9 @@ public class Entity {
 	}
 
 	// Returns null if no NPC component is attached to the owner object
-	public NPC try_get_npc() {
+	public NPC_Controller try_get_npc() {
 
-		return m_object.GetComponent<NPC>();
+		return m_object.GetComponent<NPC_Controller>();
 	}
 
 	public void do_damage(Damage damage) {
