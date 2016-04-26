@@ -29,33 +29,33 @@ public abstract class Weapon_Template : Item_Template {
 
 	public virtual void active_update(Player_Controller player) { }
 
-	public virtual void active_update(NPC npc) { }
+	public virtual void active_update(NPC_Controller npc) { }
 
 	public virtual void primary_used(Player_Controller player) { }
 
-	public virtual void primary_used(NPC npc) { }
+	public virtual void primary_used(NPC_Controller npc) { }
 
 	public virtual void primary_interrupted(Player_Controller player) { }
 
-	public virtual void primary_interrupted(NPC npc) { }
+	public virtual void primary_interrupted(NPC_Controller npc) { }
 
 	public virtual void alternate_used(Player_Controller player) { }
 
-	public virtual void alternate_used(NPC npc) { }
+	public virtual void alternate_used(NPC_Controller npc) { }
 
 	public virtual void alternate_interrupted(Player_Controller player) { }
 
-	public virtual void alternate_interrupted(NPC npc) { }
+	public virtual void alternate_interrupted(NPC_Controller npc) { }
 
 	public virtual void equipped(Player_Controller player, Weapon_Slot slot) { }
 
-	public virtual void equipped(NPC npc, Weapon_Slot slot) { }
+	public virtual void equipped(NPC_Controller npc, Weapon_Slot slot) { }
 
 	public virtual void unequipped(Player_Controller player) { }
 
-	public virtual void unequipped(NPC npc) { }
+	public virtual void unequipped(NPC_Controller npc) { }
 
 	// Used for AI, only called if the AI in question has a target and the item can be used by AI
 	// @See UsedByAI
-	public virtual bool AI_can_use_on_target(NPC npc, Entity target) { return false; }
+	public virtual bool AI_can_use_on_target(NPC_Controller npc, Entity target) { return false; }
 }

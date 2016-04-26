@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public sealed class NPC : MonoBehaviour {
+public sealed class NPC_Controller : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

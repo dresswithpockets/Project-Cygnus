@@ -32,19 +32,19 @@ public abstract class Ability_Template {
 
 	public virtual void start(Player_Controller player) { }
 
-	public virtual void start(NPC npc) { }
+	public virtual void start(NPC_Controller npc) { }
 
 	public virtual void passive_update(Player_Controller player) { }
 
-	public virtual void passive_update(NPC npc) { }
+	public virtual void passive_update(NPC_Controller npc) { }
 
 	public virtual void ability_update(Player_Controller player) { }
 
-	public virtual void ability_update(NPC npc) { }
+	public virtual void ability_update(NPC_Controller npc) { }
 
 	public virtual void end(Player_Controller player) { }
 
-	public virtual void end(NPC npc) { }
+	public virtual void end(NPC_Controller npc) { }
 
 	public virtual bool is_ready() { return true; }
 
@@ -55,7 +55,7 @@ public abstract class Ability_Template {
 	public virtual void interrupt() { }
 
 	// Determines whether or not an AI can use this ability on a target
-	public virtual bool AI_can_use_on_target(NPC npc, GameObject target) {
+	public virtual bool AI_can_use_on_target(NPC_Controller npc, GameObject target) {
 
 		return false;
 	}

@@ -21,10 +21,10 @@ public class Item : MonoBehaviour {
 
 	#region Ownership
 
-	internal NPC m_NPC_owner = null;
+	internal NPC_Controller m_NPC_owner = null;
 	internal Player_Controller m_player_owner = null;
 
-	public NPC NPC_owner {
+	public NPC_Controller NPC_owner {
 
 		get {
 
@@ -62,7 +62,7 @@ public class Item : MonoBehaviour {
 		m_player_owner = player;
 	}
 
-	internal void set_owner(NPC npc) {
+	internal void set_owner(NPC_Controller npc) {
 		m_player_owner = null;
 		m_NPC_owner = npc;
 	}
