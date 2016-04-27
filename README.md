@@ -21,7 +21,7 @@ I run a discord for anyone to join and chat. If you need help/support and you're
 4. Don't join the discord if you want to request or suggest a new feature. Read the "New Features and Bugs" section below.
 
 #### New Features and Bugs
-I'm a one-man army. Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
+Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
 
 * If you're interested in fixing bugs, introducing planned features, or proposing new ones, please read the "Fork Rules" section.
 
