@@ -20,6 +20,9 @@ I run a discord for anyone to join and chat. If you need help/support and you're
 3. Don't join the discord if you want to report a bug. Read the "New Features and Bugs" section below.
 4. Don't join the discord if you want to request or suggest a new feature. Read the "New Features and Bugs" section below.
 
+#### Twitch
+On occasion I will stream me working on the game. You can find the stream at http://www.twitch.tv/phxvyper
+
 #### New Features and Bugs
 Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
 
