@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using SimpleJSON;
 
 public struct Vox_Data {
 	
@@ -70,7 +71,7 @@ public struct Vox_Data {
 			return;
 		}
 
-		Debug.LogWarning("The mesh member in the filter that was passed in ToFilter is null. Is the filter unassigned?");
+		Debug.LogWarning("The mesh member in the filter that was passed in to_filter is null. Is the filter unassigned?");
 	}
 
 	public Vox_Data(string name, string[] data) {
@@ -79,11 +80,11 @@ public struct Vox_Data {
 		for (int i = 0; i < data.Length; i++) {
 			string line = data[i].ToLower().Trim();
 
-			Debug.Log("Checking group scope: " + line);
+			DebugConsole.Log("Checking group scope: " + line, true);
 
 			if (line.StartsWith("[group=") || line.StartsWith("[segment=")) {
 
-				Debug.Log("Entering group scope");
+				DebugConsole.Log("Entering group scope", true);
 
 				List<string> group_data = new List<string>();
 
@@ -94,7 +95,7 @@ public struct Vox_Data {
 				//		-TH 4/20/2016
 				//
 				group_data.Add(line);
-				Debug.Log("Added line: " + line);
+				DebugConsole.Log("Added line: " + line, true);
 				int next_group;
 				for (next_group = i + 1; next_group < data.Length; next_group++) {
 
@@ -111,7 +112,7 @@ public struct Vox_Data {
 		this.name = name;
 		groups = group_list.ToArray();
 
-		Debug.Log(string.Format("Created model with {0} groups.", groups.Length));
+		DebugConsole.Log(string.Format("Created model with {0} groups.", groups.Length), true);
 	}
 }
 
@@ -161,6 +162,22 @@ public struct Vox_Group {
 		return tris.ToArray();
 	}
 
+	public void to_filter(ref MeshFilter filter) {
+		if (filter.mesh != null) {
+			filter.mesh.Clear();
+
+			filter.mesh.vertices = get_vertices();
+			filter.mesh.colors = get_colors();
+			filter.mesh.triangles = get_triangles();
+
+			filter.mesh.RecalculateNormals();
+
+			return;
+		}
+
+		Debug.LogWarning("The mesh member in the filter that was passed in to_filter is null. Is the filter unassigned?");
+	}
+
 	/*
 	Group structure:
 	[group=name,(x,y,z)]
@@ -202,7 +219,7 @@ public struct Vox_Group {
 
 		chunks = chunk_list.ToArray();
 
-		Debug.Log(string.Format("Created group with {0} chunks.", chunks.Length));
+		DebugConsole.Log(string.Format("Created group with {0} chunks.", chunks.Length), true);
 	}
 }
 
@@ -267,7 +284,7 @@ public struct Vox_Chunk {
 		colors = cols.ToArray();
 		triangles = tris.ToArray();
 
-		Debug.Log(string.Format("Created chunk with {0} vertices, {1} colors, and {2} triangles.", vertices.Length, colors.Length, triangles.Length / 3));
+		DebugConsole.Log(string.Format("Created chunk with {0} vertices, {1} colors, and {2} triangles.", vertices.Length, colors.Length, triangles.Length / 3), true);
 	}
 }
 
@@ -295,19 +312,283 @@ public struct Vox_Chunk {
 	rate=60,
 	flags=(CHANGES_POSITION,CHANGES_ROTATION,CHANGES_SCALE,),
 	key=(start=0,frames=5,interp=LINEAR,groups=["group1","group2",],position=(0.0,4.0,9.0),rotation=(0.0,180.0,0.0),scale=(0.9,0.9,0.9),),
+
+	Switching to JSON because JSON is OP asf:
+	{
+		name: "Name of animation",
+		flags: [
+			"0", // Changes_Position
+			"1", // Changes_Rotation
+			"2" // Changes_Scale
+		],
+		keys: [
+			{
+				start: "0",
+				frames: "5",
+				interp: "1", // Assign = 0, Linear = 1, Spherical = 2
+				groups: [
+					"group1",
+					"group2"
+				],
+				position: {
+					x: "0.0",
+					y: "4.0",
+					z: "9.0"
+				},
+				rotation: {
+					x: "0.0",
+					y: "180.0",
+					z: "0.0",
+				},
+				scale: {
+					x: "0.9",
+					y: "0.9",
+					z: "0.0"
+				}
+			},
+		]
+	}
 */
-public struct Scd_Data {
+public class Scd_Data {
+	
+	private string m_name;
+	private float m_rate;
+	private List<Scd_Flag> m_flags;
+	private Scd_Frame[] m_frames;
 
-	public string name;
-	public float rate;
-	public Scd_Flags flags;
-	public Scd_Key_Collection[] frames;
+	public string name {
+		get {
+			return m_name;
+		}
+		internal set {
+			m_name = value;
+		}
+	}
+
+	public float rate {
+		get {
+			return m_rate;
+		}
+		internal set {
+			m_rate = value;
+		}
+	}
+
+	public List<Scd_Flag> flags {
+		get {
+			return m_flags;
+		}
+		internal set {
+			m_flags = value;
+		}
+	}
+
+	public Scd_Frame[] frames {
+		get {
+			return m_frames;
+		}
+		internal set {
+			m_frames = value;
+		}
+	}
+
+	// It is important to note that all translations, reorientations and scales
+	// are relative to the original position of the group rather than the world, at the start of the animation.
+	// So the result of the JSON animation:
+	//
+	// position: {
+	//	x: "0.0",
+	//	y: "4.0",
+	//	z: "9.0"
+	// },
+	//
+	// would be the same as doing transform.Translate(new Vector3(0f, 4f, 9f), Space.Self);
+	//
+	//		-TH 4/29/2016
+	//
+	public Scd_Data(string json) {
+		JSONNode node = JSONNode.Parse(json);
+		name = node["name"];
+		rate = node["name"].AsFloat;
+
+		flags = new List<Scd_Flag>();
+
+		foreach (int flag in node["flags"].AsArray) {
+			if (!flags.Contains((Scd_Flag)flag)) flags.Add((Scd_Flag)flag);
+		}
+
+		int anim_length = 0;
+
+		// I'm genuinely not sure how to explain this loop in plain english.
+		foreach (JSONNode key in node["keys"].AsArray) {
+			int current_length = (key["start"].AsInt + key["frames"].AsInt - 1);
+			if (current_length > anim_length) anim_length = current_length;
+		}
+
+		frames = new Scd_Frame[anim_length];
+		for (int i = 0; i < anim_length; i++) frames[i] = null;
+		
+		for (int current_frame = 0; current_frame < frames.Length; current_frame++) {
+			// kframe is the current keyframe we're scoping into
+			foreach (JSONNode kframe in node["keys"].AsArray) {
+				// Is the current frame a frame capture by the key being iterated through.
+				if (current_frame >= kframe["start"].AsInt && current_frame < (kframe["start"].AsInt + kframe["frames"].AsInt)) {
+					frames[current_frame] = new Scd_Frame();
+					frames[current_frame].groups = new Scd_Frame_Group[kframe["groups"].AsArray.Count];
+
+					for (int current_group = 0; current_group < frames[current_frame].groups.Length; current_group++) {
+						frames[current_frame].groups[current_group] = new Scd_Frame_Group();
+
+						frames[current_frame].groups[current_group].group = kframe["groups"].AsArray[current_group];
+
+						// Values used to determine a value completion from 0.0 to 1.0
+						frames[current_frame].groups[current_group].gframe_count = kframe["frames"].AsInt;
+						frames[current_frame].groups[current_group].current_gframe = Mathf.Abs(kframe["start"].AsInt - current_frame) + 1;
+						float completion = frames[current_frame].groups[current_group].current_gframe / frames[current_frame].groups[current_group].gframe_count;
+
+						switch ((Interp_Type)kframe["interp"].AsInt) {
+							case Interp_Type.ASSIGN:
+
+								if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+									JSONNode position = kframe["position"];
+									frames[current_frame].groups[current_group].position = new Vector3(position["x"].AsFloat, position["y"].AsFloat, position["z"].AsFloat);
+								}
+								if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+									JSONNode rotation = kframe["rotation"];
+									frames[current_frame].groups[current_group].rotation = new Vector3(rotation["x"].AsFloat, rotation["y"].AsFloat, rotation["z"].AsFloat);
+								}
+								if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+									JSONNode scale = kframe["scale"];
+									frames[current_frame].groups[current_group].rotation = new Vector3(scale["x"].AsFloat, scale["y"].AsFloat, scale["z"].AsFloat);
+								}
+								break;
+							case Interp_Type.LINEAR: // use Lerp
+
+								for (int fcheck = current_frame; fcheck > -1; fcheck--) {
+									if (fcheck == 0) {
+										if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+
+											Vector3 prev_pos = new Vector3(0, 0, 0);
+											JSONNode json_position = kframe["position"];
+											Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
+											frames[current_frame].groups[current_group].position = Vector3.Lerp(prev_pos, new_pos, completion);
+                                        }
+										if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+
+											Vector3 prev_rot = new Vector3(0, 0, 0);
+											JSONNode json_rotation = kframe["rotation"];
+											Vector3 new_rot = new Vector3(json_rotation["x"].AsFloat, json_rotation["y"].AsFloat, json_rotation["z"].AsFloat);
+											frames[current_frame].groups[current_group].rotation = Vector3.Lerp(prev_rot, new_rot, completion);
+										}
+										if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+
+											Vector3 prev_scale = new Vector3(0, 0, 0);
+											JSONNode json_scale = kframe["scale"];
+											Vector3 new_scale = new Vector3(json_scale["x"].AsFloat, json_scale["y"].AsFloat, json_scale["z"].AsFloat);
+											frames[current_frame].groups[current_group].scale = Vector3.Lerp(prev_scale, new_scale, completion);
+										}
+									}
+									else {
+										foreach (Scd_Frame_Group group in frames[fcheck].groups) {
+											if (group.group == frames[current_frame].groups[current_group].group) {
+												if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+
+													Vector3 prev_pos = group.position;
+													JSONNode json_position = kframe["position"];
+													Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
+													frames[current_frame].groups[current_group].position = Vector3.Lerp(prev_pos, new_pos, completion);
+												}
+												if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+
+													Vector3 prev_rot = group.rotation;
+													JSONNode json_rotation = kframe["rotation"];
+													Vector3 new_rot = new Vector3(json_rotation["x"].AsFloat, json_rotation["y"].AsFloat, json_rotation["z"].AsFloat);
+													frames[current_frame].groups[current_group].rotation = Vector3.Lerp(prev_rot, new_rot, completion);
+												}
+												if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+
+													Vector3 prev_scale = group.scale;
+													JSONNode json_scale = kframe["scale"];
+													Vector3 new_scale = new Vector3(json_scale["x"].AsFloat, json_scale["y"].AsFloat, json_scale["z"].AsFloat);
+													frames[current_frame].groups[current_group].scale = Vector3.Lerp(prev_scale, new_scale, completion);
+												}
+											}
+										}
+									}
+								}
+								break;
+							case Interp_Type.SPHERICAL: // use Slerp instead of Lerp
+
+								for (int fcheck = current_frame; fcheck > -1; fcheck--) {
+									if (fcheck == 0) {
+										if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+
+											Vector3 prev_pos = new Vector3(0, 0, 0);
+											JSONNode json_position = kframe["position"];
+											Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
+											frames[current_frame].groups[current_group].position = Vector3.Slerp(prev_pos, new_pos, completion);
+										}
+										if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+
+											Vector3 prev_rot = new Vector3(0, 0, 0);
+											JSONNode json_rotation = kframe["rotation"];
+											Vector3 new_rot = new Vector3(json_rotation["x"].AsFloat, json_rotation["y"].AsFloat, json_rotation["z"].AsFloat);
+											frames[current_frame].groups[current_group].rotation = Vector3.Slerp(prev_rot, new_rot, completion);
+										}
+										if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+
+											Vector3 prev_scale = new Vector3(0, 0, 0);
+											JSONNode json_scale = kframe["scale"];
+											Vector3 new_scale = new Vector3(json_scale["x"].AsFloat, json_scale["y"].AsFloat, json_scale["z"].AsFloat);
+											frames[current_frame].groups[current_group].scale = Vector3.Slerp(prev_scale, new_scale, completion);
+										}
+									}
+									else {
+										foreach (Scd_Frame_Group group in frames[fcheck].groups) {
+											if (group.group == frames[current_frame].groups[current_group].group) {
+												if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+
+													Vector3 prev_pos = group.position;
+													JSONNode json_position = kframe["position"];
+													Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
+													frames[current_frame].groups[current_group].position = Vector3.Slerp(prev_pos, new_pos, completion);
+												}
+												if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+
+													Vector3 prev_rot = group.rotation;
+													JSONNode json_rotation = kframe["rotation"];
+													Vector3 new_rot = new Vector3(json_rotation["x"].AsFloat, json_rotation["y"].AsFloat, json_rotation["z"].AsFloat);
+													frames[current_frame].groups[current_group].rotation = Vector3.Slerp(prev_rot, new_rot, completion);
+												}
+												if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+
+													Vector3 prev_scale = group.scale;
+													JSONNode json_scale = kframe["scale"];
+													Vector3 new_scale = new Vector3(json_scale["x"].AsFloat, json_scale["y"].AsFloat, json_scale["z"].AsFloat);
+													frames[current_frame].groups[current_group].scale = Vector3.Slerp(prev_scale, new_scale, completion);
+												}
+											}
+										}
+									}
+								}
+								break;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
-public struct Scd_Key_Collection {
-
+public class Scd_Frame {
+	public Scd_Frame_Group[] groups;
 }
 
-public struct Scd_Key {
-
+public class Scd_Frame_Group {
+	public string group;
+	public int current_gframe;
+	public int gframe_count;
+	public Vector3 position;
+	public Vector3 rotation;
+	public Vector3 scale;
 }

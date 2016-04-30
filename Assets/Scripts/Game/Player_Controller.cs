@@ -161,8 +161,6 @@ public sealed class Player_Controller : MonoBehaviour {
 
 	internal Vector3 m_home_pos = new Vector3(0f, 0f, 0f);
 
-	private bool m_game_paused = false;
-
 	public GameObject orbit_camera {
 
 		get {
@@ -236,17 +234,6 @@ public sealed class Player_Controller : MonoBehaviour {
 		}
 	}
 
-	public bool game_paused {
-		get {
-			return m_game_paused;
-		}
-		internal set {
-			m_game_paused = value;
-			fp_input.AllowGameplayInput = !game_paused;
-			//vp_Utility.LockCursor = !value;
-		}
-	}
-
 	void Start() {
 
 		orbit_camera = GetComponentInChildren<UltimateOrbitCamera>().gameObject;
@@ -260,7 +247,7 @@ public sealed class Player_Controller : MonoBehaviour {
 
 		spawn(transform.position);
 
-		game_paused = true;
+		Game_Controller.pause();
 	}
 
 	#region Update
@@ -279,7 +266,7 @@ public sealed class Player_Controller : MonoBehaviour {
 
 	void update_input() {
 
-		if (vp_Input.GetButtonDown("Menu")) game_paused = !game_paused;
+		if (vp_Input.GetButtonDown("Menu")) Game_Controller.toggle_pause();
 
 		if (vp_Input.GetButtonDown("Attack1")) {
 			if (inventory.active_weapon_list[0] != null) {
@@ -315,7 +302,9 @@ public sealed class Player_Controller : MonoBehaviour {
 			if (inventory.active_ability_list[3] != null) {
 				inventory.active_ability_list[3].ability_update(this);
 			}
-
+		}
+		else if (Input.GetKeyDown(KeyCode.BackQuote)) {
+			DebugConsole.isVisible = !DebugConsole.isVisible;
 		}
 	}
 
@@ -498,20 +487,20 @@ public sealed class Player_Controller : MonoBehaviour {
 
 	public void give_ability(string ability_ID, Mod_Template mod) {
 
-		Debug.Log("$$Checking inventory nullity...");
+		DebugConsole.Log("$$Checking inventory nullity...", true);
 
 		if (inventory == null) {
 			Debug.LogError("Uh oh, inventory is null?!");
 			return;
 		}
 
-		Debug.Log("$$Checking get_ability...");
+		DebugConsole.Log("$$Checking get_ability...", true);
 
 		if (mod.get_ability(ability_ID).min_player_level == -1) {
 			Debug.LogError("Uh oh, get_ability is returning an empty ability type?!");
 		}
 
-		Debug.Log("$$Learning the ability...");
+		DebugConsole.Log("$$Learning the ability...", true);
 
 		inventory.learn_ability(ability_ID, mod.get_ability(ability_ID));
 	}
