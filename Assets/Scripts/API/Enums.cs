@@ -105,8 +105,7 @@ public enum Image_Type {
 	JPG
 }
 
-[Flags]
-public enum Scd_Flags {
+public enum Scd_Flag {
 
 	CHANGES_POSITION = 0x0,
 	CHANGES_ROTATION = 0x1,
@@ -115,7 +114,13 @@ public enum Scd_Flags {
 
 public enum Interp_Type {
 
-	SUDDEN = 0, // Assign
+	ASSIGN = 0, // Assign
 	LINEAR, // Lerp
 	SPHERICAL // Slerp
+}
+
+public enum Debug_Warning_Level {
+	NORMAL = 0,
+	WARNING,
+	ERROR
 }
