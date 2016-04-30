@@ -180,7 +180,7 @@ public abstract class Mod_Template {
 				return template_pet;
 			case "npc":
 
-				Debug.Log("NPC Spawning has not been implemented.");
+				DebugConsole.Log("NPC Spawning has not been implemented.", true);
 				// TODO: Create GameObject instantiation for NPC prefabs
 				// and assign NPC_Template to that instantiated game object.
 
@@ -198,11 +198,11 @@ public abstract class Mod_Template {
 			return;
 		}
 
-		Debug.Log("Loading model with ID: " + ID + ", from filename: " + file_name);
+		DebugConsole.Log("Loading model with ID: " + ID + ", from filename: " + file_name, true);
 
 		model_dict.Add(ID, new Vox_Data(ID, File.ReadAllLines(mod_path + "/Models/" + file_name + ".vox")));
 
-		Debug.Log("Finished loading model.");
+		DebugConsole.Log("Finished loading model.", true);
 	}
 
 	public void load_image(string ID, string file_name, Image_Type image_type) {
@@ -239,11 +239,11 @@ public abstract class Mod_Template {
 
 		string path = mod_path + "/Sounds/" + file_name + ".wav";
 
-		Debug.Log("Importing WAV: " + path + " with ID: " + ID);
+		DebugConsole.Log("Importing WAV: " + path + " with ID: " + ID, true);
 
 		WAV wav = new WAV(path);
 
-		Debug.Log("Imported WAV: " + wav.ToString());
+		DebugConsole.Log("Imported WAV: " + wav.ToString(), true);
 
 		AudioClip clip = AudioClip.Create(file_name, wav.SampleCount, wav.ChannelCount, wav.Frequency, false);
 
@@ -357,29 +357,29 @@ public abstract class Mod_Template {
 			return;
 		}
 
-		Debug.Log("Registering ability with ID: " + ID + ", of tier: " + Enum.GetName(typeof(Ability_Tier), tier) + ", with mind level of: " + min_player_level.ToString());
+		DebugConsole.Log("Registering ability with ID: " + ID + ", of tier: " + Enum.GetName(typeof(Ability_Tier), tier) + ", with mind level of: " + min_player_level.ToString(), true);
 
 		switch (tier) {
 
 			case Ability_Tier.ADVANCED:
 
-				Debug.Log("Registering ability to advanced ability dictionary...");
+				DebugConsole.Log("Registering ability to advanced ability dictionary...", true);
 				advanced_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
-				Debug.Log("Registered ability to advanced ability dictionary.");
+				DebugConsole.Log("Registered ability to advanced ability dictionary.", true);
 
 				return;
 			case Ability_Tier.BASIC:
 
-				Debug.Log("Registering ability to basic ability dictionary...");
+				DebugConsole.Log("Registering ability to basic ability dictionary...", true);
 				basic_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
-				Debug.Log("Registered ability to basic ability dictionary.");
+				DebugConsole.Log("Registered ability to basic ability dictionary.", true);
 
 				return;
 			case Ability_Tier.INTERMEDIATE:
 
-				Debug.Log("Registering ability to intermediate ability dictionary...");
+				DebugConsole.Log("Registering ability to intermediate ability dictionary...", true);
 				inter_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
-				Debug.Log("Registered ability to intermediate ability dictionary.");
+				DebugConsole.Log("Registered ability to intermediate ability dictionary.", true);
 
 				return;
 		}
@@ -396,7 +396,7 @@ public abstract class Mod_Template {
 
 	public Player_Controller get_player() { return Player_Controller.instance; }
 
-	public NPC_Controller[] get_NPC_list() { return Game_Controller.instance.NPC_list; }
+	public NPC_Controller[] get_NPC_list() { return Game_Controller.NPC_controller_list; }
 
 	public Game_Controller get_game() { return Game_Controller.instance; }
 }

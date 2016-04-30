@@ -193,7 +193,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			material.pick_up();
 		}
 
-		Debug.Log("Picked up material with name: " + material.name);
+		DebugConsole.Log("Picked up material with name: " + material.name, true);
 
 
 		// Note: inventories probably won't exist for NPCs, at least not yet.
@@ -213,7 +213,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			armor.pick_up();
 		}
 
-		Debug.Log("Picked up armor with name: " + armor.template.name);
+		DebugConsole.Log("Picked up armor with name: " + armor.template.name, true);
 
 		// Note: inventories probably won't exist for NPCs, at least not yet.
 		// so we dont really have functionality to call the API for npc ownership.
@@ -232,7 +232,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			weapon.pick_up();
 		}
 
-		Debug.Log("Picked up weapon with name: " + weapon.template.name);
+		DebugConsole.Log("Picked up weapon with name: " + weapon.template.name, true);
 
 		// Note: inventories probably won't exist for NPCs, at least not yet.
 		// so we dont really have functionality to call the API for npc ownership.
@@ -251,7 +251,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			consumable.pick_up();
 		}
 
-		Debug.Log("Picked up consumable with name: " + consumable.template.name);
+		DebugConsole.Log("Picked up consumable with name: " + consumable.template.name, true);
 
 		// Note: inventories probably won't exist for NPCs, at least not yet.
 		// so we dont really have functionality to call the API for npc ownership.
@@ -270,7 +270,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			pet_item.pick_up();
 		}
 
-		Debug.Log("Picked up pet item with name: " + pet_item.template.name);
+		DebugConsole.Log("Picked up pet item with name: " + pet_item.template.name, true);
 
 		// Note: inventories probably won't exist for NPCs, at least not yet.
 		// so we dont really have functionality to call the API for npc ownership.
@@ -322,7 +322,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		dropped_item.set_render(true);
 
-		Debug.Log("Dropped item of type: " + Enum.GetName(typeof(Inventory_Category), tab) + " with name: " + dropped_item.name);
+		DebugConsole.Log("Dropped item of type: " + Enum.GetName(typeof(Inventory_Category), tab) + " with name: " + dropped_item.name, true);
 	}
 
 	public void equip_weapon(int inv_slot, Weapon_Slot equip_slot) {
@@ -440,7 +440,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		if (is_player_inventory) player.update_stats();
 
-		Debug.Log("Equipped weapon with name: " + weapon_to_equip.template.name + ", at slot: " + ((int)equip_slot).ToString());
+		DebugConsole.Log("Equipped weapon with name: " + weapon_to_equip.template.name + ", at slot: " + ((int)equip_slot).ToString(), true);
 	}
 
 	internal void equip_armor(int slot, Armor_Class equip_slot) {
@@ -459,7 +459,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 			armor_list[slot].set_render(false);
 
-			Debug.Log("Replacing weapon: " + armor_list[slot].template.name + " with weapon: " + armor_to_equip.template.name);
+			DebugConsole.Log("Replacing weapon: " + armor_list[slot].template.name + " with weapon: " + armor_to_equip.template.name, true);
 		}
 
 		// This will only be true if we never replaced the armor in the inventory.
@@ -471,7 +471,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		if (is_player_inventory) player.update_stats();
 
-		Debug.Log("Equipped armor with name: " + armor_to_equip.template.name);
+		DebugConsole.Log("Equipped armor with name: " + armor_to_equip.template.name, true);
 	}
 
 	public void equip_pet_item(int slot) {
@@ -487,7 +487,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			weapon.unequip();
 		}
 
-		Debug.Log("Unequipped weapon with name: " + weapon.template.name);
+		DebugConsole.Log("Unequipped weapon with name: " + weapon.template.name, true);
 	}
 
 	public void unequip_armor(Armor_Class unequip_slot) {
@@ -497,7 +497,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 			active_armor_list[(int)unequip_slot] = null;
 			armor.unequip();
 
-			Debug.Log("Unequipped armor with name: " + armor.template.name);
+			DebugConsole.Log("Unequipped armor with name: " + armor.template.name, true);
 		}
 	}
 
@@ -520,7 +520,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 					Game_Controller.invoke_player_learned(template, template.ability_level);
 				}
 
-				Debug.Log("Learned ability with ID: " + ability_ID);
+				DebugConsole.Log("Learned ability with ID: " + ability_ID, true);
 				return;
 			}
 
@@ -541,6 +541,6 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		active_ability_list[(int)active_slot] = learned_ability_list[ability_ID];
 
-		Debug.Log("Equipped ability with ID: " + ability_ID + " to slot: " + ((int)active_slot).ToString());
+		DebugConsole.Log("Equipped ability with ID: " + ability_ID + " to slot: " + ((int)active_slot).ToString(), true);
 	}
 }

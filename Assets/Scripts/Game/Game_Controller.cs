@@ -16,11 +16,14 @@ public sealed class Game_Controller : MonoBehaviour {
 	public GameObject consumable_prefab;
 	public GameObject pet_item_prefab;
 	public GameObject ent_prefab;
+	public GameObject vox_prefab;
 
 	#endregion
 	
 	internal static List<Mod_Template> mod_list = new List<Mod_Template>();
 	internal static List<Player_Event_Template> player_event_list = new List<Player_Event_Template>();
+
+	private bool m_game_paused = false;
 
 	public Player_Controller player {
 
@@ -37,6 +40,55 @@ public sealed class Game_Controller : MonoBehaviour {
 			return FindObjectsOfType<NPC_Controller>();
 		}
 	}
+	
+	public bool game_paused {
+		get {
+			return m_game_paused;
+		}
+		internal set {
+			m_game_paused = value;
+			player.fp_input.AllowGameplayInput = !game_paused;
+			//vp_Utility.LockCursor = !value;
+		}
+	}
+
+	#region static instance properties
+
+	public static Player_Controller player_controller {
+		get {
+			return instance.player;
+		}
+	}
+
+	public static NPC_Controller[] NPC_controller_list {
+		get {
+			return instance.NPC_list;
+		}
+	}
+
+	public static bool paused {
+		get {
+			return instance.game_paused;
+		}
+	}
+
+	#endregion
+
+	#region static instance functions
+
+	public static void toggle_pause() {
+		instance.game_paused = !instance.game_paused;
+	}
+
+	public static void pause() {
+		instance.game_paused = true;
+	}
+
+	public static void unpause() {
+		instance.game_paused = false;
+	}
+
+	#endregion
 
 	void Update() {
 
@@ -200,7 +252,7 @@ public sealed class Game_Controller : MonoBehaviour {
 		if (!Directory.Exists(@"plugins\")) {
 
 			Directory.CreateDirectory(@"plugins\");
-			Debug.Log("No plugins to load. Finished.");
+			DebugConsole.Log("No plugins to load. Finished.", true);
 			return;
 		}
 
@@ -210,24 +262,24 @@ public sealed class Game_Controller : MonoBehaviour {
 
 		if (files.Length == 0) {
 
-			Debug.Log("No plugins to load. Finished.");
+			DebugConsole.Log("No plugins to load. Finished.", true);
 			return;
 		}
 
-		Debug.Log("Loading plugins found in directory: " + di.FullName);
+		DebugConsole.Log("Loading plugins found in directory: " + di.FullName, true);
 
 		foreach (FileInfo file in files) {
 
-			Debug.Log("Processing possible plugin file: " + file.Name);
+			DebugConsole.Log("Processing possible plugin file: " + file.Name, true);
 			if (m_dll_ignore_list.Contains(file.Name)) {
 
-				Debug.Log("File name found within the assembly ignore list. Continuing to next assembly.");
+				DebugConsole.Log("File name found within the assembly ignore list. Continuing to next assembly.", true);
 				continue;
 			}
 
 			Assembly plugin = Assembly.LoadFrom(file.FullName);
 
-			Debug.Log("Successfuly loaded plugin's assembly, looking for inherited type for player events.");
+			DebugConsole.Log("Successfuly loaded plugin's assembly, looking for inherited type for player events.", true);
 
 			Type[] modTypes = plugin.get_all_types_with_inheriting_type(typeof(Mod_Template));
 
@@ -242,7 +294,7 @@ public sealed class Game_Controller : MonoBehaviour {
 
 			foreach (Type t in eventTypes) player_event_list.Add((Player_Event_Template)Activator.CreateInstance(t));
 
-			Debug.Log("Successfuly loaded Player Event types.");
+			DebugConsole.Log("Successfuly loaded Player Event types.", true);
 		}
 	}
 
