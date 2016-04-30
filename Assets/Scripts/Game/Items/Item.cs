@@ -4,6 +4,7 @@ using System.Collections;
 public class Item : MonoBehaviour {
 
 	public MeshFilter filter;
+	public Model_Controller model_controller;
 	internal Vox_Data data = new Vox_Data();
 
 	internal Item_Template m_template = null;
@@ -78,7 +79,8 @@ public class Item : MonoBehaviour {
 	public virtual void Start() {
 
 		filter = GetComponent<MeshFilter>();
-		data.to_filter(ref filter);
+		model_controller = GetComponent<Model_Controller>();
+		model_controller.load_vox(data);
 
 		if (template != null) template.spawned();
 
