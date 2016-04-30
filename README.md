@@ -9,6 +9,7 @@ Also, the name "Project Cygnus" is by no means final, and is due to change in th
 #### Dependencies
 1. The game is built around Unity3D. The project must be opened in a Unity3D environment of 5.3.4 or later in order to run and compile.
 2. At its current stage, the game uses VisionPunk's Ultimate FPS package for Unity, which is licensed software. Certain mechanics are built around UFPS such as playermovement and input management.
+ - The dependancy on UFPS will eventually be replaced with our own player movement and input managers. It isn't a major priority at the moment but it will happen eventually!
 
 #### Discord
 I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/0y0wUVxU3om1tBCK
@@ -28,7 +29,15 @@ Debugging and fixing issues found in the game can be difficult when you're also 
 
 * If you're interested in fixing bugs, introducing planned features, or proposing new ones, please read the "Fork Rules" section.
 
-* If you're interested in reporting bugs, fill out a bug report on the Issues page. You MUST have a video attached or linked which shows every step to reproduce the bug at least two times in a row. 
+* If you're interested in reporting bugs, send me an e-mail. You MUST have a video attached or linked which shows every step to reproduce the bug at least two times in a row. Make the subject of your e-mail "Cygnus - Bug Report" and make sure to include the following information:
+  * Your name
+  * The Version/Build Number of the game, which can be found in the log file if you Ctrl+F "game_version", or in the bottom right corner of the game's window.
+  * Platform - Windows/Linux/Mac etc
+  * Bug description:
+    * Reproduceable steps: Clearly define the steps it takes to reproduce the bug.
+    * Expected result: How is the game supposed to respond?
+    * Actual result: What is the actual response from the game?
+  * A link to a video
 
 * If you're interested in requesting or suggesting new features:
   * At the moment, only forked changes and feature suggestions will be considered.
