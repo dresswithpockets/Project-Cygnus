@@ -6,6 +6,10 @@ If you're interested in using any of the code or content found in this project, 
 
 Also, the name "Project Cygnus" is by no means final, and is due to change in the near future, before the game is released.
 
+#### Dependencies
+1. The game is built around Unity3D. The project must be opened in a Unity3D environment of 5.3.4 or later in order to run and compile.
+2. At its current stage, the game uses VisionPunk's Ultimate FPS package for Unity, which is licensed software. Certain mechanics are built around UFPS such as playermovement and input management.
+
 #### Discord
 I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/0y0wUVxU3om1tBCK
 
@@ -16,9 +20,11 @@ I run a discord for anyone to join and chat. If you need help/support and you're
 3. Don't join the discord if you want to report a bug. Read the "New Features and Bugs" section below.
 4. Don't join the discord if you want to request or suggest a new feature. Read the "New Features and Bugs" section below.
 
+#### Twitch
+On occasion I will stream me working on the game. You can find the stream at http://www.twitch.tv/***REMOVED***
 
 #### New Features and Bugs
-I'm a one-man army. Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
+Debugging and fixing issues found in the game can be difficult when you're also trying to implement new features in a timely fashion.
 
 * If you're interested in fixing bugs, introducing planned features, or proposing new ones, please read the "Fork Rules" section.
 
