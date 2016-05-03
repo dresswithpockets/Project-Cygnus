@@ -16,7 +16,6 @@ I run a discord for anyone to join and chat. If you need help/support and you're
 
 1. Check the FAQ **before** joining and bugging me about the problem.
   * I will probably ignore you if its a question answered on the FAQ.
-
 2. You will be muted or even banned for being annoying.
 3. Don't join the discord if you want to report a bug. Read the "New Features and Bugs" section below.
 4. Don't join the discord if you want to request or suggest a new feature. Read the "New Features and Bugs" section below.
