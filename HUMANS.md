@@ -1,4 +1,4 @@
-### Original Contributors
+#### Original Contributors
 - Lead Developer: Tristen Horton
   - Contact: tristen@tristenhorton.com
   - Website: www.tristenhorton.com
@@ -9,11 +9,11 @@
 
 - 3D Modeling: Brenden Perkins
 
-### Contributors
+#### Contributors
 
 - Game Mechanic Design: West
 
-### Third Party
+#### Third Party
 
 - Initial Concepts and Mechanics: CubeWorld
   - Creator: Picroma
