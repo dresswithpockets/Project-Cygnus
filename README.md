@@ -49,7 +49,7 @@ Debugging and fixing issues found in the game can be difficult when you're also 
   * Example: "-TH 4/20/2016".
 3. Follow the coding conventions found in the game's source code.
   * All member and variable names must be lower_case_with_under_scores
-  * All type names (structs, classes, enums, delegates) must be Upper_Camel_Case_With_Under_Scores
+  * All type names (structs, classes, enums, delegates) must be UpperCamelCase
   * Tight single-line if statements and loops should usually be capture in a single line without braces, unless the resulting line is very long.
   * All member, variable and type names should be easy to read and understand. Local variable names are less important.
   * The english language only, please. Changes made that aren't in english probably won't be accepted in an official build.
