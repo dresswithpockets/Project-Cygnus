@@ -5,8 +5,6 @@
   
 - Co-Creator, Game Design: Nathan Hafner  
 
-- AI, World Gen, General Development: Xunatai
-
 - 3D Modeling: Brenden Perkins
 
 #### Contributors
