@@ -10,6 +10,8 @@
 #### Contributors
 
 - Game Mechanic Design: West
+ 
+- Rarity Distribution: Xunatai
 
 #### Third Party
 
