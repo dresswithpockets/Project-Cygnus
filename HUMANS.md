@@ -9,7 +9,7 @@
 
 #### Contributors
 
-- Game Mechanic Design: West
+- Game Mechanic Design: Zac "West" Cooke
  
 - Rarity Distribution: Xunatai
 
