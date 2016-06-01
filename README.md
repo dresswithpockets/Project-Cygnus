@@ -1,10 +1,10 @@
 ## Project-Cygnus
-Project Cygnus is a code base that aims at recreating the CubeWorld experience, while creating a new experience for seasoned CubeWorld players.
+Project Cygnus _was_ a code base that aimed to recreate the CubeWorld experience. The project's direction has changed drastically, however. Cygnus now aims to be its own game that draws details from games such as CubeWorld, Bloodborne, Diablo, Dark Souls, and even Minecraft.
+
+[We have a design document for the specifications of the project which can be found here.](http://***REMOVED******REMOVED***.com/cygnus/Project%20Cygnus%20Design.htm)
 
 The game is entirely open source, but the code and content is under Copyright.
 If you're interested in using any of the code or content found in this project, please read the "Licensing" section.
-
-Also, the name "Project Cygnus" is by no means final, and is due to change in the near future, before the game is released.
 
 #### Dependencies
 1. The game is built around Unity3D. The project must be opened in a Unity3D environment of 5.3.4 or later in order to run and compile.
