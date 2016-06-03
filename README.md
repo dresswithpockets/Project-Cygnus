@@ -3,6 +3,8 @@ Project Cygnus _was_ a code base that aimed to recreate the CubeWorld experience
 
 [We have a design document for the specifications of the project which can be found here.](http://tristenhorton.com/cygnus/Cygnus.pdf)
 
+The current issues that are listed are not in-line with the current design document.
+
 The game is entirely open source, but the code and content is under Copyright.
 If you're interested in using any of the code or content found in this project, please read the "Licensing" section.
 
