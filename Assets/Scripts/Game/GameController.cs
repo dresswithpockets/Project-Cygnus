@@ -4,7 +4,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 
-public sealed class Game_Controller : MonoBehaviour {
+public sealed class GameController : MonoBehaviour {
 
 	#region Prefabs
 
@@ -25,19 +25,19 @@ public sealed class Game_Controller : MonoBehaviour {
 
 	private bool m_game_paused = false;
 
-	public Player_Controller player {
+	public PlayerController player {
 
 		get {
 
-			return Player_Controller.instance;
+			return PlayerController.instance;
 		}
 	}
 
-	public NPC_Controller[] NPC_list {
+	public NPCController[] NPC_list {
 
 		get {
 
-			return FindObjectsOfType<NPC_Controller>();
+			return FindObjectsOfType<NPCController>();
 		}
 	}
 	
@@ -54,13 +54,13 @@ public sealed class Game_Controller : MonoBehaviour {
 
 	#region static instance properties
 
-	public static Player_Controller player_controller {
+	public static PlayerController player_controller {
 		get {
 			return instance.player;
 		}
 	}
 
-	public static NPC_Controller[] NPC_controller_list {
+	public static NPCController[] NPC_controller_list {
 		get {
 			return instance.NPC_list;
 		}
@@ -100,8 +100,8 @@ public sealed class Game_Controller : MonoBehaviour {
 
 	#region Construction and Singleton
 
-	private static Game_Controller m_instance = null;
-	public static Game_Controller instance {
+	private static GameController m_instance = null;
+	public static GameController instance {
 		get {
 			return m_instance;
 		}
@@ -194,37 +194,37 @@ public sealed class Game_Controller : MonoBehaviour {
 		}
 	}
 
-	internal static void invoke_player_dropped(Item_Template item) {
+	internal static void invoke_player_dropped(ItemTemplate item) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.dropped(item);
 		}
 	}
 
-	internal static void invoke_player_picked_up(Item_Template item) {
+	internal static void invoke_player_picked_up(ItemTemplate item) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.picked_up(item);
 		}
 	}
 
-	internal static void invoke_player_crafted(Item_Template item) {
+	internal static void invoke_player_crafted(ItemTemplate item) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.crafted(item);
 		}
 	}
 
-	internal static void invoke_player_used(Item_Template weapon) {
+	internal static void invoke_player_used(ItemTemplate weapon) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.used(weapon);
 		}
 	}
 
-	internal static void invoke_player_equipped(Item_Template weapon, int slot) {
+	internal static void invoke_player_equipped(ItemTemplate weapon, int slot) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.equipped(weapon, slot);
 		}
 	}
 
-	internal static void invoke_player_unequipped(Item_Template weapon) {
+	internal static void invoke_player_unequipped(ItemTemplate weapon) {
 		foreach (Player_Event_Template pet in player_event_list) {
 			pet.unequipped(weapon);
 		}

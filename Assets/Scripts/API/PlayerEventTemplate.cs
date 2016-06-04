@@ -16,8 +16,8 @@ public abstract class Player_Event_Template {
 		}
 	}
 
-	private Player_Controller m_player;
-	public Player_Controller Player {
+	private PlayerController m_player;
+	public PlayerController Player {
 
 		get {
 
@@ -29,8 +29,8 @@ public abstract class Player_Event_Template {
 		}
 	}
 
-	private Inventory_Controller m_player_inv;
-	public Inventory_Controller player_inv {
+	private InventoryController m_player_inv;
+	public InventoryController player_inv {
 
 		get {
 
@@ -60,17 +60,17 @@ public abstract class Player_Event_Template {
 
 	public virtual void late_update() { }
 
-	public virtual void used(Item_Template item) { }
+	public virtual void used(ItemTemplate item) { }
 
-	public virtual void dropped(Item_Template item) { }
+	public virtual void dropped(ItemTemplate item) { }
 
-	public virtual void picked_up(Item_Template item) { }
+	public virtual void picked_up(ItemTemplate item) { }
 
-	public virtual void crafted(Item_Template item) { }
+	public virtual void crafted(ItemTemplate item) { }
 
-	public virtual void equipped(Item_Template weapon, int slot) { }
+	public virtual void equipped(ItemTemplate weapon, int slot) { }
 
-	public virtual void unequipped(Item_Template weapon) { }
+	public virtual void unequipped(ItemTemplate weapon) { }
 
 	public virtual void used(Ability_Template ability) { }
 

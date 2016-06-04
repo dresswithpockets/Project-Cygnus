@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Consumable_Template : Item_Template {
+public abstract class ConsumableTemplate : ItemTemplate {
 
 	private Consumable m_consumable_object;
 	public Consumable consumable_object {
@@ -18,9 +18,9 @@ public abstract class Consumable_Template : Item_Template {
 
 	public abstract bool is_pet_food { get; } // A consumable can either be player/npc food or it can be pet food.
 
-	public virtual void consume(Player_Controller player) { }
+	public virtual void consume(PlayerController player) { }
 
-	public virtual void consume(NPC_Controller npc) { }
+	public virtual void consume(NPCController npc) { }
 
-	public virtual void consume(Pet_Item pet) { }
+	public virtual void consume(PetItem pet) { }
 }

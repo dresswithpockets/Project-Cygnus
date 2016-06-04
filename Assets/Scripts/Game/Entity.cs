@@ -43,7 +43,7 @@ public class Entity {
 
 		get {
 
-			return (m_object.GetComponent<Player_Controller>() != null);
+			return (m_object.GetComponent<PlayerController>() != null);
 		}
 	}
 
@@ -51,20 +51,20 @@ public class Entity {
 
 		get {
 
-			return (m_object.GetComponent<NPC_Controller>() != null);
+			return (m_object.GetComponent<NPCController>() != null);
 		}
 	}
 
 	// Returns null if no PlayerController component is attached to the owner object
-	public Player_Controller try_get_player() {
+	public PlayerController try_get_player() {
 
-		return m_object.GetComponent<Player_Controller>();
+		return m_object.GetComponent<PlayerController>();
 	}
 
 	// Returns null if no NPC component is attached to the owner object
-	public NPC_Controller try_get_npc() {
+	public NPCController try_get_npc() {
 
-		return m_object.GetComponent<NPC_Controller>();
+		return m_object.GetComponent<NPCController>();
 	}
 
 	public void do_damage(Damage damage) {
@@ -116,7 +116,7 @@ public class Game_Entity : Entity {
 
 	public void create_instance(Vector3 pos, Vector3 rot) {
 		if (game_object == null) {
-			game_object = (GameObject)GameObject.Instantiate(Game_Controller.instance.ent_prefab, pos, Quaternion.Euler(rot));
+			game_object = (GameObject)GameObject.Instantiate(GameController.instance.ent_prefab, pos, Quaternion.Euler(rot));
 			return;
 		}
 

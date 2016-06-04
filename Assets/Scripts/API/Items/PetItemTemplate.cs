@@ -7,10 +7,10 @@ using System.Collections;
 //
 //		- TH 4/12/2016
 //
-public abstract class Pet_Item_Template : Item_Template {
+public abstract class PetItemTemplate : ItemTemplate {
 
-	private Pet_Item m_pet_item_object;
-	public Pet_Item pet_item_object {
+	private PetItem m_pet_item_object;
+	public PetItem pet_item_object {
 
 		get {
 
@@ -28,7 +28,7 @@ public abstract class Pet_Item_Template : Item_Template {
 
 	public abstract bool use_default_hp_bar { get; }
 
-	public virtual void active_update(Player_Controller player) { }
+	public virtual void active_update(PlayerController player) { }
 
-	public virtual void active_update(NPC_Controller npc) { }
+	public virtual void active_update(NPCController npc) { }
 }

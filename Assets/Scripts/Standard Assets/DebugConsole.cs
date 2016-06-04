@@ -56,7 +56,7 @@ public class DebugConsole : MonoBehaviour {
 	public float lineSpacing = 0.02F;              // The amount of space between lines
 	public ArrayList messages = new ArrayList();
 	public ArrayList guis = new ArrayList();
-	public List<Debug_Warning_Level> levels = new List<Debug_Warning_Level>();
+	public List<DebugWarningLevel> levels = new List<DebugWarningLevel>();
 	public bool draggable = true;                  // Can the output be dragged around at runtime by default? 
 	public bool visible = true;                    // Does output show on screen by default or do we have to enable it with code? 
 	public bool pixelCorrect = false; // set to be pixel Correct linespacing
@@ -195,7 +195,7 @@ public class DebugConsole : MonoBehaviour {
 
 	}
 	//+++++++++ INTERFACE FUNCTIONS ++++++++++++++++++++++++++++++++
-	public static void Log(string message, Debug_Warning_Level level, bool to_console = true) {
+	public static void Log(string message, DebugWarningLevel level, bool to_console = true) {
 		DebugConsole.instance.AddMessage(message, level);
 		if (to_console) Debug.Log(message);
 	}
@@ -215,7 +215,7 @@ public class DebugConsole : MonoBehaviour {
 	//Adds a mesage to the list
 	//--------------------------------------------------------------
 
-	public void AddMessage(string message, Debug_Warning_Level level) {
+	public void AddMessage(string message, DebugWarningLevel level) {
 		messages.Add(message);
 		levels.Add(level);
 		Display();
@@ -225,7 +225,7 @@ public class DebugConsole : MonoBehaviour {
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	public void AddMessage(string message) {
 		messages.Add(message);
-		levels.Add(Debug_Warning_Level.NORMAL);
+		levels.Add(DebugWarningLevel.NORMAL);
 		Display();
 	}
 
@@ -302,14 +302,14 @@ public class DebugConsole : MonoBehaviour {
 					GameObject gui = (GameObject)guis[x];
 
 					//set our color
-					switch ((Debug_Warning_Level)levels[x]) {
-						case Debug_Warning_Level.NORMAL:
+					switch ((DebugWarningLevel)levels[x]) {
+						case DebugWarningLevel.NORMAL:
 							gui.GetComponent<GUIText>().material.color = normal;
 							break;
-						case Debug_Warning_Level.WARNING:
+						case DebugWarningLevel.WARNING:
 							gui.GetComponent<GUIText>().material.color = warning;
 							break;
-						case Debug_Warning_Level.ERROR:
+						case DebugWarningLevel.ERROR:
 							gui.GetComponent<GUIText>().material.color = error;
 							break;
 					}

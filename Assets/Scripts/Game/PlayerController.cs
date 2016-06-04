@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 // TODO: Implement the player's ability to craft items, armor, etc.
-public sealed class Player_Controller : MonoBehaviour {
+public sealed class PlayerController : MonoBehaviour {
 
 	#region Stats
 
@@ -156,7 +156,7 @@ public sealed class Player_Controller : MonoBehaviour {
 	public GameObject m_orbit_camera = null;
 	private vp_FPController m_fp_controller = null;
 	private vp_FPInput m_fp_input = null;
-	private Inventory_Controller m_inv;
+	private InventoryController m_inv;
 	internal Collider body_collider;
 
 	internal Vector3 m_home_pos = new Vector3(0f, 0f, 0f);
@@ -206,7 +206,7 @@ public sealed class Player_Controller : MonoBehaviour {
 		}
 	}
 
-	public Inventory_Controller inventory {
+	public InventoryController inventory {
 
 		get {
 
@@ -239,7 +239,7 @@ public sealed class Player_Controller : MonoBehaviour {
 		orbit_camera = GetComponentInChildren<UltimateOrbitCamera>().gameObject;
 		fp_controller = GetComponent<vp_FPController>();
 		fp_input = GetComponent<vp_FPInput>();
-		inventory = GetComponent<Inventory_Controller>();
+		inventory = GetComponent<InventoryController>();
 		body_collider = GetComponent<Collider>();
 
 		inventory.is_player_inventory = true;
@@ -247,7 +247,7 @@ public sealed class Player_Controller : MonoBehaviour {
 
 		spawn(transform.position);
 
-		Game_Controller.pause();
+		GameController.pause();
 	}
 
 	#region Update
@@ -261,12 +261,12 @@ public sealed class Player_Controller : MonoBehaviour {
 			update_rotation();
 		}
 
-		Game_Controller.invoke_player_update();
+		GameController.invoke_player_update();
 	}
 
 	void update_input() {
 
-		if (vp_Input.GetButtonDown("Menu")) Game_Controller.toggle_pause();
+		if (vp_Input.GetButtonDown("Menu")) GameController.toggle_pause();
 
 		if (vp_Input.GetButtonDown("Attack1")) {
 			if (inventory.active_weapon_list[0] != null) {
@@ -312,7 +312,7 @@ public sealed class Player_Controller : MonoBehaviour {
 
 		if (is_moving) {
 
-			Game_Controller.invoke_player_moved(transform.position, player_velocity * Time.deltaTime);
+			GameController.invoke_player_moved(transform.position, player_velocity * Time.deltaTime);
 		}
 	}
 
@@ -337,19 +337,19 @@ public sealed class Player_Controller : MonoBehaviour {
 
 	void FixedUpdate() {
 
-		Game_Controller.invoke_player_fixed_update();
+		GameController.invoke_player_fixed_update();
 	}
 
 	void LateUpdate() {
 
-		Game_Controller.invoke_player_late_update();
+		GameController.invoke_player_late_update();
 	}
 
 	public void spawn(Vector3 pos) {
 
 		transform.position = pos;
 		hp = max_hp;
-		Game_Controller.invoke_player_spawned();
+		GameController.invoke_player_spawned();
 	}
 
 	public void spawn(bool atStatue = false) {
@@ -387,7 +387,7 @@ public sealed class Player_Controller : MonoBehaviour {
 
 		switch (damage.type) {
 
-			case Damage_Type.MAGIC:
+			case DamageType.MAGIC:
 
 				if (magic_resi > 0f || Mathf.Approximately(magic_resi, 0f)) {
 					dmgMult = 100 / (100 + magic_resi);
@@ -397,7 +397,7 @@ public sealed class Player_Controller : MonoBehaviour {
 				}
 
 				break;
-			case Damage_Type.PHYSICAL:
+			case DamageType.PHYSICAL:
 
 				if (armor > 0f || Mathf.Approximately(armor, 0f)) {
 					dmgMult = 100 / (100 + armor);
@@ -410,26 +410,26 @@ public sealed class Player_Controller : MonoBehaviour {
 		}
 
 		hp -= damage.damage * dmgMult;
-		Game_Controller.invoke_player_damaged(damage);
+		GameController.invoke_player_damaged(damage);
 		if (!is_alive) {
 
-			Game_Controller.invoke_player_died(damage.attacker);
+			GameController.invoke_player_died(damage.attacker);
 		}
 	}
 
 	public void kill(Entity killer) {
-		do_damage(new Damage(hp + 1f, killer, Damage_Type.PURE));// +1 ensures that the damage done is more than the health the player has.
+		do_damage(new Damage(hp + 1f, killer, DamageType.PURE));// +1 ensures that the damage done is more than the health the player has.
 	}
 
-	public float get_stat(Char_Stat stat) {
+	public float get_stat(CharStat stat) {
 
 		switch (stat) {
-			case Char_Stat.ARMOR: return armor;
-			case Char_Stat.CRIT: return crit_chance;
-			case Char_Stat.HP: return max_hp;
-			case Char_Stat.REG: return hp_regen;
-			case Char_Stat.RESI: return magic_resi;
-			case Char_Stat.TEMPO: return attack_tempo;
+			case CharStat.ARMOR: return armor;
+			case CharStat.CRIT: return crit_chance;
+			case CharStat.HP: return max_hp;
+			case CharStat.REG: return hp_regen;
+			case CharStat.RESI: return magic_resi;
+			case CharStat.TEMPO: return attack_tempo;
 		}
 
 		return 0f;
@@ -448,38 +448,38 @@ public sealed class Player_Controller : MonoBehaviour {
 
 		foreach (Armor arm in inventory.active_armor_list) {
 			if (arm != null) {
-				foreach (Stat_Modifier stat_mod in arm.armor_template.stat_mods) {
+				foreach (StatModifier stat_mod in arm.armor_template.stat_mods) {
 					process_stat_mod(stat_mod);
 				}
 			}
 		}
 		foreach (Weapon weapon in inventory.active_weapon_list) {
 			if (weapon != null ) {
-				foreach (Stat_Modifier stat_mod in weapon.weapon_template.stat_mods) {
+				foreach (StatModifier stat_mod in weapon.weapon_template.stat_mods) {
 					process_stat_mod(stat_mod);
 				}
 			}
 		}
 	}
 
-	internal void process_stat_mod(Stat_Modifier stat_mod) {
+	internal void process_stat_mod(StatModifier stat_mod) {
 		switch (stat_mod.stat) {
-			case Char_Stat.ARMOR:
+			case CharStat.ARMOR:
 				armor += stat_mod.amount;
 				break;
-			case Char_Stat.CRIT:
+			case CharStat.CRIT:
 				crit_chance += stat_mod.amount;
 				break;
-			case Char_Stat.HP:
+			case CharStat.HP:
 				hp += stat_mod.amount;
 				break;
-			case Char_Stat.REG:
+			case CharStat.REG:
 				hp_regen += stat_mod.amount;
 				break;
-			case Char_Stat.RESI:
+			case CharStat.RESI:
 				magic_resi += stat_mod.amount;
 				break;
-			case Char_Stat.TEMPO:
+			case CharStat.TEMPO:
 				attack_tempo += stat_mod.amount;
 				break;
 		}
@@ -506,34 +506,34 @@ public sealed class Player_Controller : MonoBehaviour {
 	}
 
 	public void give_weapon(string weapon_ID, Mod_Template mod) {
-		Weapon_Template weapon = (Weapon_Template)mod.spawn_ent("weapon." + weapon_ID, transform.position);
+		WeaponTemplate weapon = (WeaponTemplate)mod.spawn_ent("weapon." + weapon_ID, transform.position);
 		inventory.pickup(weapon.game_object.GetComponent<Weapon>());
 	}
 
 	public void give_armor(string armor_ID, Mod_Template mod) {
-		Armor_Template armor = (Armor_Template)mod.spawn_ent("armor." + armor_ID, transform.position);
+		ArmorTemplate armor = (ArmorTemplate)mod.spawn_ent("armor." + armor_ID, transform.position);
 		inventory.pickup(armor.game_object.GetComponent<Armor>());
 	}
 
 	public void give_material(string material_ID, Mod_Template mod) {
-		Material_Template material = (Material_Template)mod.spawn_ent("material." + material_ID, transform.position);
+		MaterialTemplate material = (MaterialTemplate)mod.spawn_ent("material." + material_ID, transform.position);
 		inventory.pickup(material.game_object.GetComponent<Material>());
 	}
 
 	public void give_consumable(string consumable_ID, Mod_Template mod) {
-		Consumable_Template consumable = (Consumable_Template)mod.spawn_ent("consumable." + consumable_ID, transform.position);
+		ConsumableTemplate consumable = (ConsumableTemplate)mod.spawn_ent("consumable." + consumable_ID, transform.position);
 		inventory.pickup(consumable.game_object.GetComponent<Consumable>());
 	}
 
 	public void give_pet_item(string pet_item_ID, Mod_Template mod) {
-		Pet_Item_Template pet_item = (Pet_Item_Template)mod.spawn_ent("pet_item." + pet_item_ID, transform.position);
-		inventory.pickup(pet_item.game_object.GetComponent<Pet_Item>());
+		PetItemTemplate pet_item = (PetItemTemplate)mod.spawn_ent("pet_item." + pet_item_ID, transform.position);
+		inventory.pickup(pet_item.game_object.GetComponent<PetItem>());
 	}
 
 	#region Construction and Singleton
 
-	private static Player_Controller m_instance = null;
-	public static Player_Controller instance {
+	private static PlayerController m_instance = null;
+	public static PlayerController instance {
 
 		get {
 

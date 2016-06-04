@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class Material_Template : Item_Template {
+public abstract class MaterialTemplate : ItemTemplate {
 	
 	private Material m_material_object;
 	public Material material_object {

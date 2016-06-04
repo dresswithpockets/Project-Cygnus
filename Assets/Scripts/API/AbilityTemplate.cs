@@ -4,10 +4,10 @@ using System;
 
 public struct Ability_Type {
 	public Type type;
-	public Ability_Tier tier;
+	public AbilityTier tier;
 	public int min_player_level;
 
-	public Ability_Type(Type type, Ability_Tier tier, int level) {
+	public Ability_Type(Type type, AbilityTier tier, int level) {
 
 		this.type = type;
 		this.tier = tier;
@@ -30,21 +30,21 @@ public abstract class Ability_Template {
 
 	public abstract int ability_level { get; }
 
-	public virtual void start(Player_Controller player) { }
+	public virtual void start(PlayerController player) { }
 
-	public virtual void start(NPC_Controller npc) { }
+	public virtual void start(NPCController npc) { }
 
-	public virtual void passive_update(Player_Controller player) { }
+	public virtual void passive_update(PlayerController player) { }
 
-	public virtual void passive_update(NPC_Controller npc) { }
+	public virtual void passive_update(NPCController npc) { }
 
-	public virtual void ability_update(Player_Controller player) { }
+	public virtual void ability_update(PlayerController player) { }
 
-	public virtual void ability_update(NPC_Controller npc) { }
+	public virtual void ability_update(NPCController npc) { }
 
-	public virtual void end(Player_Controller player) { }
+	public virtual void end(PlayerController player) { }
 
-	public virtual void end(NPC_Controller npc) { }
+	public virtual void end(NPCController npc) { }
 
 	public virtual bool is_ready() { return true; }
 
@@ -55,7 +55,7 @@ public abstract class Ability_Template {
 	public virtual void interrupt() { }
 
 	// Determines whether or not an AI can use this ability on a target
-	public virtual bool AI_can_use_on_target(NPC_Controller npc, GameObject target) {
+	public virtual bool AI_can_use_on_target(NPCController npc, GameObject target) {
 
 		return false;
 	}

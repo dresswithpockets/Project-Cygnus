@@ -3,33 +3,33 @@ using System.Collections;
 
 public sealed class Armor : Item {
 	
-	public Armor_Template armor_template {
+	public ArmorTemplate armor_template {
 
 		get {
 
-			return (Armor_Template)m_template;
+			return (ArmorTemplate)m_template;
 		}
 		internal set {
 
 			m_template.game_object = gameObject;
-			((Armor_Template)m_template).armor_object = this;
+			((ArmorTemplate)m_template).armor_object = this;
 			m_template = value;
 		}
 	}
 
 	public void active_update() {
 		switch (ownership) {
-			case Item_Owner.NONE:
+			case ItemOwner.NONE:
 
 				Debug.LogError("Can't call active_update on this armor because no owner was assigned before the event was completed", this);
 
 				break;
-			case Item_Owner.NPC:
+			case ItemOwner.NPC:
 
 				if (template != null) armor_template.active_update(m_NPC_owner);
 
 				break;
-			case Item_Owner.PLAYER:
+			case ItemOwner.PLAYER:
 
 				if (template != null) armor_template.active_update(m_player_owner);
 
@@ -41,17 +41,17 @@ public sealed class Armor : Item {
 
 		switch (ownership) {
 
-			case Item_Owner.NONE:
+			case ItemOwner.NONE:
 
 				Debug.LogError("Cannot equip armor as no NPC or Player owns this item.", this);
 
 				break;
-			case Item_Owner.NPC:
+			case ItemOwner.NPC:
 
 				if (template != null) armor_template.equipped(m_NPC_owner, slot);
 
 				break;
-			case Item_Owner.PLAYER:
+			case ItemOwner.PLAYER:
 
 				if (template != null) armor_template.equipped(m_player_owner, slot);
 
@@ -61,17 +61,17 @@ public sealed class Armor : Item {
 
 	internal void unequip() {
 		switch (ownership) {
-			case Item_Owner.NONE:
+			case ItemOwner.NONE:
 
 				Debug.LogError("Cannot unequip armor as no NPC or Player owns this item.", this);
 
 				break;
-			case Item_Owner.NPC:
+			case ItemOwner.NPC:
 
 				if (template != null) armor_template.unequipped(m_NPC_owner);
 
 				break;
-			case Item_Owner.PLAYER:
+			case ItemOwner.PLAYER:
 
 				if (template != null) armor_template.unequipped(m_player_owner);
 

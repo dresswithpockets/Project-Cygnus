@@ -4,11 +4,11 @@ using System.Collections;
 public class Item : MonoBehaviour {
 
 	public MeshFilter filter;
-	public Model_Controller model_controller;
+	public ModelController model_controller;
 	internal Vox_Data data = new Vox_Data();
 
-	internal Item_Template m_template = null;
-	public Item_Template template {
+	internal ItemTemplate m_template = null;
+	public ItemTemplate template {
 		get {
 
 			return m_template;
@@ -22,10 +22,10 @@ public class Item : MonoBehaviour {
 
 	#region Ownership
 
-	internal NPC_Controller m_NPC_owner = null;
-	internal Player_Controller m_player_owner = null;
+	internal NPCController m_NPC_owner = null;
+	internal PlayerController m_player_owner = null;
 
-	public NPC_Controller NPC_owner {
+	public NPCController NPC_owner {
 
 		get {
 
@@ -37,7 +37,7 @@ public class Item : MonoBehaviour {
 		}
 	}
 
-	public Player_Controller player_owner {
+	public PlayerController player_owner {
 
 		get {
 
@@ -49,21 +49,21 @@ public class Item : MonoBehaviour {
 		}
 	}
 
-	public Item_Owner ownership {
+	public ItemOwner ownership {
 
 		get {
 
-			return (m_NPC_owner == null ? (m_player_owner == null ? Item_Owner.NONE : Item_Owner.PLAYER) : Item_Owner.NPC);
+			return (m_NPC_owner == null ? (m_player_owner == null ? ItemOwner.NONE : ItemOwner.PLAYER) : ItemOwner.NPC);
 		}
 	}
 
-	internal void set_owner(Player_Controller player) {
+	internal void set_owner(PlayerController player) {
 
 		m_NPC_owner = null;
 		m_player_owner = player;
 	}
 
-	internal void set_owner(NPC_Controller npc) {
+	internal void set_owner(NPCController npc) {
 		m_player_owner = null;
 		m_NPC_owner = npc;
 	}
@@ -79,24 +79,24 @@ public class Item : MonoBehaviour {
 	public virtual void Start() {
 
 		filter = GetComponent<MeshFilter>();
-		model_controller = GetComponent<Model_Controller>();
+		model_controller = GetComponent<ModelController>();
 		model_controller.load_vox(data);
 
 		if (template != null) template.spawned();
 
-		Physics.IgnoreCollision(GetComponent<BoxCollider>(), Player_Controller.instance.body_collider);
+		Physics.IgnoreCollision(GetComponent<BoxCollider>(), PlayerController.instance.body_collider);
 	}
 
 	public virtual void Update() {
 		if (template != null) template.exists_update();
 
 		switch (ownership) {
-			case Item_Owner.NPC:
+			case ItemOwner.NPC:
 
 				if (template != null) template.passive_update(m_NPC_owner);
 
 				break;
-			case Item_Owner.PLAYER:
+			case ItemOwner.PLAYER:
 
 				if (template != null) template.passive_update(m_player_owner);
 
@@ -116,17 +116,17 @@ public class Item : MonoBehaviour {
 
 		switch (ownership) {
 
-			case Item_Owner.NONE:
+			case ItemOwner.NONE:
 
 				Debug.LogError("Cannot pick up item because no owner was assigned before the event was completed.", this);
 
 				break;
-			case Item_Owner.NPC:
+			case ItemOwner.NPC:
 
 				if (template != null) template.picked_up(m_NPC_owner);
 
 				break;
-			case Item_Owner.PLAYER:
+			case ItemOwner.PLAYER:
 
 				if (template != null) template.picked_up(m_player_owner);
 
@@ -138,17 +138,17 @@ public class Item : MonoBehaviour {
 
 		switch (ownership) {
 
-			case Item_Owner.NONE:
+			case ItemOwner.NONE:
 
 				Debug.LogError("Cannot drop item as no NPC or Player owns this item.", this);
 
 				break;
-			case Item_Owner.NPC:
+			case ItemOwner.NPC:
 
 				if (template != null) template.dropped(m_NPC_owner);
 
 				break;
-			case Item_Owner.PLAYER:
+			case ItemOwner.PLAYER:
 
 				if (template != null) template.dropped(m_player_owner);
 
@@ -157,7 +157,7 @@ public class Item : MonoBehaviour {
 		drop_owner();
 	}
 
-	public void assign_template(Item_Template template, Vox_Data model) {
+	public void assign_template(ItemTemplate template, Vox_Data model) {
 
 		this.template = template;
 		data = model;
