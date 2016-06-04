@@ -85,4 +85,62 @@ public class Model_Controller : MonoBehaviour {
 		do_group = true;
 		this.group = group;
 	}
+
+	#region animation
+
+	IEnumerator do_anim(Scd_Data data) {
+		float rate = data.rate;
+		float start_time = Time.time;
+
+		bool animate = true;
+		while (animate) {
+
+			// this only works since we're yielding inside of the loop and this is a coroutine.
+			float time_passed = Mathf.Abs(Time.time - start_time);
+
+			int frame = Mathf.CeilToInt(rate * time_passed);
+			if (frame > data.frames.Length) break;
+
+			foreach (Scd_Frame_Group group in data.frames[frame].groups) {
+				process_group(group, data.flags);
+			}
+
+			yield return null;
+		}
+	}
+
+	void process_group(Scd_Frame_Group group, List<Scd_Flag> flags) {
+		foreach (GameObject go in groups) {
+			Model_Controller mc = go.GetComponent<Model_Controller>();
+			if (mc.group.name == group.group) {
+				if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+
+					// TODO: Recreate interp generation so that it does not overcompensate interpolation when adding.
+					/*
+
+					In detail: Since we are adding (+=) the new group.position to transform.position, we need to ensure that we don't add every single POSITION
+					but instead, we add every delta position between frames. This change should be made in the calculations for frames in Scd_Data.
+
+					e.g. group.delta_position is essentially a frame-by-frame velocity
+
+					*/
+
+					// TODO: Add code here for adding the new group.delta_position to the transform.position
+
+				}
+				if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+
+					go.transform.rotation = Quaternion.Euler(group.rotation);
+
+				}
+				if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+
+					go.transform.localScale = group.scale;
+
+				}
+			}
+		}
+	}
+
+	#endregion
 }
