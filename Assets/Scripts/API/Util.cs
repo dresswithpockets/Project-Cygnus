@@ -104,12 +104,4 @@ public static class Util {
 
 		return end;
 	}
-
-	internal static bool groups_contains(this Scd_Frame_Group[] group, string group_name) {
-		for (int i = 0; i < group.Length; i++) {
-			if (group[i].group == group_name) return true;
-		}
-
-		return false;
-	}
 }

@@ -49,8 +49,14 @@ public enum ItemOwner {
 public enum DamageType {
 
 	PHYSICAL = 0,
-	MAGIC,
-	PURE
+	MAGIC
+}
+
+public enum DamageElement {
+
+	NONE = 0,
+	FIRE,
+	ICE
 }
 
 public enum CharStat {
@@ -123,4 +129,17 @@ public enum DebugWarningLevel {
 	NORMAL = 0,
 	WARNING,
 	ERROR
+}
+
+public enum EquippableSlot {
+	WEAPON_RIGHT_HAND = 0,
+	WEAPON_LEFT_HAND = 1,
+
+	HEAD = 0,
+	SHOULDERS = 1,
+	TORSO = 2,
+	HANDS = 4,
+	LEGS = 6,
+	FEET = 8,
+	NECK = 16
 }
