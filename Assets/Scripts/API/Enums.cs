@@ -2,33 +2,33 @@
 using System;
 using System.Collections;
 
-public enum Ability_Tier {
+public enum AbilityTier {
 
 	BASIC = 0,
 	INTERMEDIATE,
 	ADVANCED
 }
 
-public enum Item_Classification {
+public enum ItemClassification {
 
 	CONSUMABLE = 0,
 	MATERIAL
 }
 
-public enum Weapon_Classification {
+public enum WeaponClassification {
 
 	MELEE = 0,
 	RANGED_PROJECTILE,
 	RANGED_HITSCAN
 }
 
-public enum Weapon_Handiness {
+public enum WeaponHandiness {
 
 	ONE_HANDED = 0,
 	TWO_HANDED
 }
 
-public enum Armor_Class {
+public enum ArmorClass {
 
 	HEAD = 0,
 	SHOULDERS,
@@ -39,21 +39,21 @@ public enum Armor_Class {
 	NECK,
 }
 
-public enum Item_Owner {
+public enum ItemOwner {
 
 	NPC = 0,
 	PLAYER,
 	NONE
 }
 
-public enum Damage_Type {
+public enum DamageType {
 
 	PHYSICAL = 0,
 	MAGIC,
 	PURE
 }
 
-public enum Char_Stat {
+public enum CharStat {
 
 	ARMOR = 0, // Resistance to physical
 	RESI, // Resistance to magic
@@ -63,13 +63,13 @@ public enum Char_Stat {
 	REG // HP Regen per second
 }
 
-public enum Stat_Modifier_Type {
+public enum StatModifierType {
 
 	PRODUCT = 0,
 	SUM
 }
 
-public enum Inventory_Category {
+public enum InventoryCategory {
 
 	WEAPON = 0,
 	ARMOR,
@@ -78,20 +78,20 @@ public enum Inventory_Category {
 	PET_ITEM
 }
 
-public enum Model_Section {
+public enum ModelSection {
 
 	VERTS = 0,
 	COLS,
 	TRIS
 }
 
-public enum Weapon_Slot {
+public enum WeaponSlot {
 
 	RIGHT_HAND = 0,
 	LEFT_HAND,
 }
 
-public enum Ability_Slot {
+public enum AbilitySlot {
 
 	SLOT_1 = 0,
 	SLOT_2,
@@ -99,27 +99,27 @@ public enum Ability_Slot {
 	SLOT_4
 }
 
-public enum Image_Type {
+public enum ImageType {
 
 	PNG = 0,
 	JPG
 }
 
-public enum Scd_Flag {
+public enum ScdFlag {
 
 	CHANGES_POSITION = 0x0,
 	CHANGES_ROTATION = 0x1,
 	CHANGES_SCALE = 0x2,
 }
 
-public enum Interp_Type {
+public enum InterpType {
 
 	ASSIGN = 0, // Assign
 	LINEAR, // Lerp
 	SPHERICAL // Slerp
 }
 
-public enum Debug_Warning_Level {
+public enum DebugWarningLevel {
 	NORMAL = 0,
 	WARNING,
 	ERROR

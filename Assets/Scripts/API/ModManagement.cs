@@ -70,9 +70,9 @@ public abstract class Mod_Template {
 
 			case "material":
 
-				GameObject item = (GameObject)GameObject.Instantiate(Game_Controller.instance.material_prefab, pos, Quaternion.Euler(rot));
+				GameObject item = (GameObject)GameObject.Instantiate(GameController.instance.material_prefab, pos, Quaternion.Euler(rot));
 
-				Material_Template template_item = (Material_Template)Activator.CreateInstance(item_template_dict[ent_ID]);
+				MaterialTemplate template_item = (MaterialTemplate)Activator.CreateInstance(item_template_dict[ent_ID]);
 
 				model_ID = (template_item.model_ID == null ? "default" : template_item.model_ID);
 
@@ -89,9 +89,9 @@ public abstract class Mod_Template {
 				return template_item;
 			case "weapon":
 
-				GameObject weapon = (GameObject)GameObject.Instantiate(Game_Controller.instance.weapon_prefab, pos, Quaternion.Euler(rot));
+				GameObject weapon = (GameObject)GameObject.Instantiate(GameController.instance.weapon_prefab, pos, Quaternion.Euler(rot));
 
-				Weapon_Template template_weapon = (Weapon_Template)Activator.CreateInstance(weapon_template_dict[ent_ID]);
+				WeaponTemplate template_weapon = (WeaponTemplate)Activator.CreateInstance(weapon_template_dict[ent_ID]);
 
 				model_ID = (template_weapon.model_ID == null ? "default" : template_weapon.model_ID);
 
@@ -107,9 +107,9 @@ public abstract class Mod_Template {
 				return template_weapon;
 			case "armor":
 
-				GameObject armor = (GameObject)GameObject.Instantiate(Game_Controller.instance.armor_prefab, pos, Quaternion.Euler(rot));
+				GameObject armor = (GameObject)GameObject.Instantiate(GameController.instance.armor_prefab, pos, Quaternion.Euler(rot));
 
-				Armor_Template template_armor = (Armor_Template)Activator.CreateInstance(armor_template_dict[ent_ID]);
+				ArmorTemplate template_armor = (ArmorTemplate)Activator.CreateInstance(armor_template_dict[ent_ID]);
 
 				model_ID = (template_armor.model_ID == null ? "default" : template_armor.model_ID);
 
@@ -125,9 +125,9 @@ public abstract class Mod_Template {
 				return template_armor;
 			case "consumable":
 
-				GameObject consumable = (GameObject)GameObject.Instantiate(Game_Controller.instance.consumable_prefab, pos, Quaternion.Euler(rot));
+				GameObject consumable = (GameObject)GameObject.Instantiate(GameController.instance.consumable_prefab, pos, Quaternion.Euler(rot));
 
-				Consumable_Template template_consumable = (Consumable_Template)Activator.CreateInstance(consumable_template_dict[ent_ID]);
+				ConsumableTemplate template_consumable = (ConsumableTemplate)Activator.CreateInstance(consumable_template_dict[ent_ID]);
 
 				model_ID = (template_consumable.model_ID == null ? "default" : template_consumable.model_ID);
 
@@ -143,9 +143,9 @@ public abstract class Mod_Template {
 				return template_consumable;
 			case "petitem":
 
-				GameObject pet_item = (GameObject)GameObject.Instantiate(Game_Controller.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
+				GameObject pet_item = (GameObject)GameObject.Instantiate(GameController.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
 
-				Pet_Item_Template template_pet_item = (Pet_Item_Template)Activator.CreateInstance(pet_item_template_dict[ent_ID]);
+				PetItemTemplate template_pet_item = (PetItemTemplate)Activator.CreateInstance(pet_item_template_dict[ent_ID]);
 
 				model_ID = (template_pet_item.model_ID == null ? "default" : template_pet_item.model_ID);
 				
@@ -156,14 +156,14 @@ public abstract class Mod_Template {
 					vox = model_dict[model_ID];
 				}
 
-				pet_item.GetComponent<Pet_Item>().assign_template(template_pet_item, vox);
+				pet_item.GetComponent<PetItem>().assign_template(template_pet_item, vox);
 
 				return template_pet_item;
 			case "pet":
 
-				GameObject pet = (GameObject)GameObject.Instantiate(Game_Controller.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
+				GameObject pet = (GameObject)GameObject.Instantiate(GameController.instance.pet_item_prefab, pos, Quaternion.Euler(rot));
 
-				Pet_Item_Template template_pet = (Pet_Item_Template)Activator.CreateInstance(pet_item_template_dict[ent_ID]);
+				PetItemTemplate template_pet = (PetItemTemplate)Activator.CreateInstance(pet_item_template_dict[ent_ID]);
 
 				model_ID = (template_pet.model_ID == null ? "default" : template_pet.model_ID);
 
@@ -174,8 +174,8 @@ public abstract class Mod_Template {
 					vox = model_dict[model_ID];
 				}
 
-				pet.GetComponent<Pet_Item>().assign_template(template_pet, vox);
-				pet.GetComponent<Pet_Item>().is_item = false;
+				pet.GetComponent<PetItem>().assign_template(template_pet, vox);
+				pet.GetComponent<PetItem>().is_item = false;
 
 				return template_pet;
 			case "npc":
@@ -205,7 +205,7 @@ public abstract class Mod_Template {
 		DebugConsole.Log("Finished loading model.", true);
 	}
 
-	public void load_image(string ID, string file_name, Image_Type image_type) {
+	public void load_image(string ID, string file_name, ImageType image_type) {
 
 		if (image_dict.ContainsKey(ID)) {
 			Debug.LogError("Cannot import image file " + file_name +
@@ -215,7 +215,7 @@ public abstract class Mod_Template {
 		}
 
 		Texture2D image = new Texture2D(2, 2);
-		byte[] data = File.ReadAllBytes(mod_path + "/Images/" + file_name + "." + Enum.GetName(typeof(Image_Type), image_type));
+		byte[] data = File.ReadAllBytes(mod_path + "/Images/" + file_name + "." + Enum.GetName(typeof(ImageType), image_type));
 		image.LoadImage(data);
 
 		image_dict.Add(ID, image);
@@ -270,7 +270,7 @@ public abstract class Mod_Template {
 			Debug.LogError("Templates can only be registered inside Initialize().");
 			return;
 		}
-		if (typeof(Material_Template).IsAssignableFrom(item_type)) {
+		if (typeof(MaterialTemplate).IsAssignableFrom(item_type)) {
 
 			if (item_template_dict.ContainsKey(ID)) {
 
@@ -281,7 +281,7 @@ public abstract class Mod_Template {
 
 			item_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Weapon_Template).IsAssignableFrom(item_type)) {
+		else if (typeof(WeaponTemplate).IsAssignableFrom(item_type)) {
 
 			if (weapon_template_dict.ContainsKey(ID)) {
 
@@ -292,7 +292,7 @@ public abstract class Mod_Template {
 
 			weapon_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Armor_Template).IsAssignableFrom(item_type)) {
+		else if (typeof(ArmorTemplate).IsAssignableFrom(item_type)) {
 
 			if (armor_template_dict.ContainsKey(ID)) {
 
@@ -303,7 +303,7 @@ public abstract class Mod_Template {
 
 			armor_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Consumable_Template).IsAssignableFrom(item_type)) {
+		else if (typeof(ConsumableTemplate).IsAssignableFrom(item_type)) {
 
 			if (consumable_template_dict.ContainsKey(ID)) {
 
@@ -314,7 +314,7 @@ public abstract class Mod_Template {
 
 			consumable_template_dict.Add(ID, item_type);
 		}
-		else if (typeof(Pet_Item_Template).IsAssignableFrom(item_type)) {
+		else if (typeof(PetItemTemplate).IsAssignableFrom(item_type)) {
 
 			if (pet_item_template_dict.ContainsKey(ID)) {
 
@@ -346,7 +346,7 @@ public abstract class Mod_Template {
 		Debug.LogError("Cannot import template of type " + npc_type.Name + " because it does not inherit from the abstract npc template in CygnusAPI");
 	}
 
-	public void register_ability(string ID, Type ability_type, Ability_Tier tier, int min_player_level) {
+	public void register_ability(string ID, Type ability_type, AbilityTier tier, int min_player_level) {
 
 		if (advanced_ability_dict.ContainsKey(ID) ||
 			inter_ability_dict.ContainsKey(ID) ||
@@ -357,25 +357,25 @@ public abstract class Mod_Template {
 			return;
 		}
 
-		DebugConsole.Log("Registering ability with ID: " + ID + ", of tier: " + Enum.GetName(typeof(Ability_Tier), tier) + ", with mind level of: " + min_player_level.ToString(), true);
+		DebugConsole.Log("Registering ability with ID: " + ID + ", of tier: " + Enum.GetName(typeof(AbilityTier), tier) + ", with mind level of: " + min_player_level.ToString(), true);
 
 		switch (tier) {
 
-			case Ability_Tier.ADVANCED:
+			case AbilityTier.ADVANCED:
 
 				DebugConsole.Log("Registering ability to advanced ability dictionary...", true);
 				advanced_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
 				DebugConsole.Log("Registered ability to advanced ability dictionary.", true);
 
 				return;
-			case Ability_Tier.BASIC:
+			case AbilityTier.BASIC:
 
 				DebugConsole.Log("Registering ability to basic ability dictionary...", true);
 				basic_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
 				DebugConsole.Log("Registered ability to basic ability dictionary.", true);
 
 				return;
-			case Ability_Tier.INTERMEDIATE:
+			case AbilityTier.INTERMEDIATE:
 
 				DebugConsole.Log("Registering ability to intermediate ability dictionary...", true);
 				inter_ability_dict.Add(ID, new Ability_Type(ability_type, tier, min_player_level));
@@ -391,12 +391,12 @@ public abstract class Mod_Template {
 		if (advanced_ability_dict.ContainsKey(ability_ID)) return advanced_ability_dict[ability_ID];
 		else if (inter_ability_dict.ContainsKey(ability_ID)) return inter_ability_dict[ability_ID];
 		else if (basic_ability_dict.ContainsKey(ability_ID)) return basic_ability_dict[ability_ID];
-		else return new Ability_Type(null, Ability_Tier.BASIC, -1);
+		else return new Ability_Type(null, AbilityTier.BASIC, -1);
 	}
 
-	public Player_Controller get_player() { return Player_Controller.instance; }
+	public PlayerController get_player() { return PlayerController.instance; }
 
-	public NPC_Controller[] get_NPC_list() { return Game_Controller.NPC_controller_list; }
+	public NPCController[] get_NPC_list() { return GameController.NPC_controller_list; }
 
-	public Game_Controller get_game() { return Game_Controller.instance; }
+	public GameController get_game() { return GameController.instance; }
 }

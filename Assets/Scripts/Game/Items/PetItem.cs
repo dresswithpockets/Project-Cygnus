@@ -4,19 +4,19 @@ using System.Collections;
 
 // TODO: Implement Pet Items and Pets
 
-public sealed class Pet_Item : Item {
+public sealed class PetItem : Item {
 	
 	private bool m_is_item = true;
 
-	public Pet_Item_Template pet_item_template {
+	public PetItemTemplate pet_item_template {
 		get {
 
-			return (Pet_Item_Template)m_template;
+			return (PetItemTemplate)m_template;
 		}
 		internal set {
 
 			m_template.game_object = gameObject;
-			((Pet_Item_Template)m_template).pet_item_object = this;
+			((PetItemTemplate)m_template).pet_item_object = this;
 			m_template = value;
 		}
 	}

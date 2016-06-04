@@ -16,8 +16,8 @@ public abstract class NPC_Template {
 		}
 	}
 
-	private NPC_Controller m_NPC;
-	public NPC_Controller NPC {
+	private NPCController m_NPC;
+	public NPCController NPC {
 		get {
 
 			return m_NPC;

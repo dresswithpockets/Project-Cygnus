@@ -3,16 +3,16 @@ using System.Collections;
 
 public sealed class Consumable : Item {
 
-	public Consumable_Template consumable_template {
+	public ConsumableTemplate consumable_template {
 
 		get {
 
-			return (Consumable_Template)m_template;
+			return (ConsumableTemplate)m_template;
 		}
 		internal set {
 
 			m_template.game_object = gameObject;
-			((Consumable_Template)m_template).consumable_object = this;
+			((ConsumableTemplate)m_template).consumable_object = this;
 			m_template = value;
 		}
 	}

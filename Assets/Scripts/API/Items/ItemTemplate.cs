@@ -8,7 +8,7 @@ using System.Collections;
 //
 //		- TH 4/12/2016
 //
-public abstract class Item_Template  {
+public abstract class ItemTemplate  {
 
 	private GameObject m_game_object;
 	public GameObject game_object {
@@ -35,39 +35,39 @@ public abstract class Item_Template  {
 
 	public virtual void exists_update() { }
 
-	public virtual void passive_update(Player_Controller player) { }
+	public virtual void passive_update(PlayerController player) { }
 
-	public virtual void passive_update(NPC_Controller npc) { }
+	public virtual void passive_update(NPCController npc) { }
 
 	public virtual void fixed_update() { }
 
 	public virtual void late_update() { }
 
-	public virtual void picked_up(Player_Controller player) { }
+	public virtual void picked_up(PlayerController player) { }
 
-	public virtual void picked_up(NPC_Controller npc) { }
+	public virtual void picked_up(NPCController npc) { }
 
-	public virtual void dropped(Player_Controller player) { }
+	public virtual void dropped(PlayerController player) { }
 
-	public virtual void dropped(NPC_Controller npc) { }
+	public virtual void dropped(NPCController npc) { }
 
 	public bool is_weapon() {
-		return typeof(Weapon_Template) == this.GetType();
+		return typeof(WeaponTemplate) == this.GetType();
 	}
 
 	public bool is_material() {
-		return typeof(Material_Template) == this.GetType();
+		return typeof(MaterialTemplate) == this.GetType();
 	}
 
 	public bool is_pet_item() {
-		return typeof(Pet_Item_Template) == this.GetType();
+		return typeof(PetItemTemplate) == this.GetType();
 	}
 
 	public bool is_armor() {
-		return typeof(Armor_Template) == this.GetType();
+		return typeof(ArmorTemplate) == this.GetType();
 	}
 
 	public bool is_consumable() {
-		return typeof(Consumable_Template) == this.GetType();
+		return typeof(ConsumableTemplate) == this.GetType();
 	}
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Model_Controller : MonoBehaviour {
+public class ModelController : MonoBehaviour {
 
 	public List<GameObject> groups = new List<GameObject>();
 
@@ -16,7 +16,7 @@ public class Model_Controller : MonoBehaviour {
 	void Start() {
 		filter = GetComponent<MeshFilter>();
 		if (do_data && do_group) {
-			DebugConsole.Log("Can't load meshes for both group and data. Using group mesh.", Debug_Warning_Level.WARNING);
+			DebugConsole.Log("Can't load meshes for both group and data. Using group mesh.", DebugWarningLevel.WARNING);
 		}
 		else if (do_data) {
 			data.to_filter(ref filter);
@@ -52,9 +52,9 @@ public class Model_Controller : MonoBehaviour {
 		if (segmented) {
 			foreach (Vox_Group group in data.groups) {
 				// Add a group object which will be assigned the mesh of the current group being iterated over
-				GameObject go = (GameObject)Instantiate(Game_Controller.instance.vox_prefab, transform.position + group.position, Quaternion.identity);
+				GameObject go = (GameObject)Instantiate(GameController.instance.vox_prefab, transform.position + group.position, Quaternion.identity);
 
-				go.GetComponent<Model_Controller>().load_group(group);
+				go.GetComponent<ModelController>().load_group(group);
 
 				go.transform.parent = transform;
 
@@ -62,9 +62,9 @@ public class Model_Controller : MonoBehaviour {
 			}
 		}
 		else {
-			GameObject go = (GameObject)Instantiate(Game_Controller.instance.vox_prefab, transform.position, Quaternion.identity);
+			GameObject go = (GameObject)Instantiate(GameController.instance.vox_prefab, transform.position, Quaternion.identity);
 
-			go.GetComponent<Model_Controller>().load_data(data);
+			go.GetComponent<ModelController>().load_data(data);
 
 			go.transform.parent = transform;
 
@@ -109,11 +109,11 @@ public class Model_Controller : MonoBehaviour {
 		}
 	}
 
-	void process_group(Scd_Frame_Group group, List<Scd_Flag> flags) {
+	void process_group(Scd_Frame_Group group, List<ScdFlag> flags) {
 		foreach (GameObject go in groups) {
-			Model_Controller mc = go.GetComponent<Model_Controller>();
+			ModelController mc = go.GetComponent<ModelController>();
 			if (mc.group.name == group.group) {
-				if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
+				if (flags.Contains(ScdFlag.CHANGES_POSITION)) {
 
 					// TODO: Recreate interp generation so that it does not overcompensate interpolation when adding.
 					/*
@@ -128,12 +128,12 @@ public class Model_Controller : MonoBehaviour {
 					// TODO: Add code here for adding the new group.delta_position to the transform.position
 
 				}
-				if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
+				if (flags.Contains(ScdFlag.CHANGES_ROTATION)) {
 
 					go.transform.rotation = Quaternion.Euler(group.rotation);
 
 				}
-				if (flags.Contains(Scd_Flag.CHANGES_SCALE)) {
+				if (flags.Contains(ScdFlag.CHANGES_SCALE)) {
 
 					go.transform.localScale = group.scale;
 

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public struct Stat_Modifier
+public struct StatModifier
 {
-	public Char_Stat stat;
+	public CharStat stat;
 	public float amount;
 }

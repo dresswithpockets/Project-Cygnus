@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-public sealed class Inventory_Controller : MonoBehaviour {
+public sealed class InventoryController : MonoBehaviour {
 	
 	public bool is_casting_ability = false;
 
@@ -10,7 +10,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 	private List<Armor> m_armor_list = new List<Armor>();
 	private List<Weapon> m_weapon_list = new List<Weapon>();
 	private List<Consumable> m_consumable_list = new List<Consumable>();
-	private List<Pet_Item> m_pet_item_list = new List<Pet_Item>();
+	private List<PetItem> m_pet_item_list = new List<PetItem>();
 
 	// index 0 = right hand weapons. One handed and two handed weapons go here.
 	// index 1 = left hand weapons. One handed weapons go here.
@@ -30,12 +30,12 @@ public sealed class Inventory_Controller : MonoBehaviour {
 	private Dictionary<string, Ability_Template> m_learned_ability_list = new Dictionary<string, Ability_Template>();
 	private Ability_Template[] m_active_ability_list = new[] { (Ability_Template)null, null, null, null }; // 4 slots, 0 through 3
 
-	private Player_Controller m_player = null;
+	private PlayerController m_player = null;
 	private bool m_player_inv = false;
 
 	#region Properties
 
-	public Player_Controller player {
+	public PlayerController player {
 
 		get {
 
@@ -107,7 +107,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		}
 	}
 
-	public List<Pet_Item> pet_item_list {
+	public List<PetItem> pet_item_list {
 
 		get {
 
@@ -187,7 +187,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		material.set_render(false);
 
 		if (is_player_inventory) {
-			Game_Controller.invoke_player_picked_up(material.template);
+			GameController.invoke_player_picked_up(material.template);
 
 			material.set_owner(player);
 			material.pick_up();
@@ -207,7 +207,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		armor.set_render(false);
 
 		if (is_player_inventory) {
-			Game_Controller.invoke_player_picked_up(armor.template);
+			GameController.invoke_player_picked_up(armor.template);
 
 			armor.set_owner(player);
 			armor.pick_up();
@@ -226,7 +226,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		weapon.set_render(false);
 
 		if (is_player_inventory) {
-			Game_Controller.invoke_player_picked_up(weapon.template);
+			GameController.invoke_player_picked_up(weapon.template);
 
 			weapon.set_owner(player);
 			weapon.pick_up();
@@ -245,7 +245,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		consumable.set_render(false);
 
 		if (is_player_inventory) {
-			Game_Controller.invoke_player_picked_up(consumable.template);
+			GameController.invoke_player_picked_up(consumable.template);
 
 			consumable.set_owner(player);
 			consumable.pick_up();
@@ -257,14 +257,14 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		// so we dont really have functionality to call the API for npc ownership.
 	}
 
-	public void pickup(Pet_Item pet_item) {
+	public void pickup(PetItem pet_item) {
 
 		pet_item_list.Add(pet_item);
 
 		pet_item.set_render(false);
 
 		if (is_player_inventory) {
-			Game_Controller.invoke_player_picked_up(pet_item.template);
+			GameController.invoke_player_picked_up(pet_item.template);
 
 			pet_item.set_owner(player);
 			pet_item.pick_up();
@@ -276,37 +276,37 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		// so we dont really have functionality to call the API for npc ownership.
 	}
 
-	public void drop(Inventory_Category tab, int slot) {
+	public void drop(InventoryCategory tab, int slot) {
 
 		Item dropped_item = null;
 
 		switch (tab) {
 
-			case Inventory_Category.ARMOR:
+			case InventoryCategory.ARMOR:
 
 				dropped_item = armor_list[slot];
 				armor_list.RemoveAt(slot);
 
 				break;
-			case Inventory_Category.MATERIAL:
+			case InventoryCategory.MATERIAL:
 
 				dropped_item = material_list[slot];
 				material_list.RemoveAt(slot);
 
 				break;
-			case Inventory_Category.WEAPON:
+			case InventoryCategory.WEAPON:
 
 				dropped_item = weapon_list[slot];
 				weapon_list.RemoveAt(slot);
 
 				break;
-			case Inventory_Category.CONSUMABLE:
+			case InventoryCategory.CONSUMABLE:
 
 				dropped_item = consumable_list[slot];
 				consumable_list.RemoveAt(slot);
 				
 				break;
-			case Inventory_Category.PET_ITEM:
+			case InventoryCategory.PET_ITEM:
 
 				dropped_item = pet_item_list[slot];
 				pet_item_list.RemoveAt(slot);
@@ -316,16 +316,16 @@ public sealed class Inventory_Controller : MonoBehaviour {
 
 		if (is_player_inventory) {
 			
-			Game_Controller.invoke_player_dropped(dropped_item.template);
+			GameController.invoke_player_dropped(dropped_item.template);
 			dropped_item.drop();
 		}
 
 		dropped_item.set_render(true);
 
-		DebugConsole.Log("Dropped item of type: " + Enum.GetName(typeof(Inventory_Category), tab) + " with name: " + dropped_item.name, true);
+		DebugConsole.Log("Dropped item of type: " + Enum.GetName(typeof(InventoryCategory), tab) + " with name: " + dropped_item.name, true);
 	}
 
-	public void equip_weapon(int inv_slot, Weapon_Slot equip_slot) {
+	public void equip_weapon(int inv_slot, WeaponSlot equip_slot) {
 
 		if (weapon_list.Count < inv_slot + 1) {
 
@@ -336,8 +336,8 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		Weapon weapon_to_equip = weapon_list[inv_slot];
 		weapon_list[inv_slot] = null;
 
-		Weapon left_wep = active_weapon_list[(int)Weapon_Slot.LEFT_HAND];
-		Weapon right_wep = active_weapon_list[(int)Weapon_Slot.RIGHT_HAND];
+		Weapon left_wep = active_weapon_list[(int)WeaponSlot.LEFT_HAND];
+		Weapon right_wep = active_weapon_list[(int)WeaponSlot.RIGHT_HAND];
 		bool moved_inv_slot = false;
 
 		// if there are no weapons equipped, equip this weapon to the right hand
@@ -345,7 +345,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		//		
 		//		- TH 4/13/2016
 		//
-		if (left_wep == null && right_wep == null) equip_slot = Weapon_Slot.RIGHT_HAND;
+		if (left_wep == null && right_wep == null) equip_slot = WeaponSlot.RIGHT_HAND;
 		// Two handed weapons cannot be equipped with other
 		// on handed or two handed weapons. Thus, we must move
 		// any weapons that are equipped into the inventory.
@@ -355,14 +355,14 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		//
 		//		- TH 4/13/2016
 		//
-		else if (weapon_to_equip.weapon_template.handiness == Weapon_Handiness.TWO_HANDED) {
+		else if (weapon_to_equip.weapon_template.handiness == WeaponHandiness.TWO_HANDED) {
 			if (left_wep != null) {
 				weapon_list[inv_slot] = left_wep;
 				weapon_list[inv_slot].set_render(false);
 
 				moved_inv_slot = true;
 
-				active_weapon_list[(int)Weapon_Slot.LEFT_HAND] = null;
+				active_weapon_list[(int)WeaponSlot.LEFT_HAND] = null;
 			}
 			if (right_wep != null) {
 				if (moved_inv_slot) {
@@ -376,13 +376,13 @@ public sealed class Inventory_Controller : MonoBehaviour {
 					moved_inv_slot = true;
 				}
 
-				active_weapon_list[(int)Weapon_Slot.RIGHT_HAND] = null;
+				active_weapon_list[(int)WeaponSlot.RIGHT_HAND] = null;
 			}
 
-			equip_slot = Weapon_Slot.RIGHT_HAND;
+			equip_slot = WeaponSlot.RIGHT_HAND;
 		}
 		else { // One handed weapon to equip
-			if (right_wep != null && right_wep.weapon_template.handiness == Weapon_Handiness.TWO_HANDED) {
+			if (right_wep != null && right_wep.weapon_template.handiness == WeaponHandiness.TWO_HANDED) {
 				if (moved_inv_slot) {
 					weapon_list.Add(right_wep);
 					weapon_list[weapon_list.Count - 1].set_render(false);
@@ -394,11 +394,11 @@ public sealed class Inventory_Controller : MonoBehaviour {
 					moved_inv_slot = true;
 				}
 
-				active_weapon_list[(int)Weapon_Slot.RIGHT_HAND] = null;
+				active_weapon_list[(int)WeaponSlot.RIGHT_HAND] = null;
 
-				equip_slot = Weapon_Slot.RIGHT_HAND;
+				equip_slot = WeaponSlot.RIGHT_HAND;
 			}
-			else if (equip_slot == Weapon_Slot.LEFT_HAND && left_wep != null) {
+			else if (equip_slot == WeaponSlot.LEFT_HAND && left_wep != null) {
 				if (moved_inv_slot) {
 					weapon_list.Add(left_wep);
 					weapon_list[weapon_list.Count - 1].set_render(false);
@@ -410,9 +410,9 @@ public sealed class Inventory_Controller : MonoBehaviour {
 					moved_inv_slot = true;
 				}
 
-				active_weapon_list[(int)Weapon_Slot.LEFT_HAND] = null;
+				active_weapon_list[(int)WeaponSlot.LEFT_HAND] = null;
 			}
-			else if (equip_slot == Weapon_Slot.RIGHT_HAND && right_wep != null) {
+			else if (equip_slot == WeaponSlot.RIGHT_HAND && right_wep != null) {
 				if (moved_inv_slot) {
 					weapon_list.Add(right_wep);
 					weapon_list[weapon_list.Count - 1].set_render(false);
@@ -424,7 +424,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 					moved_inv_slot = true;
 				}
 
-				active_weapon_list[(int)Weapon_Slot.RIGHT_HAND] = null;
+				active_weapon_list[(int)WeaponSlot.RIGHT_HAND] = null;
 			}
 		}
 
@@ -443,7 +443,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		DebugConsole.Log("Equipped weapon with name: " + weapon_to_equip.template.name + ", at slot: " + ((int)equip_slot).ToString(), true);
 	}
 
-	internal void equip_armor(int slot, Armor_Class equip_slot) {
+	internal void equip_armor(int slot, ArmorClass equip_slot) {
 
 		if (armor_list.Count < slot + 1) {
 
@@ -479,7 +479,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		// TODO: Implement equipping pet items
 	}
 
-	public void unequip_weapon(Weapon_Slot unequip_slot) {
+	public void unequip_weapon(WeaponSlot unequip_slot) {
 		Weapon weapon = active_weapon_list[(int)unequip_slot];
 		if (weapon != null) {
 			weapon_list.Add(weapon);
@@ -490,7 +490,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		DebugConsole.Log("Unequipped weapon with name: " + weapon.template.name, true);
 	}
 
-	public void unequip_armor(Armor_Class unequip_slot) {
+	public void unequip_armor(ArmorClass unequip_slot) {
 		Armor armor = active_armor_list[(int)unequip_slot];
 		if (armor != null) {
 			armor_list.Add(armor);
@@ -517,7 +517,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 				
 				if (is_player_inventory) {
 
-					Game_Controller.invoke_player_learned(template, template.ability_level);
+					GameController.invoke_player_learned(template, template.ability_level);
 				}
 
 				DebugConsole.Log("Learned ability with ID: " + ability_ID, true);
@@ -531,7 +531,7 @@ public sealed class Inventory_Controller : MonoBehaviour {
 		Debug.LogError("Can't learn ability with ID: " + ability_ID + " because the player already knows this ability.");
 	}
 
-	public void equip_ability(string ability_ID, Ability_Slot active_slot) {
+	public void equip_ability(string ability_ID, AbilitySlot active_slot) {
 
 		if (!has_learned(ability_ID)) {
 
