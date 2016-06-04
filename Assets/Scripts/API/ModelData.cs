@@ -406,6 +406,13 @@ public class Scd_Data {
 	//
 	//		-TH 4/29/2016
 	//
+	//
+	// This entire function for parsing the JSON associated with an exported animation will be changed drastically
+	// and also implemented later in the Voxify software designed specifically for 3d modeling and animating.
+	//
+	//		-TH 5/4/2016
+	//
+	//
 	public Scd_Data(string json) {
 		JSONNode node = JSONNode.Parse(json);
 		name = node["name"];
@@ -446,12 +453,14 @@ public class Scd_Data {
 						frames[current_frame].groups[current_group].current_gframe = Mathf.Abs(kframe["start"].AsInt - current_frame) + 1;
 						float completion = frames[current_frame].groups[current_group].current_gframe / frames[current_frame].groups[current_group].gframe_count;
 
-						switch ((Interp_Type)kframe["interp"].AsInt) {
+						frames[current_frame].interp = (Interp_Type)kframe["interp"].AsInt;
+
+						switch (frames[current_frame].interp) {
 							case Interp_Type.ASSIGN:
 
 								if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
 									JSONNode position = kframe["position"];
-									frames[current_frame].groups[current_group].position = new Vector3(position["x"].AsFloat, position["y"].AsFloat, position["z"].AsFloat);
+									frames[current_frame].groups[current_group].delta_position = new Vector3(position["x"].AsFloat, position["y"].AsFloat, position["z"].AsFloat);
 								}
 								if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
 									JSONNode rotation = kframe["rotation"];
@@ -464,14 +473,15 @@ public class Scd_Data {
 								break;
 							case Interp_Type.LINEAR: // use Lerp
 
-								for (int fcheck = current_frame; fcheck > -1; fcheck--) {
+								// We want to start at the previous frame, and go backwards until we hit the same group again
+								for (int fcheck = current_frame - 1; fcheck > -1; fcheck--) {
 									if (fcheck == 0) {
 										if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
 
 											Vector3 prev_pos = new Vector3(0, 0, 0);
 											JSONNode json_position = kframe["position"];
 											Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
-											frames[current_frame].groups[current_group].position = Vector3.Lerp(prev_pos, new_pos, completion);
+											frames[current_frame].groups[current_group].delta_position = Vector3.Lerp(prev_pos, new_pos, completion);
                                         }
 										if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
 
@@ -493,10 +503,10 @@ public class Scd_Data {
 											if (group.group == frames[current_frame].groups[current_group].group) {
 												if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
 
-													Vector3 prev_pos = group.position;
+													Vector3 prev_pos = group.delta_position;
 													JSONNode json_position = kframe["position"];
 													Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
-													frames[current_frame].groups[current_group].position = Vector3.Lerp(prev_pos, new_pos, completion);
+													frames[current_frame].groups[current_group].delta_position = Vector3.Lerp(Vector3.zero, new_pos, completion);
 												}
 												if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
 
@@ -518,15 +528,15 @@ public class Scd_Data {
 								}
 								break;
 							case Interp_Type.SPHERICAL: // use Slerp instead of Lerp
-
-								for (int fcheck = current_frame; fcheck > -1; fcheck--) {
+								
+								for (int fcheck = current_frame - 1; fcheck > -1; fcheck--) {
 									if (fcheck == 0) {
 										if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
 
 											Vector3 prev_pos = new Vector3(0, 0, 0);
 											JSONNode json_position = kframe["position"];
 											Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
-											frames[current_frame].groups[current_group].position = Vector3.Slerp(prev_pos, new_pos, completion);
+											frames[current_frame].groups[current_group].delta_position = Vector3.Slerp(prev_pos, new_pos, completion);
 										}
 										if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
 
@@ -548,10 +558,10 @@ public class Scd_Data {
 											if (group.group == frames[current_frame].groups[current_group].group) {
 												if (flags.Contains(Scd_Flag.CHANGES_POSITION)) {
 
-													Vector3 prev_pos = group.position;
+													Vector3 prev_pos = group.delta_position;
 													JSONNode json_position = kframe["position"];
 													Vector3 new_pos = new Vector3(json_position["x"].AsFloat, json_position["y"].AsFloat, json_position["z"].AsFloat);
-													frames[current_frame].groups[current_group].position = Vector3.Slerp(prev_pos, new_pos, completion);
+													frames[current_frame].groups[current_group].delta_position = Vector3.Slerp(prev_pos, new_pos, completion);
 												}
 												if (flags.Contains(Scd_Flag.CHANGES_ROTATION)) {
 
@@ -581,6 +591,7 @@ public class Scd_Data {
 }
 
 public class Scd_Frame {
+	public Interp_Type interp;
 	public Scd_Frame_Group[] groups;
 }
 
@@ -588,7 +599,7 @@ public class Scd_Frame_Group {
 	public string group;
 	public int current_gframe;
 	public int gframe_count;
-	public Vector3 position;
+	public Vector3 delta_position;
 	public Vector3 rotation;
 	public Vector3 scale;
 }
