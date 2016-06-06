@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public abstract class AWeapon : AItem, IEquippable {
+public abstract class AWeapon : AItem {
 
-	public EquippableSlot Slot { get; set; }
 }
