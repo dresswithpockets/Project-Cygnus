@@ -104,4 +104,20 @@ public static class Util {
 
 		return end;
 	}
+
+	public static float SqrDistance(Vector3 a, Vector3 b) {
+		return (a - b).sqrMagnitude;
+	}
+	
+	public static bool Contains(this object[] array, object other) {
+		foreach (object obj in array)
+			if (obj == other) return true;
+
+		return false;
+	}
+
+	public static void Remove(this object[] array, object other) {
+		for (int i = 0; i < array.Length; i++)
+			if (array[i] == other) array[i] = null;
+	}
 }
