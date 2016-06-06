@@ -13,6 +13,12 @@ public class Pawn : MonoBehaviour {
 		}
 	}
 
+	public string FullName {
+		get {
+			return "[Pawn:" + Name + "]";
+		}
+	}
+
 	public PlayerController Player {
 		get {
 			return (IsPlayer)
@@ -25,5 +31,9 @@ public class Pawn : MonoBehaviour {
 		get {
 			return this.GetType() != typeof(PlayerController);
 		}
+	}
+
+	public virtual void Damage(DamageInfo damage) {
+		GameController.InvokeDamaged(this, damage.Source, this, damage);
 	}
 }
