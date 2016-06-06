@@ -6,9 +6,9 @@ public struct DamageInfo {
 	public readonly DamageType Type;
 	public readonly DamageElement Element;
 	public readonly float Damage;
-	public readonly GameObject Source;
+	public readonly Pawn Source;
 
-	public DamageInfo(DamageType type, DamageElement element, float dmg, GameObject source) {
+	public DamageInfo(DamageType type, DamageElement element, float dmg, Pawn source) {
 		Type = type;
 		Element = element;
 		Damage = dmg;
