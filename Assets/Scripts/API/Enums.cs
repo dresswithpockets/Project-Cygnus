@@ -28,7 +28,7 @@ public enum WeaponHandiness {
 	TWO_HANDED
 }
 
-public enum ArmorClass {
+public enum ArmorSlot {
 
 	HEAD = 0,
 	SHOULDERS,
@@ -132,14 +132,18 @@ public enum DebugWarningLevel {
 }
 
 public enum EquippableSlot {
-	WEAPON_RIGHT_HAND = 0,
-	WEAPON_LEFT_HAND = 1,
+	// Weapons
+
+	RIGHT_HAND = 0,
+	LEFT_HAND = 1,
+
+	// Armor
 
 	HEAD = 0,
 	SHOULDERS = 1,
 	TORSO = 2,
-	HANDS = 4,
-	LEGS = 6,
-	FEET = 8,
-	NECK = 16
+	HANDS = 3,
+	LEGS = 4,
+	FEET = 5,
+	NECK = 6,
 }
