@@ -4,45 +4,44 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-public abstract class Mod_Template {
+public abstract class Plugin {
 
 	#region Template Code
 
-	public abstract string mod_name { get; }
+	public abstract string Name { get; }
 
-	public abstract string mod_author { get; }
+	public abstract string Author { get; }
 
-	public abstract Version mod_version { get; }
+	public abstract Version Version { get; }
 
-	public virtual void initialize() { }
+	public virtual void Initialize() { }
 
-	public virtual void update() { }
+	public virtual void Update() { }
 
 	#endregion
 
-	internal string mod_path {
+	internal string Path {
 
 		get {
 
-			return "plugins/" + mod_name;
+			return "plugins/" + Name;
 		}
 	}
 
-	internal Dictionary<string, Type> item_template_dict = new Dictionary<string, Type>();
-	internal Dictionary<string, Type> weapon_template_dict = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> itemTemplateDictionary = new Dictionary<string, Type>();
+	internal Dictionary<string, Type> weaponTemplateDictionary = new Dictionary<string, Type>();
 
-	internal bool inside_mod_initer = true;
+	private bool insideModInit = true;
 
-	internal void internal_init() {
-		
+	internal void InternalInit() {
 		
 	}
 
-	public void register_item(string ID, Type item_type) {
+	public void RegisterItem(string ID, Type item_type) {
 
-		if (!inside_mod_initer) {
+		if (!insideModInit) {
 
-			Debug.LogError("Templates can only be registered inside Initialize().");
+			Debug.LogError("Types can only be registered inside Initialize().");
 			return;
 		}
 		else Debug.LogError("Cannot import template of type " + item_type.Name + " because it does not inherit one of the abstract item templates in CygnusAPI.");
