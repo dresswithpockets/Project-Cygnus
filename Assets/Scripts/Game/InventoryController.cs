@@ -25,7 +25,35 @@ public class InventoryController : MonoBehaviour {
 	private List<AItem> EquippableItems = new List<AItem>();
 	private List<AItem> MiscItems = new List<AItem>();
 
-	private Pawn Owner;
+	private List<Ability> LearnedAbilities = new List<Ability>();
+
+	public Ability[] Abilities {
+		get {
+			return new Ability[] { ActiveAbility1, ActiveAbility2, ActiveAbility3, ActiveAbility4, PassiveAbility1, PassiveAbility2 };
+		}
+	}
+
+	public Ability[] ActiveAbilities {
+		get {
+			return new Ability[] { ActiveAbility1, ActiveAbility2, ActiveAbility3, ActiveAbility4 };
+		}
+	}
+
+	public Ability[] PassiveAbilities {
+		get {
+			return new Ability[] { PassiveAbility1, PassiveAbility2 };
+		}
+	}
+
+	public Ability ActiveAbility1 { get; private set; }
+	public Ability ActiveAbility2 { get; private set; }
+	public Ability ActiveAbility3 { get; private set; }
+	public Ability ActiveAbility4 { get; private set; }
+
+	public Ability PassiveAbility1 { get; private set; }
+	public Ability PassiveAbility2 { get; private set; }
+
+	public Pawn Owner { get; private set; }
 
 	public bool IsUsingWeapon {
 		get {
