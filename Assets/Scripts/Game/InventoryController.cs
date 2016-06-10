@@ -17,13 +17,13 @@ using System;
 [RequireComponent(typeof(Pawn))]
 public class InventoryController : MonoBehaviour {
 	
-	private AWeapon LeftHand = null;
-	private AWeapon RightHand = null;
+	public Weapon LeftHand { get; private set; }
+	public Weapon RightHand { get; private set; }
 
-	private AArmor[] EquippedArmor;
+	public Armor[] EquippedArmor { get; private set; }
 
-	private List<AItem> EquippableItems = new List<AItem>();
-	private List<AItem> MiscItems = new List<AItem>();
+	private List<Item> EquippableItems = new List<Item>();
+	private List<Item> MiscItems = new List<Item>();
 
 	private List<Ability> LearnedAbilities = new List<Ability>();
 
@@ -61,7 +61,7 @@ public class InventoryController : MonoBehaviour {
 		}
 	}
 
-	public AWeapon this[WeaponSlot slot] {
+	public Weapon this[WeaponSlot slot] {
 		get {
 			return GetEquippedItem(slot);
 		}
@@ -70,7 +70,7 @@ public class InventoryController : MonoBehaviour {
 		}
 	}
 
-	public AWeapon GetEquippedItem(WeaponSlot slot) {
+	public Weapon GetEquippedItem(WeaponSlot slot) {
 		switch (slot) {
 			case WeaponSlot.LEFT_HAND:
 				return LeftHand;
@@ -80,7 +80,7 @@ public class InventoryController : MonoBehaviour {
 		return null;
 	}
 
-	public void Pickup(AItem item) {
+	public void Pickup(Item item) {
 		if (item.IsEquippable) EquippableItems.Add(item);
 		else MiscItems.Add(item);
 
@@ -91,11 +91,14 @@ public class InventoryController : MonoBehaviour {
 		GameController.InvokePickedUpItem(this, Owner, item);
 	}
 
-	public void Pickup(AAbility ability) {
-		// TODO: Add ability storing nad management
+	public void Pickup(Ability ability) {
+		if (LearnedAbilities.Contains(ability)) return;
+
+		LearnedAbilities.Add(ability);
+		GameController.InvokeLearnedAbility(this, Owner, ability);
 	}
 
-	public void Drop(AItem item) {
+	public void Drop(Item item) {
 		if (LeftHand == item) Unequip(WeaponSlot.LEFT_HAND);
 		else if (RightHand == item) Unequip(WeaponSlot.RIGHT_HAND);
 		else if (EquippedArmor.Contains(item)) EquippedArmor.Remove(item);
@@ -108,7 +111,7 @@ public class InventoryController : MonoBehaviour {
 		GameController.InvokeDroppedItem(this, Owner, item);
 	}
 
-	public void Equip(AWeapon weapon, WeaponSlot slot) {
+	public void Equip(Weapon weapon, WeaponSlot slot) {
 		if (!EquippableItems.Contains(weapon)) Pickup(weapon);
 
 		EquippableItems.Remove(weapon);
@@ -168,6 +171,10 @@ public class InventoryController : MonoBehaviour {
 
 	void Start() {
 		Owner = GetComponent<Pawn>();
-		EquippedArmor = new AArmor[Enum.GetNames(typeof(ArmorSlot)).Length];
+		EquippedArmor = new Armor[Enum.GetNames(typeof(ArmorSlot)).Length];
+	}
+
+	void Update() {
+		
 	}
 }
