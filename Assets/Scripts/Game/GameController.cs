@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 
 public class ItemEventArgs : EventArgs {
-	public readonly AItem Item;
+	public readonly Item Item;
 
-	public ItemEventArgs(AItem item) {
+	public ItemEventArgs(Item item) {
 		Item = item;
 	}
 }
@@ -44,9 +44,9 @@ public class PawnMovedEventArgs : EventArgs {
 
 public class PawnItemEventArgs : EventArgs {
 	public readonly Pawn Pawn;
-	public readonly AItem Item;
+	public readonly Item Item;
 
-	public PawnItemEventArgs(Pawn pawn, AItem item) {
+	public PawnItemEventArgs(Pawn pawn, Item item) {
 		Pawn = pawn;
 		Item = item;
 	}
@@ -54,9 +54,9 @@ public class PawnItemEventArgs : EventArgs {
 
 public class PawnWeaponEventArgs : EventArgs {
 	public readonly Pawn Pawn;
-	public readonly AWeapon Weapon;
+	public readonly Weapon Weapon;
 
-	public PawnWeaponEventArgs(Pawn pawn, AWeapon weapon) {
+	public PawnWeaponEventArgs(Pawn pawn, Weapon weapon) {
 		Pawn = pawn;
 		Weapon = weapon;
 	}
@@ -64,9 +64,9 @@ public class PawnWeaponEventArgs : EventArgs {
 
 public class PawnArmorEventArgs : EventArgs {
 	public readonly Pawn Pawn;
-	public readonly AArmor Armor;
+	public readonly Armor Armor;
 
-	public PawnArmorEventArgs(Pawn pawn, AArmor armor) {
+	public PawnArmorEventArgs(Pawn pawn, Armor armor) {
 		Pawn = pawn;
 		Armor = armor;
 	}
@@ -74,9 +74,9 @@ public class PawnArmorEventArgs : EventArgs {
 
 public class PawnLanternEventArgs : EventArgs {
 	public readonly Pawn Pawn;
-	public readonly ALantern Lantern;
+	public readonly Lantern Lantern;
 
-	public PawnLanternEventArgs(Pawn pawn, ALantern lantern) {
+	public PawnLanternEventArgs(Pawn pawn, Lantern lantern) {
 		Pawn = pawn;
 		Lantern = lantern;
 	}
@@ -84,9 +84,9 @@ public class PawnLanternEventArgs : EventArgs {
 
 public class PawnAbilityEventArgs : EventArgs {
 	public readonly Pawn Pawn;
-	public readonly AAbility Ability;
+	public readonly Ability Ability;
 
-	public PawnAbilityEventArgs(Pawn pawn, AAbility ability) {
+	public PawnAbilityEventArgs(Pawn pawn, Ability ability) {
 		Pawn = pawn;
 		Ability = ability;
 	}
@@ -107,6 +107,8 @@ public class GameController : MonoBehaviour {
 	public bool Paused = false;
 	public bool Debug = false;
 
+	public Vector3 SpawnPoint = new Vector3(0f, 0f ,0f);
+
 	public static bool GamePaused {
 		get {
 			return Instance.Paused;
@@ -115,7 +117,7 @@ public class GameController : MonoBehaviour {
 
 	public static Type[] EquippableTypes {
 		get {
-			return new[] { typeof(AArmor), typeof(AWeapon), typeof(ALantern) };
+			return new[] { typeof(Armor), typeof(Weapon), typeof(Lantern) };
 		}
 	}
 
@@ -125,6 +127,7 @@ public class GameController : MonoBehaviour {
 	public event EventHandler<ItemEventArgs> SpawnedItem;
 	public event EventHandler<PawnEventArgs> Landed;
 	public event EventHandler<PawnEventArgs> Jumped;
+	public event EventHandler<PawnEventArgs> Died;
 	public event EventHandler<PawnDamagedEventArgs> Damaged;
 	public event EventHandler<PawnMovedEventArgs> Moved;
 	public event EventHandler<PawnEventArgs> Update;
@@ -150,7 +153,7 @@ public class GameController : MonoBehaviour {
 		if (Instance.SpawnedPawn != null) Instance.SpawnedPawn(sender, new PawnEventArgs(pawn));
 	}
 
-	public static void InvokeSpawned(object sender, AItem item) {
+	public static void InvokeSpawned(object sender, Item item) {
 		if (Instance.SpawnedItem != null) Instance.SpawnedItem(sender, new ItemEventArgs(item));
 	}
 
@@ -160,6 +163,10 @@ public class GameController : MonoBehaviour {
 
 	public static void InvokeJumped(object sender, Pawn pawn) {
 		if (Instance.Jumped != null) Instance.Jumped(sender, new PawnEventArgs(pawn));
+	}
+
+	public static void InvokeDied(object sender, Pawn pawn) {
+		if (Instance.Died != null) Instance.Died(sender, new PawnEventArgs(pawn));
 	}
 
 	public static void InvokeDamaged(object sender, Pawn inflicter, Pawn inflicted, DamageInfo damage) {
@@ -182,59 +189,59 @@ public class GameController : MonoBehaviour {
 		if (Instance.LateUpdate != null) Instance.LateUpdate(sender, new PawnEventArgs(pawn));
 	}
 
-	public static void InvokeUsedItem(object sender, Pawn pawn, AItem item) {
+	public static void InvokeUsedItem(object sender, Pawn pawn, Item item) {
 		if (Instance.UsedItem != null) Instance.UsedItem(sender, new PawnItemEventArgs(pawn, item));
 	}
 
-	public static void InvokePickedUpItem(object sender, Pawn pawn, AItem item) {
+	public static void InvokePickedUpItem(object sender, Pawn pawn, Item item) {
 		if (Instance.PickedUpItem != null) Instance.PickedUpItem(sender, new PawnItemEventArgs(pawn, item));
 	}
 
-	public static void InvokeDroppedItem(object sender, Pawn pawn, AItem item) {
+	public static void InvokeDroppedItem(object sender, Pawn pawn, Item item) {
 		if (Instance.DroppedItem != null) Instance.DroppedItem(sender, new PawnItemEventArgs(pawn, item));
 	}
 
-	public static void InvokeCraftedItem(object sender, Pawn pawn, AItem item) {
+	public static void InvokeCraftedItem(object sender, Pawn pawn, Item item) {
 		if (Instance.CraftedItem != null) Instance.CraftedItem(sender, new PawnItemEventArgs(pawn, item));
 	}
 
-	public static void InvokeEquippedWeapon(object sender, Pawn pawn, AWeapon weapon) {
+	public static void InvokeEquippedWeapon(object sender, Pawn pawn, Weapon weapon) {
 		if (Instance.EquippedWeapon != null) Instance.EquippedWeapon(sender, new PawnWeaponEventArgs(pawn, weapon));
 	}
 
-	public static void InvokeEquippedArmor(object sender, Pawn pawn, AArmor armor) {
+	public static void InvokeEquippedArmor(object sender, Pawn pawn, Armor armor) {
 		if (Instance.EquippedArmor != null) Instance.EquippedArmor(sender, new PawnArmorEventArgs(pawn, armor));
 	}
 
-	public static void InvokeEquippedLantern(object sender, Pawn pawn, ALantern lantern) {
+	public static void InvokeEquippedLantern(object sender, Pawn pawn, Lantern lantern) {
 		if (Instance.EquippedLantern != null) Instance.EquippedLantern(sender, new PawnLanternEventArgs(pawn, lantern));
 	}
 
-	public static void InvokeEquippedAbility(object sender, Pawn pawn, AAbility ability) {
+	public static void InvokeEquippedAbility(object sender, Pawn pawn, Ability ability) {
 		if (Instance.EquippedAbility != null) Instance.EquippedAbility(sender, new PawnAbilityEventArgs(pawn, ability));
 	}
 
-	public static void InvokeUnequippedWeapon(object sender, Pawn pawn, AWeapon weapon) {
+	public static void InvokeUnequippedWeapon(object sender, Pawn pawn, Weapon weapon) {
 		if (Instance.UnequippedWeapon != null) Instance.UnequippedWeapon(sender, new PawnWeaponEventArgs(pawn, weapon));
 	}
 
-	public static void InvokeUnequippedArmor(object sender, Pawn pawn, AArmor armor) {
+	public static void InvokeUnequippedArmor(object sender, Pawn pawn, Armor armor) {
 		if (Instance.UnequippedArmor != null) Instance.UnequippedArmor(sender, new PawnArmorEventArgs(pawn, armor));
 	}
 
-	public static void InvokeUnequippedLantern(object sender, Pawn pawn, ALantern lantern) {
+	public static void InvokeUnequippedLantern(object sender, Pawn pawn, Lantern lantern) {
 		if (Instance.UnequippedLantern != null) Instance.UnequippedLantern(sender, new PawnLanternEventArgs(pawn, lantern));
 	}
 
-	public static void InvokeUnequippedAbility(object sender, Pawn pawn, AAbility ability) {
+	public static void InvokeUnequippedAbility(object sender, Pawn pawn, Ability ability) {
 		if (Instance.UnequippedAbility != null) Instance.UnequippedAbility(sender, new PawnAbilityEventArgs(pawn, ability));
 	}
 
-	public static void InvokeTriggeredAbility(object sender, Pawn pawn, AAbility ability) {
+	public static void InvokeTriggeredAbility(object sender, Pawn pawn, Ability ability) {
 		if (Instance.TriggeredAbility != null) Instance.TriggeredAbility(sender, new PawnAbilityEventArgs(pawn, ability));
 	}
 
-	public static void InvokeLearnedAbility(object sender, Pawn pawn, AAbility ability) {
+	public static void InvokeLearnedAbility(object sender, Pawn pawn, Ability ability) {
 		if (Instance.LearnedAbility != null) Instance.LearnedAbility(sender, new PawnAbilityEventArgs(pawn, ability));
 	}
 
@@ -267,8 +274,13 @@ public class GameController : MonoBehaviour {
 				DebugConsole.Log(args.Item.FullName + " was spawned at: " + args.Item.transform.position.ToString());
 			};
 
+			Died += (sender, args) => {
+				DebugConsole.Log(args.Pawn.FullName + " was killed");
+			};
+
 			Damaged += (sender, args) => {
-				DebugConsole.Log(args.Inflicted.FullName + " received " + args.Damage.Damage + " " + args.Damage.Element.ToString() + "-" + args.Damage.Type.ToString() + " Damage from " + args.Inflicter.FullName);
+				if (args.Inflicter != null) DebugConsole.Log(args.Inflicted.FullName + " received " + args.Damage.Damage + " " + (args.Damage.Element == DamageElement.NONE ? "" : args.Damage.Element.ToString() + "-") + args.Damage.Type.ToString() + " damage from " + args.Inflicter.FullName);
+				else DebugConsole.Log(args.Inflicted.FullName + " received " + args.Damage.Damage + " " + (args.Damage.Element == DamageElement.NONE ? "" : args.Damage.Element.ToString() + "-") + args.Damage.Type.ToString() + " damage.");
 			};
 			
 			UsedItem += (sender, args) => {
