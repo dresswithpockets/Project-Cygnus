@@ -29,7 +29,7 @@ public class Pawn : MonoBehaviour {
 
 	public bool IsPlayer {
 		get {
-			return this.GetType() != typeof(PlayerController);
+			return this.GetType().Equals(typeof(PlayerController));
 		}
 	}
 
