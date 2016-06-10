@@ -147,3 +147,8 @@ public enum EquippableSlot {
 	FEET = 5,
 	NECK = 6,
 }
+
+public enum AbilityType {
+	ACTIVE = 0,
+	PASSIVE = 1
+}
