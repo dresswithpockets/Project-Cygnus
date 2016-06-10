@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShortSword : AWeapon {
+public class ShortSword : Weapon {
 
 	public override string Name {
 		get {
@@ -18,9 +18,10 @@ public class ShortSword : AWeapon {
 	GameObject RenderedModel;
 	BoxCollider ModelCollider;
 
-	public bool Animating = false;
-	float TimeSinceAnimate = 0.0f;
-	float AnimationLength = 0.25f;
+
+	public bool Animating;
+	public float AnimationLength = 0.25f;
+	float TimeSinceAnimate;
 
 	Vector3 StartingAnimPos = new Vector3(1.25f, 0f, 0f);
 	Vector3 StartingRotation = new Vector3(0f, 90f, 0f);
@@ -28,15 +29,18 @@ public class ShortSword : AWeapon {
 	Vector3 InactivePosition = new Vector3(0.55f, -0.25f, 0f);
 	Vector3 InactiveRotation = new Vector3(60f, 180f, 90f);
 
+	public float StaminaUsed = 25f;
 	public float Damage = 10f;
 
 	public override void Start() {
 		RenderedModel = transform.FindChild("Render").gameObject;
 		ModelCollider = RenderedModel.GetComponent<BoxCollider>();
+
+		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("LocalPlayer"), LayerMask.NameToLayer("Weapon"));
 	}
 
 	public override void Update() {
-		if (Active) { // Weapon is equipped on hand
+		if (Active && Owner.Alive) { // Weapon is equipped on hand and the owner is alive; the owner can use this weapon.
 
 			if (Animating) {
 
@@ -62,14 +66,14 @@ public class ShortSword : AWeapon {
 				RenderedModel.transform.localPosition = InactivePosition;
 				RenderedModel.transform.localEulerAngles = InactiveRotation;
 
-				if (vp_Input.GetButtonAny("Attack1")) {
+				// If the player is pressing the primary attack key, then check if stamina is required
+				// -> Stamina is required if the Owner is a Player
+				// -> if stamina is required, then ensure that stamina is used.
+				// -> If stamina isn't required, then continue without checking for stamina usage
+				if (vp_Input.GetButtonAny("Attack1") && (!Owner.IsPlayer || Owner.Player.UseStamina(StaminaUsed))) {
 
 					RenderedModel.transform.localPosition = StartingAnimPos;
 					RenderedModel.transform.localEulerAngles = StartingRotation;
-
-					/*StartCoroutine(
-						AnimateNormalAttack(transform.parent.position, Vector3.up, -145f, 0.25f)
-						);*/
 
 					Animating = true;
 					Using = true;
