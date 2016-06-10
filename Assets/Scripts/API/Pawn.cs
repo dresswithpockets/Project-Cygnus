@@ -4,26 +4,43 @@
 /// The base class for any controllable entity in Cygnus.
 /// Players, NetworkPlayers and NPCs all derive from Pawn.
 /// </summary>
-public class Pawn : MonoBehaviour {
+[RequireComponent(typeof(CharacterController))]
+public abstract class Pawn : MonoBehaviour {
 	
-	public string Name {
+	private bool m_Alive = false;
+
+	public bool Alive {
 		get {
-			if (IsPlayer) return "Player";
-			return name;
+			return m_Alive;
+		}
+		internal set {
+			if (value != m_Alive) {
+				m_Alive = value;
+				if (GetType().Equals(typeof(PlayerController)))
+					(this as PlayerController).AllowMovement = m_Alive;
+			}
 		}
 	}
 
+	public bool AliveLastFrame { get; private set; }
+
+	/// <summary>
+	/// Returns a BaseType-lead name of the pawn. Example: [Pawn:LocalPlayer] or [Pawn:BossCaveTroll]
+	/// </summary>
 	public string FullName {
 		get {
-			return "[Pawn:" + Name + "]";
+			/*
+			Old: return "[Pawn:" + GetType().Name + "]";
+			*/
+			return "[" +
+				(GetType().BaseType.Equals(typeof(MonoBehaviour)) ? GetType().Name : GetType().BaseType.Name) +
+				":" + Name + "]";
 		}
 	}
 
 	public PlayerController Player {
 		get {
-			return (IsPlayer)
-				? (PlayerController)this
-				: null;
+			return GetComponent<PlayerController>();
 		}
 	}
 
@@ -31,6 +48,13 @@ public class Pawn : MonoBehaviour {
 		get {
 			return this.GetType().Equals(typeof(PlayerController));
 		}
+	}
+	
+	public abstract string Name { get; }
+
+	public virtual void Update() {
+
+		AliveLastFrame = Alive;
 	}
 
 	public virtual void Damage(DamageInfo damage) {
