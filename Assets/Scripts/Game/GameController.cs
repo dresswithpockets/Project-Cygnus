@@ -109,6 +109,8 @@ public class GameController : MonoBehaviour {
 
 	public Vector3 SpawnPoint = new Vector3(0f, 0f ,0f);
 
+	public GUIStyle VersionTextStyle;
+
 	public static bool GamePaused {
 		get {
 			return Instance.Paused;
@@ -243,6 +245,23 @@ public class GameController : MonoBehaviour {
 
 	public static void InvokeLearnedAbility(object sender, Pawn pawn, Ability ability) {
 		if (Instance.LearnedAbility != null) Instance.LearnedAbility(sender, new PawnAbilityEventArgs(pawn, ability));
+	}
+
+	#endregion
+
+	#region Update
+
+	#endregion
+
+	#region GUI
+
+	void OnGUI() {
+		Util.DrawOutline(new Rect(Util.ScreenSize, new Vector3(0f, 0f)), "v" + Util.AssemblyVersion, VersionTextStyle, Color.black);
+		/*GUI.Label(new Rect(Util.ScreenSize, new Vector2(0f, 0f)), "v" + Util.AssemblyVersion, VersionTextStyle);
+		GUIStyle outlineStyle = new GUIStyle(VersionTextStyle);
+		outlineStyle.normal.textColor = Color.black;
+		outlineStyle.fontSize += 1;
+		GUI.Label(new Rect(Util.ScreenSize, new Vector2(0f, 0f)), "v" + Util.AssemblyVersion, outlineStyle);*/
 	}
 
 	#endregion

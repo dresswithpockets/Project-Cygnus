@@ -3,7 +3,35 @@ using System;
 using System.Reflection;
 using System.Collections.Generic;
 
+[assembly: AssemblyVersion("0.1.*")]
 public static class Util {
+
+	public static Vector2 MainGameViewSize {
+		get {
+			Type T = Type.GetType("UnityEditor.GameView,UnityEditor");
+			MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView", BindingFlags.NonPublic | BindingFlags.Static);
+			object Res = GetSizeOfMainGameView.Invoke(null,null);
+			return (Vector2)Res;
+		}
+	}
+
+	public static Vector2 ScreenSize {
+		get {
+#if UNITY_EDITOR
+			return MainGameViewSize;
+#else
+			return new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+#endif
+		}
+	}
+
+	public static string AssemblyVersion {
+		get {
+
+			return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+		}
+	}
+
 
 	internal static string to_hex(this Color color) {
 
@@ -119,5 +147,25 @@ public static class Util {
 	public static void Remove(this object[] array, object other) {
 		for (int i = 0; i < array.Length; i++)
 			if (array[i] == other) array[i] = null;
+	}
+
+	public static void DrawOutline(Rect position, string text, GUIStyle style, Color outlineColor) {
+		GUIStyle backupStyle = new GUIStyle(style);
+		Color oldColor = style.normal.textColor;
+		style.normal.textColor = outlineColor;
+
+		position.x--;
+		GUI.Label(position, text, style);
+		position.x += 2;
+		GUI.Label(position, text, style);
+		position.x--;
+		position.y--;
+		GUI.Label(position, text, style);
+		position.y += 2;
+		GUI.Label(position, text, style);
+		position.y--;
+		style.normal.textColor = oldColor;
+		GUI.Label(position, text, style);
+		style = backupStyle;
 	}
 }
