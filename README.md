@@ -12,6 +12,7 @@ If you're interested in using any of the code or content found in this project, 
 1. The game is built around Unity3D. The project must be opened in a Unity3D environment of 5.3.4 or later in order to run and compile.
 2. At its current stage, the game uses VisionPunk's Ultimate FPS package for Unity, which is licensed software. Certain mechanics are built around UFPS such as playermovement and input management.
  - The dependancy on UFPS will eventually be replaced with our own player movement and input managers. It isn't a major priority at the moment but it will happen eventually!
+3. The game's voxel model rendering is done through PicaVoxel - a fully-blown voxel engine, with built in editor. However, we use MagicaVoxel (.vox) models for importing files at runtime. All 3d models you'll find in the game are created using MagicaVoxel. We may add support for Qubicle.
 
 #### Discord
 I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/0y0wUVxU3om1tBCK
