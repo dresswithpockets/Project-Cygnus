@@ -17,6 +17,8 @@ public abstract class Ability {
 
 	public abstract string Name { get; }
 
+	public abstract int Level { get; }
+
 	public virtual AbilityType AbilityType {
 		get {
 			return AbilityType.ACTIVE;
@@ -41,4 +43,15 @@ public abstract class Ability {
 	/// For casted abilities, it is expected that this stops any ability from casting/being used.
 	/// </summary>
 	public virtual void Interrupt() { }
+
+	/// <summary>
+	/// Called when the Owner explicitly chooses to level this ability up.
+	/// </summary>
+	public virtual void LevelUp() { }
+
+	/// <summary>
+	/// Called right before LevelUp() is called by the Owner to see if the player can actually level this ability up.
+	/// </summary>
+	/// <returns></returns>
+	public virtual bool CanLevelUp() { return true; }
 }
