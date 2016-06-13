@@ -2,13 +2,6 @@
 using System;
 using System.Collections;
 
-public enum AbilityTier {
-
-	BASIC = 0,
-	INTERMEDIATE,
-	ADVANCED
-}
-
 public enum ItemClassification {
 
 	CONSUMABLE = 0,
@@ -61,11 +54,55 @@ public enum DamageElement {
 
 public enum CharStat {
 
+	/// <summary>
+	/// Total Armor modifier.
+	/// Resistance to physical damage.
+	/// </summary>
 	ARMOR = 0, // Resistance to physical
+
+	/// <summary>
+	/// Total Magic Resistance modifier.
+	/// Reistance to magic damage.
+	/// </summary>
 	RESI, // Resistance to magic
+
+	/// <summary>
+	/// Total HP Modifier.
+	/// </summary>
 	HP, // Total health modifier
+
+	/// <summary>
+	/// Total Magic modifier.
+	/// </summary>
+	MP, // Total magic modifier
+
+	/// <summary>
+	/// Total Stamina modifier.
+	/// </summary>
+	STAM, // Total stamina modifier
+
+	/// <summary>
+	/// Stamina regeneration per second.
+	/// </summary>
+	DEX, // Stamina regen per second
+
+	/// <summary>
+	/// Total critical hit chance modifier.
+	/// Value ranging from 0 to 1, chance of getting a critical hit.
+	/// </summary>
 	CRIT, // Chance of getting a crit hit. Percentage
+
+	/// <summary>
+	/// Total Tempo modifier.
+	/// Value ranging from 0 to infinity.
+	/// Delay between next attack = 1 / Tempo.
+	/// </summary>
 	TEMPO, // Speed multiplier for attacks. Percentage
+
+	/// <summary>
+	/// Total HP Regeneration Per Second modifier.
+	/// Every frame, HPRegen * Time.deltaTime is added to the player's HP pool if the player hasn't recently been damaged.
+	/// </summary>
 	REG // HP Regen per second
 }
 
@@ -132,11 +169,6 @@ public enum DebugWarningLevel {
 }
 
 public enum EquippableSlot {
-	// Weapons
-
-	RIGHT_HAND = 0,
-	LEFT_HAND = 1,
-
 	// Armor
 
 	HEAD = 0,
@@ -146,6 +178,24 @@ public enum EquippableSlot {
 	LEGS = 4,
 	FEET = 5,
 	NECK = 6,
+
+	// Weapons
+
+	RIGHT_HAND = 7,
+	LEFT_HAND = 8,
+	BOTH_HANDS = 9,
+
+	// Lantern
+
+	LANTERN = 10,
+
+	// Boat
+
+	BOAT = 11,
+
+	// Pets
+
+	PET = 12
 }
 
 public enum AbilityType {
