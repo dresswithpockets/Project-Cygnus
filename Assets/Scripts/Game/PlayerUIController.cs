@@ -20,17 +20,30 @@ public class PlayerUIController : MonoBehaviour {
 
 	public Text InteractText;
 
+	#region Stat Texts
+
+	public Text ArmorValue;
+	public Text ResiValue;
+	public Text DexValue;
+	public Text CritValue;
+	public Text TempoValue;
+	public Text RegValue;
+	public Text LevelValue;
+	public Text PowerValue;
+
+	#endregion
+
 	void Start() {
 		m_Player = GetComponent<PlayerController>();
 	}
 
 	void Update() {
 		HealthSlider.value = (m_Player.HP / m_Player.MaxHealth);
-		HealthNumberText.text = Mathf.CeilToInt(m_Player.HP).ToString() + "/" + Mathf.CeilToInt(m_Player.MaxHealth).ToString();
+		HealthNumberText.text = Mathf.FloorToInt(m_Player.HP).ToString() + "/" + Mathf.FloorToInt(m_Player.MaxHealth).ToString();
 		HealthFill.enabled = !Mathf.Approximately(m_Player.HP, 0f);
 
 		MagicSlider.value = (m_Player.MP / m_Player.MaxMagic);
-		MagicNumberText.text = Mathf.CeilToInt(m_Player.MP).ToString() + "/" + Mathf.CeilToInt(m_Player.MaxMagic).ToString();
+		MagicNumberText.text = Mathf.FloorToInt(m_Player.MP).ToString() + "/" + Mathf.FloorToInt(m_Player.MaxMagic).ToString();
 		MagicFill.enabled = !Mathf.Approximately(m_Player.MP, 0f);
 
 		if (m_Player.Stamina < m_Player.MaxStamina && !StaminaObject.activeInHierarchy) {
@@ -43,6 +56,15 @@ public class PlayerUIController : MonoBehaviour {
 
 			StaminaFill.enabled = !(Mathf.Approximately(m_Player.Stamina, 0f) || m_Player.Stamina < 0f);
 		}
+
+		ArmorValue.text = m_Player.Armor.ToString() + " ";
+		ResiValue.text = m_Player.MagicResistance.ToString() + " ";
+		DexValue.text = m_Player.Dexterity.ToString() + " ";
+		CritValue.text = m_Player.Crit.ToString() + " ";
+		TempoValue.text = m_Player.Tempo.ToString() + " ";
+		RegValue.text = m_Player.HealthRegenRate.ToString() + " ";
+		LevelValue.text = m_Player.Level.ToString() + " ";
+		PowerValue.text = m_Player.Power.ToString() + " ";
 	}
 
 	public void SetInteractText(string value, bool show = false) {
