@@ -104,16 +104,22 @@ public class PawnPawnEventArgs : EventArgs {
 
 public class GameController : MonoBehaviour {
 	
-	public bool Paused = false;
-	public bool Debug = false;
+	public bool ShowMenu;
+	public bool Debug;
 
 	public Vector3 SpawnPoint = new Vector3(0f, 0f ,0f);
 
 	public GUIStyle VersionTextStyle;
 
-	public static bool GamePaused {
+	public static bool ShowGameMenu {
 		get {
-			return Instance.Paused;
+			return Instance.ShowMenu;
+		}
+		set {
+			Instance.ShowMenu = value;
+
+			Cursor.lockState = value ? CursorLockMode.None : CursorLockMode.Locked;
+			Cursor.visible = value;
 		}
 	}
 
@@ -122,6 +128,14 @@ public class GameController : MonoBehaviour {
 			return new[] { typeof(Armor), typeof(Weapon), typeof(Lantern) };
 		}
 	}
+
+	public List<Plugin> PluginInstances { get; internal set; }
+
+	#region Prefabs
+
+	public GameObject VoxPrefab;
+
+	#endregion
 
 	#region Events
 
@@ -132,7 +146,7 @@ public class GameController : MonoBehaviour {
 	public event EventHandler<PawnEventArgs> Died;
 	public event EventHandler<PawnDamagedEventArgs> Damaged;
 	public event EventHandler<PawnMovedEventArgs> Moved;
-	public event EventHandler<PawnEventArgs> Update;
+	public event EventHandler<PawnEventArgs> NormalUpdate;
 	public event EventHandler<PawnEventArgs> FixedUpdate;
 	public event EventHandler<PawnEventArgs> LateUpdate;
 	public event EventHandler<PawnItemEventArgs> UsedItem;
@@ -180,7 +194,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public static void InvokeUpdate(object sender, Pawn pawn) {
-		if (Instance.Update != null) Instance.Update(sender, new PawnEventArgs(pawn));
+		if (Instance.NormalUpdate != null) Instance.NormalUpdate(sender, new PawnEventArgs(pawn));
 	}
 
 	public static void InvokeFixedUpdate(object sender, Pawn pawn) {
@@ -251,24 +265,26 @@ public class GameController : MonoBehaviour {
 
 	#region Update
 
+	void Update() {
+		foreach (Plugin plugin in PluginInstances) {
+			plugin.Update();
+		}
+	}
+	
 	#endregion
 
 	#region GUI
 
 	void OnGUI() {
-		Util.DrawOutline(new Rect(Util.ScreenSize, new Vector3(0f, 0f)), "v" + Util.AssemblyVersion, VersionTextStyle, Color.black);
-		/*GUI.Label(new Rect(Util.ScreenSize, new Vector2(0f, 0f)), "v" + Util.AssemblyVersion, VersionTextStyle);
-		GUIStyle outlineStyle = new GUIStyle(VersionTextStyle);
-		outlineStyle.normal.textColor = Color.black;
-		outlineStyle.fontSize += 1;
-		GUI.Label(new Rect(Util.ScreenSize, new Vector2(0f, 0f)), "v" + Util.AssemblyVersion, outlineStyle);*/
+		Util.DrawOutline(new Rect(Util.ScreenSize, new Vector3(0f, 0f)), "v" + Util.AssemblyVersion.ToString(), VersionTextStyle, Color.black);
+		Util.DrawOutline(new Rect(Util.ScreenSize + new Vector2(0f, -15f), new Vector3(0f, 0f)), "build " + Util.BuildNumber.ToString(), VersionTextStyle, Color.black);
 	}
 
 	#endregion
 
 	#region Construction & Singleton
 
-	private static GameController m_Instance = null;
+	private static GameController m_Instance;
 	public static GameController Instance {
 		get {
 			if (m_Instance == null) m_Instance = new GameObject("GameController", new Type[] { typeof(GameController) }).GetComponent<GameController>();
@@ -283,6 +299,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		m_Instance = this;
+		PluginInstances = new List<Plugin>();
 
 		if (Debug) {
 			SpawnedPawn += (sender, args) => {
@@ -342,6 +359,8 @@ public class GameController : MonoBehaviour {
 				DebugConsole.Log(args.Pawn.FullName + " unequipped " + args.Lantern.FullName);
 			};
 		}
+
+		Plugin.RegisterPlugin<BasePlugin>();
 	}
 
 	#endregion
