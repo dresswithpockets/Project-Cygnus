@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 /// <summary>
 /// Standard Inventory component for a Pawn with:
@@ -15,17 +18,27 @@ using System;
 /// A page for each category of items.
 /// </summary>
 [RequireComponent(typeof(Pawn))]
-public class InventoryController : MonoBehaviour {
-	
+public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
+
 	public Weapon LeftHand { get; private set; }
 	public Weapon RightHand { get; private set; }
 
 	public Armor[] EquippedArmor { get; private set; }
 
-	private List<Item> EquippableItems = new List<Item>();
+	public Lantern EquippedLantern { get; private set; }
+
+	// TODO: Implement other equippable items
+
+	private List<Equippable> EquippableItems = new List<Equippable>();
 	private List<Item> MiscItems = new List<Item>();
 
-	private List<Ability> LearnedAbilities = new List<Ability>();
+	private List<Ability> m_LearnedAbilities = new List<Ability>();
+
+	public Ability[] LearnedAbilities {
+		get {
+			return m_LearnedAbilities.ToArray();
+		}
+	}
 
 	public Ability[] Abilities {
 		get {
@@ -80,8 +93,14 @@ public class InventoryController : MonoBehaviour {
 		return null;
 	}
 
+	public Equippable[] EquippedItems {
+		get {
+			return EquippedArmor.Concat(new Equippable[] { RightHand, LeftHand, EquippedLantern }).ToArray();
+		}
+	}
+
 	public void Pickup(Item item) {
-		if (item.IsEquippable) EquippableItems.Add(item);
+		if (item.IsEquippable) EquippableItems.Add((Equippable)item);
 		else MiscItems.Add(item);
 
 		item.Owner = Owner;
@@ -92,17 +111,20 @@ public class InventoryController : MonoBehaviour {
 	}
 
 	public void Pickup(Ability ability) {
-		if (LearnedAbilities.Contains(ability)) return;
+		if (m_LearnedAbilities.Contains(ability)) return;
 
-		LearnedAbilities.Add(ability);
+		m_LearnedAbilities.Add(ability);
 		GameController.InvokeLearnedAbility(this, Owner, ability);
 	}
 
 	public void Drop(Item item) {
-		if (LeftHand == item) Unequip(WeaponSlot.LEFT_HAND);
-		else if (RightHand == item) Unequip(WeaponSlot.RIGHT_HAND);
-		else if (EquippedArmor.Contains(item)) EquippedArmor.Remove(item);
-		else if (EquippableItems.Contains(item)) EquippableItems.Remove(item);
+		if (item.IsEquippable) {
+			if (LeftHand == item) Unequip(WeaponSlot.LEFT_HAND);
+			else if (RightHand == item) Unequip(WeaponSlot.RIGHT_HAND);
+			else if (EquippedArmor.Contains((Equippable)item)) EquippedArmor.Remove((Equippable)item);
+			else if (EquippableItems.Contains((Equippable)item)) EquippableItems.Remove((Equippable)item);
+			else return;
+		}
 		else if (MiscItems.Contains(item)) MiscItems.Remove(item);
 		else return;
 
@@ -169,6 +191,8 @@ public class InventoryController : MonoBehaviour {
 		}
 	}
 
+	// TODO: Add equip/unequip functions for non-weapon equippables
+
 	void Start() {
 		Owner = GetComponent<Pawn>();
 		EquippedArmor = new Armor[Enum.GetNames(typeof(ArmorSlot)).Length];
@@ -176,5 +200,79 @@ public class InventoryController : MonoBehaviour {
 
 	void Update() {
 		
+	}
+
+	IEnumerator IEnumerable.GetEnumerator() {
+		return this.GetEnumerator1();
+	}
+
+	private IEnumerator GetEnumerator1() {
+		return this.GetEnumerator();
+	}
+
+	public IEnumerator<Equippable> GetEnumerator() {
+		// TODO: Add newly implemented equippable items to this list.
+		return new EquippableEnum(EquippedItems);
+	}
+}
+
+public class EquippableEnum : IEnumerator<Equippable> {
+
+	private Equippable[] m_Items;
+	public EquippableEnum(Equippable[] items) {
+		m_Items = items;
+	}
+
+	private int index = -1;
+
+	public Equippable m_Current;
+	public Equippable Current {
+		get {
+			if (m_Items.Length == 0 || m_Current == null || index > m_Items.Length) {
+				throw new InvalidOperationException();
+			}
+
+			return m_Current;
+		}
+	}
+
+	object IEnumerator.Current {
+		get {
+			return Current;
+		}
+	}
+
+	public bool MoveNext() {
+		index++;
+		m_Current = m_Items[index];
+		return !(m_Current == null);
+	}
+
+	public void Reset() {
+		index = -1;
+		m_Current = null;
+	}
+
+	private bool disposedValue;
+	public void Dispose() {
+		Dispose(true);
+		GC.SuppressFinalize(this);
+	}
+
+	protected virtual void Dispose(bool disposing) {
+		if (!this.disposedValue) {
+			if (disposing) {
+				// dispose managed
+			}
+
+			m_Current = null;
+			m_Items = null;
+		}
+
+		this.disposedValue = true;
+	}
+
+	~EquippableEnum() {
+		Dispose(false);
 	}
 }
