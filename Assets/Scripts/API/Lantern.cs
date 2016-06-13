@@ -1,6 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class Lantern : Item {
-	
+public abstract class Lantern : Equippable {
+	public override EquippableSlot Slot {
+		get {
+			return EquippableSlot.LANTERN;
+		}
+	}
 }

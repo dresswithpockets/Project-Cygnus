@@ -8,10 +8,7 @@ public abstract class Item : MonoBehaviour {
 
 	public bool IsEquippable {
 		get {
-			foreach (Type t in GameController.EquippableTypes)
-				if (t.IsAssignableFrom(GetType())) return true;
-
-			return false;
+			return typeof(Equippable).IsAssignableFrom(GetType());
 		}
 	}
 
