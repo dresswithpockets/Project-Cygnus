@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class ShortSword : Weapon {
 
@@ -9,38 +10,52 @@ public class ShortSword : Weapon {
 		}
 	}
 
+	public override EquippableSlot Slot {
+		get {
+			return EquippableSlot.BOTH_HANDS;
+		}
+	}
+
+	public override StatMod[] StatModifiers {
+		get {
+			return new StatMod[] {
+				new StatMod(CharStat.REG, 5f)
+			};
+		}
+	}
+
 	public override WeaponHandiness Handiness {
 		get {
 			return WeaponHandiness.ONE_HANDED;
 		}
 	}
 
-	GameObject RenderedModel;
-	BoxCollider ModelCollider;
+	GameObject RenderedModel { get; set; }
+	BoxCollider ModelCollider { get; set; }
 
 
 	public bool Animating;
 	public float AnimationLength = 0.25f;
 	float TimeSinceAnimate;
 
-	Vector3 StartingAnimPos = new Vector3(1.25f, 0f, 0f);
-	Vector3 StartingRotation = new Vector3(0f, 90f, 0f);
+	public Vector3 StartingAnimPos = new Vector3(1.5f, 0f, 0f);
+	public Vector3 StartingRotation = new Vector3(0f, 0f, 270f);
 
-	Vector3 InactivePosition = new Vector3(0.55f, -0.25f, 0f);
-	Vector3 InactiveRotation = new Vector3(60f, 180f, 90f);
+	public Vector3 InactivePosition = new Vector3(0.6f, -0.5f, -0.25f);
+	public Vector3 InactiveRotation = new Vector3(240f, 0f, 0f);
 
 	public float StaminaUsed = 25f;
 	public float Damage = 10f;
 
 	public override void Start() {
 		RenderedModel = transform.FindChild("Render").gameObject;
-		ModelCollider = RenderedModel.GetComponent<BoxCollider>();
+		ModelCollider = RenderedModel.GetComponentInChildren<BoxCollider>();
 
 		Physics.IgnoreLayerCollision(LayerMask.NameToLayer("LocalPlayer"), LayerMask.NameToLayer("Weapon"));
 	}
 
 	public override void Update() {
-		if (Active && Owner.Alive) { // Weapon is equipped on hand and the owner is alive; the owner can use this weapon.
+		if (Active && Owner != null && Owner.Alive) { // Weapon is equipped on hand and the owner is alive; the owner can use this weapon.
 
 			if (Animating) {
 
@@ -49,6 +64,7 @@ public class ShortSword : Weapon {
 				if (TimeSinceAnimate > AnimationLength) {
 					TimeSinceAnimate = 0f;
 					Animating = false;
+					Using = false;
 				}
 				else {
 					Vector3 newRot = transform.parent.eulerAngles;
@@ -64,7 +80,7 @@ public class ShortSword : Weapon {
 
 				transform.rotation = transform.parent.rotation;
 				RenderedModel.transform.localPosition = InactivePosition;
-				RenderedModel.transform.localEulerAngles = InactiveRotation;
+				RenderedModel.transform.localRotation = Quaternion.Euler(InactiveRotation);
 
 				// If the player is pressing the primary attack key, then check if stamina is required
 				// -> Stamina is required if the Owner is a Player
