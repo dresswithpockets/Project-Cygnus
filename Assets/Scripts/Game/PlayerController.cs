@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 
 public class PlayerController : Pawn {
-
+	
 	#region Stats
 	
-	private float m_HP = 0;
-	private float m_MP = 0;
-	private float m_Stamina = 0;
-	private float m_Armor = 0;
-	private float m_MagicResistance = 0;
-	private float m_StaminaRegenRate = 30; // TODO: default?
+	public override string Name {
+		get {
+			return "LocalPlayer";
+		}
+	}
+
+	private float m_HP = 0f;
+	private float m_MP = 0f;
+	private float m_Stamina = 0f;
+	private float m_Dexterity = 0f;
+	private float m_Armor = 0f;
+	private float m_CritChance = 0f;
+	private float m_MagicResistance = 0f;
+	private float m_StaminaRegenRate = 30; // TODO: default value?
+	private float m_HealthRegenRate = 0f; // TODO: default value?
+	private float m_Tempo = 1f;
 
 	private float m_MaxHealth = 0;
 	private float m_MaxMagic = 0;
@@ -19,6 +29,24 @@ public class PlayerController : Pawn {
 	private float m_MaxHealthAdditive = 0f;
 	private float m_MaxMagicAdditive = 0f;
 	private float m_MaxStaminaAdditive = 0f;
+	private float m_DexterityAdditive = 0f;
+	private float m_ArmorAdditive = 0f;
+	private float m_CritAdditive = 0f;
+	private float m_MagicResistanceAdditive = 0f;
+	private float m_StaminaRegenAdditive = 0f;
+	private float m_HealthRegenAdditive = 0f;
+	private float m_TempoAdditive = 0f;
+
+	private float m_MaxHealthProduct = 1f;
+	private float m_MaxMagicProduct = 1f;
+	private float m_MaxStaminaProduct = 1f;
+	private float m_DexterityProduct = 1f;
+	private float m_ArmorProduct = 1f;
+	private float m_CritProduct = 1f;
+	private float m_MagicResistanceProduct = 1f;
+	private float m_StaminaRegenProduct = 1f;
+	private float m_HealthRegenProduct = 1f;
+	private float m_TempoProduct = 1f;
 
 	private int m_MaxHealthLevel = 1;
 	private int m_MaxMagicLevel = 1;
@@ -26,10 +54,13 @@ public class PlayerController : Pawn {
 
 	private bool m_StaminaLocked = false;
 	private float m_TimeSinceStaminaUsed = 0f;
+	private float m_TimeSinceDamaged = 0f;
+	private float m_TimeSinceMagicUsed = 0f;
 
 	public float PickupDistance = 7.5f;
 
 	public float HealthLevelMod = 10;
+	public float MagicLevelMod = 5;
 	public float StaminaLevelMod = 2;
 
 	public float MaxHealthDefault = 100;
@@ -40,6 +71,19 @@ public class PlayerController : Pawn {
 	public float ResiModConstant = 100f;
 	
 	public float StaminaRegenDelay = 1.5f;
+	public float MagicRegenDelay = 1.5f;
+	public float HealthRegenDelay = 1.5f;
+
+	public float PowerAmplitude = 101f;
+	public float PowerShift = 0.025f;
+
+	public int Level {
+		get {
+			return Inventory.LearnedAbilities.Length + 1;
+		}
+	}
+
+	public float Power { get; private set; }
 
 	public float HP {
 		get {
@@ -70,44 +114,66 @@ public class PlayerController : Pawn {
 		set {
 			m_Stamina = value;
 			if (m_Stamina > m_MaxStamina) m_Stamina = m_MaxStamina;
-			//if (m_Stamina < 0f || Mathf.Approximately(m_Stamina, 0f)) m_Stamina = 0f;
-			//else if (m_Stamina > m_MaxStamina) m_Stamina = m_MaxStamina;
+		}
+	}
+
+	public float Dexterity {
+		get {
+			return (m_Dexterity + m_DexterityAdditive) * m_DexterityProduct;
 		}
 	}
 
 	public float Armor {
 		get {
-			return m_Armor;
+			return (m_Armor + m_ArmorAdditive) * m_ArmorProduct;
+		}
+	}
+
+	public float Crit {
+		get {
+			return (m_CritChance + m_CritAdditive) * m_ArmorProduct;
 		}
 	}
 
 	public float MagicResistance {
 		get {
-			return m_MagicResistance;
+			return (m_MagicResistance + m_MagicResistanceAdditive) * m_MagicResistanceProduct;
 		}
 	}
 
 	public float StaminaRegenRate {
 		get {
-			return m_StaminaRegenRate;
+			return (m_StaminaRegenRate + m_StaminaRegenAdditive) * m_StaminaRegenProduct;
+		}
+	}
+
+	public float HealthRegenRate {
+		get {
+			return (m_HealthRegenRate + m_HealthRegenAdditive) * m_HealthRegenProduct;
+		}
+	}
+
+	public float Tempo {
+		get {
+			return (m_Tempo + m_TempoAdditive) * m_TempoProduct;
 		}
 	}
 
 	public float MaxHealth {
 		get {
-			return m_MaxHealth;
+			return (m_MaxHealth + m_MaxHealthAdditive) * m_MaxHealthProduct;
 		}
 	}
 
 	public float MaxMagic {
 		get {
-			return m_MaxMagic;
+			return (m_MaxMagic + m_MaxMagicAdditive) * m_MaxMagicProduct;
 		}
 	}
 
 	public float MaxStamina {
 		get {
-			return m_MaxStamina;
+			return (m_MaxStamina + m_MaxStaminaAdditive) * m_MaxStaminaProduct;
 		}
 	}
 
@@ -117,13 +183,49 @@ public class PlayerController : Pawn {
 		}
 	}
 
-	#endregion
-
-	public override string Name {
+	public int MaxHealthLevel {
 		get {
-			return "LocalPlayer";
+			return m_MaxHealthLevel;
+		}
+		private set {
+			m_MaxHealthLevel = value;
+			SetupMaxHealth();
 		}
 	}
+
+	public int MaxMagicLevel {
+		get {
+			return m_MaxMagicLevel;
+		}
+		private set {
+			m_MaxMagicLevel = value;
+			SetupMaxMagic();
+		}
+	}
+
+	public int MaxStaminaLevel {
+		get {
+			return m_MaxStaminaLevel;
+		}
+		private set {
+			m_MaxStaminaLevel = value;
+			SetupMaxStamina();
+		}
+	}
+
+	#endregion
+
+	#region Soul Stats
+	
+	private float m_HealthUpgradeConstant = 10f;
+	private float m_AbilityUpgradeConstant = 25f;
+	private float m_NewAbilityConstant = 75f;
+
+	public int Souls { get; private set; }
+
+	#endregion
+
+	#region Movement
 
 	private bool m_AllowMovement = true;
 
@@ -160,6 +262,10 @@ public class PlayerController : Pawn {
 		}
 	}
 
+	#endregion
+
+	#region Setup
+
 	public UltimateOrbitCamera OrbitCamera { get; private set; }
 	public vp_FPInput FPInput { get; private set; }
 	public vp_FPController FPController { get; private set; }
@@ -181,11 +287,17 @@ public class PlayerController : Pawn {
 		SetupMaxMagic();
 		SetupMaxStamina();
 
-		m_HP = m_MaxHealth;
-		m_MP = m_MaxMagic;
+		m_HP = MaxHealth;
+		m_MP = MaxMagic;
 		m_Stamina = m_MaxStamina;
 
+		// TODO: Get player items and abilities from save file
+
+		SetNewPower();
+
 		m_TimeSinceStaminaUsed = StaminaRegenDelay;
+		m_TimeSinceDamaged = HealthRegenDelay;
+		m_TimeSinceMagicUsed = MagicRegenDelay;
 
 		Alive = true; // Call the property's set routine to update the player's state.
 
@@ -194,6 +306,8 @@ public class PlayerController : Pawn {
 		PlayerUI.ToggleInteractText(false);
 
 		Spawn(transform.position);
+
+		ToggleGameMenu(false);
 	}
 
 	void SetupMaxHealth() {
@@ -201,13 +315,13 @@ public class PlayerController : Pawn {
 		for (int i = 0; i < m_MaxHealthLevel; i++) {
 			m_MaxHealth += HealthLevelMod * i;
 		}
-		m_MaxHealth += m_MaxHealthAdditive;
 	}
 
 	void SetupMaxMagic() {
 		m_MaxMagic = MaxMagicDefault;
-
-		m_MaxMagic += m_MaxMagicAdditive;
+		for (int i = 1; i < m_MaxMagicLevel; i++) {
+			m_MaxMagic += MagicLevelMod * i;
+		}
 	}
 
 	void SetupMaxStamina() {
@@ -215,26 +329,42 @@ public class PlayerController : Pawn {
 		for (int i = 1; i < m_MaxStaminaLevel; i++) {
 			m_MaxStamina += StaminaLevelMod * i;
 		}
-		m_MaxStamina += m_MaxStaminaAdditive;
 	}
+
+	#endregion
 
 	#region Update
 
 	public override void Update() {
-		if (Alive) {
-			UpdateAbilities();
+		if (GameController.ShowGameMenu) {
 
-			UpdateMovement();
-
-			UpdateRotation();
-
-			UpdateInteract();
+			if (vp_Input.GetButtonDown("Menu")) ToggleGameMenu(false);
 		}
-		else if (vp_Input.GetButtonDown("Use")) { // Player wants to respawn
-			Spawn(true);
+		else {
+			if (Alive) {
+
+				ClearFrameStats();
+
+				UpdateStats();
+
+				UpdateAbilities();
+
+				UpdateMovement();
+
+				UpdateRotation();
+
+				UpdateInteract();
+			}
+			else if (vp_Input.GetButtonDown("Use")) { // Player wants to respawn
+				Spawn(true);
+			}
+
+			if (vp_Input.GetButtonDown("Menu")) ToggleGameMenu(true);
 		}
 
 		UpdateHealth();
+
+		UpdateMagic();
 
 		UpdateStamina();
 
@@ -275,22 +405,46 @@ public class PlayerController : Pawn {
 		}
 	}
 
+	void UpdateStats() {
+		foreach (Equippable equip in Inventory.EquippedItems) {
+			if (equip == null) continue;
+			foreach (StatMod statMod in equip.StatModifiers) {
+				AddFrameStat(statMod);
+			}
+		}
+	}
+
 	void UpdateHealth() {
 
 		if (Alive) {
-			if (m_HP < 0f || Mathf.Approximately(m_HP, 0f)) { // The player just died!
+			if (HP < 0f || Mathf.Approximately(HP, 0f)) { // The player just died!
 				Alive = false;
 
 				PlayerUI.SetInteractText("Revive", true);
 
 				GameController.InvokeDied(this, this);
 			}
+			else {
+				if (m_TimeSinceDamaged > HealthRegenDelay) {
+					HP += HealthRegenRate * Time.deltaTime;
+				}
+				else m_TimeSinceDamaged += Time.deltaTime;
+			}
 		}
     }
 
+	void UpdateMagic() {
+		if (Alive) {
+			if (m_TimeSinceMagicUsed > MagicRegenDelay) {
+				MP += MagicRegenDelay * Time.deltaTime;
+			}
+			else m_TimeSinceMagicUsed += Time.deltaTime;
+		}
+	}
+
 	void UpdateStamina() {
 
-		if (!Alive && AliveLastFrame) Stamina = m_MaxStamina;
+		if (!Alive && AliveLastFrame) Stamina = MaxStamina;
 		else if (Alive && !m_StaminaLocked) {
 			if (m_TimeSinceStaminaUsed < StaminaRegenDelay) m_TimeSinceStaminaUsed += Time.deltaTime;
 			else {
@@ -324,6 +478,90 @@ public class PlayerController : Pawn {
 	}
 
 	#endregion
+	
+	#region Frame Stats
+
+	void ClearFrameStats() {
+		m_MaxHealthAdditive = 0f;
+		m_MaxMagicAdditive = 0f;
+		m_MaxStaminaAdditive = 0f;
+		m_DexterityAdditive = 0f;
+		m_ArmorAdditive = 0f;
+		m_CritAdditive = 0f;
+		m_MagicResistanceAdditive = 0f;
+		m_StaminaRegenAdditive = 0f;
+		m_HealthRegenAdditive = 0f;
+		m_TempoAdditive = 0f;
+
+		m_MaxHealthProduct = 1f;
+		m_MaxMagicProduct = 1f;
+		m_MaxStaminaProduct = 1f;
+		m_DexterityProduct = 1f;
+		m_ArmorProduct = 1f;
+		m_CritProduct = 1f;
+		m_MagicResistanceProduct = 1f;
+		m_StaminaRegenProduct = 1f;
+		m_HealthRegenProduct = 1f;
+		m_TempoProduct = 1f;
+	}
+
+	void AddFrameStat(StatMod mod) {
+		switch (mod.Type) {
+			case StatModifierType.PRODUCT:
+				switch (mod.Stat) {
+					case CharStat.ARMOR:
+						m_ArmorProduct += mod.Value;
+						break;
+					case CharStat.DEX:
+						m_DexterityProduct += mod.Value;
+						break;
+					case CharStat.CRIT:
+						m_CritProduct += mod.Value;
+						break;
+					case CharStat.HP:
+						m_MaxHealthProduct += mod.Value;
+						break;
+					case CharStat.REG:
+						m_HealthRegenProduct += mod.Value;
+						break;
+					case CharStat.RESI:
+						m_MagicResistanceProduct += mod.Value;
+						break;
+					case CharStat.TEMPO:
+						m_TempoProduct += mod.Value;
+						break;
+				}
+				return;
+		}
+
+		switch (mod.Stat) {
+			case CharStat.ARMOR:
+				m_ArmorAdditive += mod.Value;
+				break;
+			case CharStat.DEX:
+				m_DexterityAdditive += mod.Value;
+				break;
+			case CharStat.CRIT:
+				m_CritAdditive += mod.Value;
+				break;
+			case CharStat.HP:
+				m_MaxHealthAdditive += mod.Value;
+				break;
+			case CharStat.REG:
+				m_HealthRegenAdditive += mod.Value;
+				break;
+			case CharStat.RESI:
+				m_MagicResistanceAdditive += mod.Value;
+				break;
+			case CharStat.TEMPO:
+				m_TempoAdditive += mod.Value;
+				break;
+		}
+	}
+
+	#endregion
+
+	#region Inventory
 
 	public void PickupItem(Item item) {
 		if (item) {
@@ -348,23 +586,16 @@ public class PlayerController : Pawn {
 		else Spawn(GameController.Instance.SpawnPoint);
 	}
 
-	public void Spawn(Vector3 pos) {
-		transform.position = pos;
+	#endregion
+	
+	#region Stamina, Magic and Damage Usage
 
-		// Reset stats
-		HP = m_MaxHealth;
-		MP = m_MaxMagic;
-		Stamina = m_MaxStamina;
-
-		Alive = true;
-
-		// TODO: Roll Abilities and Skills that aren't locked in.
-
-		GameController.InvokeSpawned(this, this);
+	public  bool CanUseStamina() {
+		return Stamina > 0f;
 	}
 
 	public bool UseStamina(float stamina) {
-		if (Stamina > 0f) { // Can use the stamina
+		if (CanUseStamina()) { // Can use the stamina
 
 			//m_TimeSinceStaminaUsed = 0f; // reset the timer for stamina usage
 			m_TimeSinceStaminaUsed = 0f;
@@ -384,16 +615,21 @@ public class PlayerController : Pawn {
 		m_StaminaLocked = lockStamina;
 	}
 
-	public bool UseMagic(float magic) {
-		if (MP > magic || Mathf.Approximately(MP, magic)) {
+	public bool CanUseMagic(float magic) {
+		return MP > magic || Mathf.Approximately(MP, magic);
+	}
 
+	public bool UseMagic(float magic) {
+		if (CanUseMagic(magic)) {
+
+			m_TimeSinceMagicUsed = 0f;
 			MP -= magic;
 			return true;
 		}
 
 		return false;
 	}
-	
+
 	public override void Damage(DamageInfo damage) {
 		
 		if (!damage.Passed) {
@@ -430,6 +666,8 @@ public class PlayerController : Pawn {
 
 					HP -= dmgMod * damage.Damage;
 
+					m_TimeSinceDamaged = 0f;
+
 					base.Damage(damage);
 
 					DebugConsole.Log(FullName + ".HP = " + HP.ToString());
@@ -440,5 +678,97 @@ public class PlayerController : Pawn {
 		else {
 			// TODO: Damage over time
 		}
+	}
+
+	#endregion
+
+	#region Soul Management
+
+	public int GetSoulsForHealthUpgrade() {
+		return Mathf.RoundToInt((m_MaxHealthLevel) * m_HealthUpgradeConstant);
+	}
+
+	public int GetSoulsForAbilityUpgrade(Ability ability) {
+		// TODO: Factor in tier and rarity of the ability
+		return Mathf.RoundToInt((ability.Level) * m_AbilityUpgradeConstant);
+	}
+
+	public int GetSoulsForNewAbility() {
+		return Mathf.RoundToInt(Level * m_NewAbilityConstant);
+	}
+
+	public bool CanUpgradeHealth() {
+		return Souls >= GetSoulsForHealthUpgrade();
+	}
+
+	public bool CanUpgradeAbility(Ability ability) {
+		return Souls >= GetSoulsForAbilityUpgrade(ability);
+	}
+
+	public bool CanLevelUp() {
+		return Souls >= GetSoulsForNewAbility();
+	}
+
+	public bool UpgradeHealth() {
+		if (CanUpgradeHealth()) {
+
+			Souls -= GetSoulsForHealthUpgrade();
+			m_MaxHealthLevel++;
+			return true;
+		}
+		return false;
+	}
+
+	public bool UpgradeAbility(Ability ability) {
+		if (CanUpgradeAbility(ability) && ability.CanLevelUp()) {
+
+			Souls -= GetSoulsForAbilityUpgrade(ability);
+			ability.LevelUp();
+			return true;
+		}
+		return false;
+	}
+
+	public bool LevelUp() {
+		if (CanLevelUp()) {
+
+			Souls -= GetSoulsForNewAbility();
+			// TODO: Roll for a new ability.
+			SetNewPower();
+			return true;
+		}
+		return false;
+	}
+
+	#endregion
+
+	#region Crafting
+
+
+
+	#endregion
+
+	public void Spawn(Vector3 pos) {
+		transform.position = pos;
+
+		// Reset stats
+		HP = MaxHealth;
+		MP = MaxMagic;
+		Stamina = MaxStamina;
+
+		Alive = true;
+
+		// TODO: Roll Abilities and Skills that aren't locked in.
+
+		GameController.InvokeSpawned(this, this);
+	}
+
+	public void ToggleGameMenu(bool toggle) {
+		GameController.ShowGameMenu = toggle;
+		FPInput.AllowGameplayInput = !toggle;
+	}
+
+	public float SetNewPower() {
+		return 2 * (PowerAmplitude / Mathf.PI) * Mathf.Atan(Level * PowerShift);
 	}
 }
