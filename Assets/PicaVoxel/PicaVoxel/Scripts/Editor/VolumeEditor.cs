@@ -107,7 +107,7 @@ namespace PicaVoxel
 
             drawGrid = voxelObject.DrawGrid;
             drawMesh = voxelObject.DrawMesh;
-            runtimeOnlyMesh = serializedObject.FindProperty("RuntimOnlyMesh");
+            runtimeOnlyMesh = serializedObject.FindProperty("RuntimeOnlyMesh");
 
             material = serializedObject.FindProperty("Material");
             physicMaterial = serializedObject.FindProperty("PhysicMaterial");
