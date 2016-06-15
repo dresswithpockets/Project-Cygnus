@@ -21,9 +21,20 @@ public sealed class BasePlugin : Plugin {
 	}
 
 	public override void Initialize() {
-		LoadModel("ShortSword", "ShortSword");
+		LoadModel("ShortSword", "shortsword");
+		LoadModel("Recipe", "recipe");
 
-		SpawnItem(typeof(ShortSword), new Vector3(0f, 2f, 0f), Quaternion.identity, "ShortSword");
+		LoadModel("Projectile", "projectile");
+
+		LoadModel("PlayerFox", "player_fox");
+		LoadModel("PlayerRain", "player_rain");
+
+		SpawnPlayer("PlayerRain");
+
+		SpawnItem(typeof(ShortSword), new Vector3(0f, 2f, 0f), Quaternion.identity);
+
+		Projectile proj = (Projectile)SpawnPawn(typeof(Projectile), new Vector3(-16f, 1f, 17f), Quaternion.identity);
+		proj.SetTrajectory(new Vector3(1f, 0f, 0f), 10f);
 	}
 
 	public override void Update() {
