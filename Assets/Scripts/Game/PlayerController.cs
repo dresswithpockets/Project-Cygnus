@@ -225,6 +225,14 @@ public class PlayerController : Pawn {
 
 	#endregion
 
+	#region Interaction Properties
+
+	public List<Item> NearbyItems { get; private set; }
+
+	public List<GameObject> NearbyTables { get; private set; }
+
+	#endregion
+
 	#region Movement
 
 	private bool m_AllowMovement = true;
@@ -273,13 +281,16 @@ public class PlayerController : Pawn {
 	public InventoryController Inventory { get; private set; }
 	public PlayerUIController PlayerUI { get; private set; }
 
-	void Start() {
+	public override void OnStart() {
 		OrbitCamera = GetComponentInChildren<UltimateOrbitCamera>();
 		FPInput = GetComponent<vp_FPInput>();
 		FPController = GetComponent<vp_FPController>();
 		BodyCollider = GetComponent<Collider>();
 		Inventory = GetComponent<InventoryController>();
 		PlayerUI = GetComponent<PlayerUIController>();
+
+		NearbyItems = new List<Item>();
+		NearbyTables = new List<GameObject>();
 
 		// TODO: Update stats from save file
 
@@ -305,9 +316,9 @@ public class PlayerController : Pawn {
 
 		PlayerUI.ToggleInteractText(false);
 
-		Spawn(transform.position);
-
 		ToggleGameMenu(false);
+
+		GameController.Instance.LocalPlayer = this;
 	}
 
 	void SetupMaxHealth() {
@@ -335,7 +346,7 @@ public class PlayerController : Pawn {
 
 	#region Update
 
-	public override void Update() {
+	public override void OnUpdate() {
 		if (GameController.ShowGameMenu) {
 
 			if (vp_Input.GetButtonDown("Menu")) ToggleGameMenu(false);
@@ -367,8 +378,6 @@ public class PlayerController : Pawn {
 		UpdateMagic();
 
 		UpdateStamina();
-
-		base.Update();
 
 		GameController.InvokeUpdate(this, this);
 	}
@@ -454,19 +463,26 @@ public class PlayerController : Pawn {
 	}
 
 	void UpdateInteract() {
-		bool showInteract = false;
-		Item[] nearItems = FindObjectsOfType<Item>();
-		foreach (Item item in nearItems) {
-			if (item.Owner != this && Util.SqrDistance(item.transform.position, transform.position) < SqrPickupDistance) {
-				if (vp_Input.GetButtonDown("Use")) {
-					PickupItem(item);
-                    continue;
+		List<int> itemsToRemove = new List<int>();
+		string interactText = "";
+
+		for (int i = 0; i < NearbyItems.Count; i++) {
+			Item item = NearbyItems[i];
+			if (item.Owner != this) {
+				if (Util.SqrDistance(item.transform.position, transform.position) < SqrPickupDistance) {
+					if (vp_Input.GetButtonDown("Interact")) PickupItem(item);
+					interactText = "Pick Up";
+					break;
 				}
-				showInteract = true;
-				break;
+				else {
+					itemsToRemove.Add(i);
+				}
 			}
 		}
-		PlayerUI.SetInteractText("Pick Up", showInteract);
+
+		foreach (int i in itemsToRemove) NearbyItems.RemoveAt(i);
+
+		PlayerUI.SetInteractText(interactText, !string.IsNullOrEmpty(interactText));
 	}
 
 	void FixedUpdate() {
@@ -570,20 +586,6 @@ public class PlayerController : Pawn {
 				Inventory.Equip((Weapon)item, WeaponSlot.RIGHT_HAND);
 			}
 		}
-	}
-
-	public void Spawn(bool atStatue = false) {
-		GameObject[] statues;
-		if (atStatue && (statues = GameObject.FindGameObjectsWithTag("Statue")).Length > 0) {
-			int closestIndex = 0;
-			float sqrDistance = 0f;
-			for (int i = 0; i < statues.Length; i++) {
-				float newDistance = Util.SqrDistance(transform.position, statues[i].transform.position);
-				if (newDistance < sqrDistance) closestIndex = i;
-			}
-			Spawn(statues[closestIndex].transform.position + new Vector3(0f, 0f, 2f));
-		}
-		else Spawn(GameController.Instance.SpawnPoint);
 	}
 
 	#endregion
@@ -742,13 +744,11 @@ public class PlayerController : Pawn {
 
 	#endregion
 
-	#region Crafting
-
-
+	#region Interaction
 
 	#endregion
 
-	public void Spawn(Vector3 pos) {
+	public override void Spawn(Vector3 pos) {
 		transform.position = pos;
 
 		// Reset stats
@@ -761,6 +761,20 @@ public class PlayerController : Pawn {
 		// TODO: Roll Abilities and Skills that aren't locked in.
 
 		GameController.InvokeSpawned(this, this);
+	}
+
+	public void Spawn(bool atStatue = false) {
+		GameObject[] statues;
+		if (atStatue && (statues = GameObject.FindGameObjectsWithTag("Statue")).Length > 0) {
+			int closestIndex = 0;
+			float sqrDistance = 0f;
+			for (int i = 0; i < statues.Length; i++) {
+				float newDistance = Util.SqrDistance(transform.position, statues[i].transform.position);
+				if (newDistance < sqrDistance) closestIndex = i;
+			}
+			Spawn(statues[closestIndex].transform.position + new Vector3(0f, 0f, 2f));
+		}
+		else Spawn(GameController.Instance.SpawnPoint);
 	}
 
 	public void ToggleGameMenu(bool toggle) {
