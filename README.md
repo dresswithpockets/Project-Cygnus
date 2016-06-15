@@ -62,10 +62,10 @@ I use Atlassian Jira to track my personal progress on the project. Every week I 
 
 ## Licensing
 Project Cygnus will be referred to as "The Project" and "This Project".
+
 I, ***REMOVED***, hereby grant individuals and entities the right to use the code and content found in The Project, except for Special Cases listed below, for personal, educational and non-commercial use, free of charge, free of royalties.
 
-*Special Cases:*
-
+**Special Cases:**
 - If you are not one of the developers contributing to This Project then The Single-Seat Copy of PicaVoxel found within This Project may not be used for any other purpose other than to compile this project. Copying the assets or code found within the Single-Seat Copy of PicaVoxel found within This Project is strictly dissallowed by this license.
 
 
