@@ -7,7 +7,7 @@
 [RequireComponent(typeof(CharacterController))]
 public abstract class Pawn : MonoBehaviour {
 	
-	private bool m_Alive = false;
+	private bool m_Alive { get; set; }
 
 	public bool Alive {
 		get {
@@ -50,14 +50,46 @@ public abstract class Pawn : MonoBehaviour {
 		}
 	}
 	
+	public virtual string DefaultModel {
+		get {
+			return "Default";
+		}
+	}
+
 	public abstract string Name { get; }
 
-	public virtual void Update() {
+	public bool HasStarted { get; internal set; }
+	public bool SpawnAtQueue { get; internal set; }
+	public Vector3 QueuedSpawn { get; internal set; }
+
+	public virtual void OnUpdate() {
+
+	}
+
+	public virtual void OnStart() {
+
+	}
+
+	public void Start() {
+		OnStart();
+
+		if (SpawnAtQueue) Spawn(QueuedSpawn);
+
+		HasStarted = true;
+	}
+
+	public void Update() {
+
+		OnUpdate();
 
 		AliveLastFrame = Alive;
 	}
 
 	public virtual void Damage(DamageInfo damage) {
 		GameController.InvokeDamaged(this, damage.Source, this, damage);
+	}
+
+	public virtual void Spawn(Vector3 position) {
+		transform.position = position;
 	}
 }
