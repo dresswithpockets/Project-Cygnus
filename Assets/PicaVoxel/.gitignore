@@ -1,0 +1,18 @@
+PicaVoxel/Textures/
+PicaVoxel/Textures.meta
+PicaVoxel/Editor/
+PicaVoxel/Editor.meta
+
+PicaVoxel/Scripts/Volume.cs
+PicaVoxel/Scripts/Frame.cs
+PicaVoxel/Scripts/Chunk.cs
+PicaVoxel/Scripts/Voxel.cs
+PicaVoxel/Scripts/Batch.cs
+PicaVoxel/Scripts/Exploder.cs
+PicaVoxel/Scripts/VoxelParticleSystem.cs
+
+PicaVoxelDemos/
+PicaVoxel Manual.pdf
+PicaVoxel Manual.pdf.meta
+PicaVoxel.meta
+PicaVoxelDemos.meta
