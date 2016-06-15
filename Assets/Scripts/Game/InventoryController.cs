@@ -29,10 +29,12 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 
 	// TODO: Implement other equippable items
 
-	private List<Equippable> EquippableItems = new List<Equippable>();
-	private List<Item> MiscItems = new List<Item>();
+	private List<Equippable> m_EquippableItems = new List<Equippable>();
+	private List<Item> m_MiscItems = new List<Item>();
 
 	private List<Ability> m_LearnedAbilities = new List<Ability>();
+
+	private List<Recipe> m_LearnedRecipes = new List<Recipe>();
 
 	public Ability[] LearnedAbilities {
 		get {
@@ -100,8 +102,8 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 	}
 
 	public void Pickup(Item item) {
-		if (item.IsEquippable) EquippableItems.Add((Equippable)item);
-		else MiscItems.Add(item);
+		if (item.IsEquippable) m_EquippableItems.Add((Equippable)item);
+		else m_MiscItems.Add(item);
 
 		item.Owner = Owner;
 		item.transform.SetParent(transform);
@@ -110,11 +112,18 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 		GameController.InvokePickedUpItem(this, Owner, item);
 	}
 
-	public void Pickup(Ability ability) {
+	public void Learn(Ability ability) {
 		if (m_LearnedAbilities.Contains(ability)) return;
 
 		m_LearnedAbilities.Add(ability);
 		GameController.InvokeLearnedAbility(this, Owner, ability);
+	}
+
+	public void Learn(Recipe recipe) {
+		if (m_LearnedRecipes.Contains(recipe)) return;
+
+		m_LearnedRecipes.Add(recipe);
+		GameController.InvokeLearnedRecipe(this, Owner, recipe);
 	}
 
 	public void Drop(Item item) {
@@ -122,10 +131,10 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 			if (LeftHand == item) Unequip(WeaponSlot.LEFT_HAND);
 			else if (RightHand == item) Unequip(WeaponSlot.RIGHT_HAND);
 			else if (EquippedArmor.Contains((Equippable)item)) EquippedArmor.Remove((Equippable)item);
-			else if (EquippableItems.Contains((Equippable)item)) EquippableItems.Remove((Equippable)item);
+			else if (m_EquippableItems.Contains((Equippable)item)) m_EquippableItems.Remove((Equippable)item);
 			else return;
 		}
-		else if (MiscItems.Contains(item)) MiscItems.Remove(item);
+		else if (m_MiscItems.Contains(item)) m_MiscItems.Remove(item);
 		else return;
 
 		item.transform.SetParent(null);
@@ -134,9 +143,9 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 	}
 
 	public void Equip(Weapon weapon, WeaponSlot slot) {
-		if (!EquippableItems.Contains(weapon)) Pickup(weapon);
+		if (!m_EquippableItems.Contains(weapon)) Pickup(weapon);
 
-		EquippableItems.Remove(weapon);
+		m_EquippableItems.Remove(weapon);
 		
 		weapon.Active = true;
 		weapon.ToggleItem(true);
@@ -172,7 +181,7 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 		switch (slot) {
 			case WeaponSlot.LEFT_HAND:
 				if (LeftHand != null) {
-					EquippableItems.Add(LeftHand);
+					m_EquippableItems.Add(LeftHand);
 					LeftHand.Active = false;
 					LeftHand.ToggleItem(false);
 					GameController.InvokeUnequippedWeapon(this, Owner, LeftHand);
@@ -181,7 +190,7 @@ public class InventoryController : MonoBehaviour, IEnumerable<Equippable> {
 				break;
 			case WeaponSlot.RIGHT_HAND:
 				if (RightHand != null) {
-					EquippableItems.Add(RightHand);
+					m_EquippableItems.Add(RightHand);
 					RightHand.Active = false;
 					RightHand.ToggleItem(false);
 					GameController.InvokeUnequippedWeapon(this, Owner, RightHand);
