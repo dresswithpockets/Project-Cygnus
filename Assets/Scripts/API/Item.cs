@@ -32,8 +32,14 @@ public abstract class Item : MonoBehaviour {
 	public string FullName {
 		get {
 			return "[" +
-				(GetType().BaseType.Equals(typeof(MonoBehaviour)) ? GetType().Name : GetType().BaseType.Name) +
+				(!string.IsNullOrEmpty(InternalTypeName) ? InternalTypeName : (GetType().BaseType.Equals(typeof(MonoBehaviour)) ? GetType().Name : GetType().BaseType.Name)) +
 				":" + Name + "]";
+		}
+	}
+
+	internal virtual string InternalTypeName {
+		get {
+			return "";
 		}
 	}
 
@@ -43,11 +49,28 @@ public abstract class Item : MonoBehaviour {
 		}
 	}
 
-	public virtual void Start() {
+	public virtual string DefaultModel {
+		get {
+			return "Default";
+		}
+	}
+
+	public virtual void OnStart() {
 
 	}
 
-	public virtual void Update() {
+	public virtual void OnUpdate() {
 
+	}
+
+	public void Start() {
+		OnStart();
+	}
+
+	public void Update() {
+		OnUpdate();
+
+		PlayerController local = GameController.Instance.LocalPlayer;
+		if (local && Util.SqrDistance(local.transform.position, transform.position) < local.SqrPickupDistance && !local.NearbyItems.Contains(this)) local.NearbyItems.Add(this);
 	}
 }
