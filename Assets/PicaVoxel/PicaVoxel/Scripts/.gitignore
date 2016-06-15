@@ -3,10 +3,10 @@ Textures.meta
 Editor/
 Editor.meta
 
-BasicAnimator.cs
-CollisionDetector.cs
-Constructor.cs
-Destructor.cs
-MultiPartVolume.cs
-QubicleImport.cs
-RandomDeformer.cs
+BasicAnimator.cs*
+CollisionDetector.cs*
+Constructor.cs*
+Destructor.cs*
+MultiPartVolume.cs*
+QubicleImport.cs*
+RandomDeformer.cs*
