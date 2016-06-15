@@ -71,8 +71,8 @@ I, Tristen Horton, hereby grant The Users the right to use the code and content 
 **Giving Credt:**
 The text garnered below in the following Markdown Code block must be included in a text file named "CREDIT.TXT" at the root directory of the redistributed package of assets or code found in This Project.
 ```
-A part or parts of this codebase, assetbase, package or software is redistributed or
-reworked work originally created by the contributors and developers found at the following URL:
+A part or parts of this codebase, assetbase, package or software is redistributed work
+originally created by the contributors and developers listed at the following URL:
 https://github.com/phxvyper/Project-Cygnus/blob/master/HUMANS.md
 ```
 
