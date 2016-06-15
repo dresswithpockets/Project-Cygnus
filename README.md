@@ -12,6 +12,7 @@ If you're interested in using any of the code or content found in this project, 
 1. The game is built around Unity3D. The project must be opened in a Unity3D environment of 5.3.4 or later in order to run and compile.
 2. At its current stage, the game uses VisionPunk's Ultimate FPS package for Unity, which is licensed software. Certain mechanics are built around UFPS such as playermovement and input management.
  - The dependancy on UFPS will eventually be replaced with our own player movement and input managers. It isn't a major priority at the moment but it will happen eventually!
+3. The game's voxel model rendering is done through PicaVoxel - a fully-blown voxel engine, with built in editor. However, we use MagicaVoxel (.vox) models for importing files at runtime. All 3d models you'll find in the game are created using MagicaVoxel. We may add support for Qubicle.
 
 #### Discord
 I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/0y0wUVxU3om1tBCK
@@ -60,9 +61,20 @@ Debugging and fixing issues found in the game can be difficult when you're also 
 I use Atlassian Jira to track my personal progress on the project. Every week I will update the issues page to be concurrent with my current issues in Jira. 
 
 ## Licensing
-I, Tristen Horton, hereby grant individuals and entities the right to use the code and content found in Project Cygnus for personal, educational and non-commercial use, free of charge, free of royalties.
+Project Cygnus will be referred to as "The Project" and "This Project". Individuals or Entities who intend to use assets or code found in This Project will be referred to as "The Users".
 
-If the intention of use of the content found in Project Cygnus is not personal or educational, then the usage of said content falls under [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.](http://creativecommons.org/licenses/by-nc-nd/4.0/)
+I, Tristen Horton, hereby grant The Users the right to use the code and content found in The Project, with exceptions for specific scenarios listed below in the "Special Cases" section, for personal, educational or non-commercial use, free of charge, free of royalties. In the case that any assets or code in This Project are redistributed in any format (compiled, packaged, open source, et cetera), there must be an explicit declaration of credit given to the contributors to This Project. This explicit declaration of credit can be found below in the  "Giving Credit" section.
 
-If you would like to commercialize modified distributions of Project Cygnus or any code base that uses my code, please contact me at [tristen@tristenhorton.com](mailto:tristen@tristenhorton.com)
+**Special Cases:**
+- If you are not one of the developers contributing to This Project then The Single-Seat Copy of PicaVoxel found within This Project may not be used for any other purpose other than to compile this project. Copying the assets or code found within the Single-Seat Copy of PicaVoxel found within This Project is strictly dissallowed by this license.
 
+**Giving Credt:**
+The text garnered below in the following Markdown Code block must be included in a text file named "CREDIT.TXT" at the root directory of the redistributed package of assets or code found in This Project.
+```
+A part or parts of this codebase, assetbase, package or software is redistributed work
+originally created by the contributors and developers listed at the following URL:
+https://github.com/phxvyper/Project-Cygnus/blob/master/HUMANS.md
+```
+
+**Commercial Use:**
+If The Users are interested in implementing parts of This Project's codebase or assetbase in another solution and intend on commercializing that solution, please contact me at [tristen@tristenhorton.com](mailto:tristen@tristenhorton.com). I'd be glad to work out a royalty or flat fee depending on the amount of work that is being used from This Project.
