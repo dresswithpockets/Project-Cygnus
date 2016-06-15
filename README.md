@@ -61,7 +61,14 @@ Debugging and fixing issues found in the game can be difficult when you're also 
 I use Atlassian Jira to track my personal progress on the project. Every week I will update the issues page to be concurrent with my current issues in Jira. 
 
 ## Licensing
-I, ***REMOVED***, hereby grant individuals and entities the right to use the code and content found in Project Cygnus for personal, educational and non-commercial use, free of charge, free of royalties.
+Project Cygnus will be referred to as "The Project" and "This Project".
+
+I, ***REMOVED***, hereby grant individuals and entities the right to use the code and content found in The Project, except for Special Cases listed below, for personal, educational and non-commercial use, free of charge, free of royalties.
+
+**Special Cases:**
+- If you are not one of the developers contributing to This Project then The Single-Seat Copy of PicaVoxel found within This Project may not be used for any other purpose other than to compile this project. Copying the assets or code found within the Single-Seat Copy of PicaVoxel found within This Project is strictly dissallowed by this license.
+
+
 
 If the intention of use of the content found in Project Cygnus is not personal or educational, then the usage of said content falls under [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.](http://creativecommons.org/licenses/by-nc-nd/4.0/)
 
