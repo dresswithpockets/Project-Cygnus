@@ -7,7 +7,7 @@ public class LookAt : MonoBehaviour {
 	public Transform Target;
 
 	void Update() {
-		if (LookAtCamera) transform.LookAt(Camera.main.transform);
+		if (LookAtCamera && Camera.main) transform.LookAt(Camera.main.transform);
 		else if (Target) transform.LookAt(Target);
 	}
 }
