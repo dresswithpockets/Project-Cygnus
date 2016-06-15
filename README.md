@@ -61,16 +61,20 @@ Debugging and fixing issues found in the game can be difficult when you're also 
 I use Atlassian Jira to track my personal progress on the project. Every week I will update the issues page to be concurrent with my current issues in Jira. 
 
 ## Licensing
-Project Cygnus will be referred to as "The Project" and "This Project".
+Project Cygnus will be referred to as "The Project" and "This Project". Individuals or Entities who intend to use assets or code found in This Project will be referred to as "The Users".
 
-I, ***REMOVED***, hereby grant individuals and entities the right to use the code and content found in The Project, except for Special Cases listed below, for personal, educational and non-commercial use, free of charge, free of royalties.
+I, ***REMOVED***, hereby grant The Users the right to use the code and content found in The Project, with exceptions for specific scenarios listed below in the "Special Cases" section, for personal, educational or non-commercial use, free of charge, free of royalties. In the case that any assets or code in This Project are redistributed in any format (compiled, packaged, open source, et cetera), there must be an explicit declaration of credit given to the contributors to This Project. This explicit declaration of credit can be found below in the  "Giving Credit" section.
 
 **Special Cases:**
 - If you are not one of the developers contributing to This Project then The Single-Seat Copy of PicaVoxel found within This Project may not be used for any other purpose other than to compile this project. Copying the assets or code found within the Single-Seat Copy of PicaVoxel found within This Project is strictly dissallowed by this license.
 
+**Giving Credt:**
+The text garnered below in the following Markdown Code block must be included in a text file named "CREDIT.TXT" at the root directory of the redistributed package of assets or code found in This Project.
+```
+A part or parts of this codebase, assetbase, package or software is redistributed or
+reworked work originally created by the contributors and developers found at the following URL:
+https://github.com/***REMOVED***/Project-Cygnus/blob/master/HUMANS.md
+```
 
-
-If the intention of use of the content found in Project Cygnus is not personal or educational, then the usage of said content falls under [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License.](http://creativecommons.org/licenses/by-nc-nd/4.0/)
-
-If you would like to commercialize modified distributions of Project Cygnus or any code base that uses my code, please contact me at [***REMOVED***@***REMOVED******REMOVED***.com](mailto:***REMOVED***@***REMOVED******REMOVED***.com)
-
+**Commercial Use:**
+If The Users are interested in implementing parts of This Project's codebase or assetbase in another solution and intend on commercializing that solution, please contact me at [***REMOVED***@***REMOVED******REMOVED***.com](mailto:***REMOVED***@***REMOVED******REMOVED***.com). I'd be glad to work out a royalty or flat fee depending on the amount of work that is being used from This Project.
