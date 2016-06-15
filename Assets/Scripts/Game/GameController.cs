@@ -102,12 +102,22 @@ public class PawnPawnEventArgs : EventArgs {
 	}
 }
 
+public class PawnRecipeEventArgs : EventArgs {
+	public readonly Pawn Pawn;
+	public readonly Recipe Recipe;
+
+	public PawnRecipeEventArgs(Pawn pawn, Recipe recipe) {
+		Pawn = pawn;
+		Recipe = recipe;
+	}
+}
+
 public class GameController : MonoBehaviour {
 	
 	public bool ShowMenu;
 	public bool Debug;
 
-	public Vector3 SpawnPoint = new Vector3(0f, 0f ,0f);
+	public Vector3 SpawnPoint;
 
 	public GUIStyle VersionTextStyle;
 
@@ -134,6 +144,8 @@ public class GameController : MonoBehaviour {
 	#region Prefabs
 
 	public GameObject VoxPrefab;
+
+	public GameObject PlayerPrefab;
 
 	#endregion
 
@@ -164,6 +176,7 @@ public class GameController : MonoBehaviour {
 	public event EventHandler<PawnAbilityEventArgs> UnequippedAbility;
 	public event EventHandler<PawnAbilityEventArgs> TriggeredAbility;
 	public event EventHandler<PawnPawnEventArgs> DefeatedOther;
+	public event EventHandler<PawnRecipeEventArgs> LearnedRecipe;
 
 	public static void InvokeSpawned(object sender, Pawn pawn) {
 		if (Instance.SpawnedPawn != null) Instance.SpawnedPawn(sender, new PawnEventArgs(pawn));
@@ -261,6 +274,10 @@ public class GameController : MonoBehaviour {
 		if (Instance.LearnedAbility != null) Instance.LearnedAbility(sender, new PawnAbilityEventArgs(pawn, ability));
 	}
 
+	public static void InvokeLearnedRecipe(object sender, Pawn pawn, Recipe recipe) {
+		if (Instance.LearnedRecipe != null) Instance.LearnedRecipe(sender, new PawnRecipeEventArgs(pawn, recipe));
+	}
+
 	#endregion
 
 	#region Update
@@ -279,6 +296,12 @@ public class GameController : MonoBehaviour {
 		Util.DrawOutline(new Rect(Util.ScreenSize, new Vector3(0f, 0f)), "v" + Util.AssemblyVersion.ToString(), VersionTextStyle, Color.black);
 		Util.DrawOutline(new Rect(Util.ScreenSize + new Vector2(0f, -15f), new Vector3(0f, 0f)), "build " + Util.BuildNumber.ToString(), VersionTextStyle, Color.black);
 	}
+
+	#endregion
+
+	#region Game
+
+	public PlayerController LocalPlayer { get; internal set; }
 
 	#endregion
 
