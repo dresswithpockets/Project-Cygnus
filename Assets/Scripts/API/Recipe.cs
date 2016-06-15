@@ -11,7 +11,7 @@ public struct RecipePart {
 	}
 }
 
-public struct Recipe {
+public class Recipe : MonoBehaviour {
 	internal static int nextID = 1;
 	private int m_ID;
 	public int ID {
@@ -24,7 +24,7 @@ public struct Recipe {
 		}
 	}
 
-	public Item CraftedItem;
+	public readonly Item CraftedItem;
 	public readonly RecipePart[] Parts;
 
 	public readonly bool RequireTable;
