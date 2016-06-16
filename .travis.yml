@@ -19,4 +19,4 @@ deploy:
   acl: 'private'
   on:
     repo: phxvyper/Project-Cygnus
-    branch: develop
+    branch: master
