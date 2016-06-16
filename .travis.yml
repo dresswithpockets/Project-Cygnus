@@ -16,10 +16,9 @@ deploy:
   bucket: cygnusci
   local-dir: Build
   upload-dir: cibuild
-  skip_cleanup: false
+  skip_cleanup: true
   acl: 'private'
   on:
-    repo: phxvyper/Project-Cygnus
     branch: master
 - provider: s3
   access_key_id: AKIAJEDSNES7PBLUWLEQ
@@ -28,8 +27,7 @@ deploy:
   bucket: cygnusci
   local-dir: Build
   upload-dir: cibuild
-  skip_cleanup: false
+  skip_cleanup: true
   acl: 'private'
   on:
-    repo: phxvyper/Project-Cygnus
     branch: develop
