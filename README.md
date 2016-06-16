@@ -78,3 +78,4 @@ https://github.com/***REMOVED***/Project-Cygnus/blob/master/HUMANS.md
 
 **Commercial Use:**
 If The Users are interested in implementing parts of This Project's codebase or assetbase in another solution and intend on commercializing that solution, please contact me at [***REMOVED***@***REMOVED******REMOVED***.com](mailto:***REMOVED***@***REMOVED******REMOVED***.com). I'd be glad to work out a royalty or flat fee depending on the amount of work that is being used from This Project.
+
