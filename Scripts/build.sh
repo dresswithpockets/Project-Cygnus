@@ -22,6 +22,7 @@ echo "Attempting to build $project for OS X"
   -buildOSXUniversalPlayer "$(pwd)/Build/osx/$project.app" \
   -quit
 
+: <<'QWERTY'
 echo "Attempting to build $project for Linux"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
@@ -31,6 +32,7 @@ echo "Attempting to build $project for Linux"
   -projectPath $(pwd) \
   -buildLinuxUniversalPlayer "$(pwd)/Build/linux/$project.exe" \
   -quit
+QWERTY
 
 echo '\n\nLogs from build\n'
 cat $(pwd)/unity.log
