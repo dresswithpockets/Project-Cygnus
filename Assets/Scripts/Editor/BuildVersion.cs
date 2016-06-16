@@ -5,9 +5,9 @@ using System.IO;
 using System;
 
 [InitializeOnLoad]
-public class BuildVersion {
+public class Build {
 
-	static BuildVersion() {
+	static Build() {
 		EditorApplication.update += RunOnce;
 	}
 
@@ -30,5 +30,10 @@ public class BuildVersion {
 			byte[] newBuildVersion = BitConverter.GetBytes(BitConverter.ToInt32(Util.ReadToEnd(fs), 0) + 1);
 			fs.Write(newBuildVersion, 0, 4);
 		}
+	}
+
+	static void BuildGame() {
+		BuildPipeline.BuildPlayer(new string[] { "Assets/Scenes/DebugScene.unity" }, "Build/Windows/Cygnus.exe", BuildTarget.StandaloneWindows, BuildOptions.Development);
+		File.Copy("version", "Build/Windows/version");
 	}
 }
