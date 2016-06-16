@@ -1,0 +1,22 @@
+language: objective-c
+osx_image: xcode61
+rvm:
+- 2.1.2
+before_install:
+- chmod a+x ./Scripts/install.sh
+install:
+- "./Scripts/install.sh"
+script:
+- "./Scripts/build.sh"
+deploy:
+  provider: s3
+  access_key_id: AKIAJEDSNES7PBLUWLEQ
+  secret_access_key:
+    secure: KIHnRdyQbjMNtUaJ6STvy1xlycU6TLkY6HamNhrzKJjSWoI3sonY9PfkQC+njincbZThxQNjTrpuFrO65ERWkYgLb/EGC/VcRb+BD8/RaeIqY45zYUCD4Fi07eGEoJsYLkN5EWkd0oxvOhA3IwZUsXXp/Fn9FWDdJXcLbcODQ3wsFamiG6eKzNQWlakEGNiDChsWiI/ly7+L3j0BYE5advBpZTsK16ZLhN2K7VtKpxdWRnPd2FkUBgrxNHf8Mt4LVEeDPHyNFKohdBGB1TEL1UdbKt1OdVddngECyOBmaO0QXXPD5iOw1YC0uM9a2BjtxPxwfdu0hH66v/F/2yc43vsu7m6F98zo+qj1VsL0HqNV4keAduIHQUrnbaSD+OKjB++yKvkpmTVTYOT3+l7wLvjidxtaW4L5Rd5Svghf5LgAKAIC5NurVp0enK+YauajBx1uoq1pRKAk+OTxlh55NlQ8gIz9PgeE8dZIl1bg6HOkbK8GGLsGD5djrF+wCIZXCuas7vRGoyfuyhn/0nIqRtAUWbCnlaI3o+wj+Ytu2FcnhDYO6urg9zt7NMurNlAAwa5n+RsNhu/XdCWvj6mySiZIUiTH/16jCH8Pex0gZ9/0sbV2bPqwRfN4j6i1HBC5T0ZbVdHSuMmd4nUqflSet1/pDuYjmuOnM/Ml2qm7Nyk=
+  bucket: cygnusci
+  local-dir: Build
+  upload-dir: ci-build
+  acl: 'private'
+  on:
+    repo: phxvyper/Project-Cygnus
+    branch: develop
