@@ -17,6 +17,3 @@ deploy:
   local-dir: Build
   upload-dir: ci-build
   acl: 'private'
-  on:
-    repo: phxvyper/Project-Cygnus
-    branch: develop
