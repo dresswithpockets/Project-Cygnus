@@ -16,7 +16,7 @@ deploy:
   bucket: cygnusci
   local-dir: Build
   upload-dir: ci-build
-  acl: ''
+  acl: 'private'
   on:
     repo: phxvyper/Project-Cygnus
     branch: develop
