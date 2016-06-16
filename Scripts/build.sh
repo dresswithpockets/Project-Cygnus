@@ -8,6 +8,7 @@ echo "Attempting to build $project for Windows"
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/unity.log \
+  -buildTarget win32
   -projectPath $(pwd) \
   -buildWindowsPlayer "$(pwd)/Build/windows/$project.exe" \
   -quit
@@ -18,11 +19,11 @@ echo "Attempting to build $project for OS X"
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/unity.log \
+  -buildTarget osx
   -projectPath $(pwd) \
   -buildOSXUniversalPlayer "$(pwd)/Build/osx/$project.app" \
   -quit
 
-: <<'QWERTY'
 echo "Attempting to build $project for Linux"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
@@ -30,9 +31,8 @@ echo "Attempting to build $project for Linux"
   -silent-crashes \
   -logFile $(pwd)/unity.log \
   -projectPath $(pwd) \
-  -buildLinuxUniversalPlayer "$(pwd)/Build/linux/$project.exe" \
+  -buildLinuxUniversalPlayer "$(pwd)/Build/linux/$project" \
   -quit
-QWERTY
 
 echo '\n\nLogs from build\n'
 cat $(pwd)/unity.log
