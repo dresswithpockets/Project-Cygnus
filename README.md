@@ -1,4 +1,4 @@
-## Project-Cygnus [![Build Status](https://travis-ci.org/phxvyper/Project-Cygnus.svg?branch=develop)](https://travis-ci.org/phxvyper/Project-Cygnus)
+## Project-Cygnus
 Project Cygnus _was_ a code base that aimed to recreate the CubeWorld experience. The project's direction has changed drastically, however. Cygnus now aims to be its own game that draws details from games such as CubeWorld, Bloodborne, Diablo, Dark Souls, and even Minecraft.
 
 [We have a design document for the specifications of the project which can be found here.](http://tristenhorton.com/cygnus/Cygnus.pdf)
