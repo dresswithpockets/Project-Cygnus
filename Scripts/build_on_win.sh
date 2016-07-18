@@ -3,17 +3,18 @@
 project="Cygnus"
 
 echo "Attempting to build $project for Windows"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
+/c/Program\ Files/Unity/Editor/Editor.exe \
   -batchmode \
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/unity.log \
+  -buildTarget win32
   -projectPath $(pwd) \
-  -executeMethod Build.BuildGame \
+  -buildWindowsPlayer "$(pwd)/Build/windows/$project.exe" \
   -quit
-: <<'QWERT'
+
 echo "Attempting to build $project for OS X"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
+/c/Program\ Files/Unity/Editor/Editor.exe \
   -batchmode \
   -nographics \
   -silent-crashes \
@@ -24,7 +25,7 @@ echo "Attempting to build $project for OS X"
   -quit
 
 echo "Attempting to build $project for Linux"
-/Applications/Unity/Unity.app/Contents/MacOS/Unity \
+/c/Program\ Files/Unity/Editor/Editor.exe \
   -batchmode \
   -nographics \
   -silent-crashes \
@@ -32,6 +33,6 @@ echo "Attempting to build $project for Linux"
   -projectPath $(pwd) \
   -buildLinuxUniversalPlayer "$(pwd)/Build/linux/$project" \
   -quit
-QWERT
+
 echo '\n\nLogs from build\n'
 cat $(pwd)/unity.log
