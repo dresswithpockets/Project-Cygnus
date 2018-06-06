@@ -15,7 +15,7 @@ If you're interested in using any of the code or content found in this project, 
 3. The game's voxel model rendering is done through PicaVoxel - a fully-blown voxel engine, with built in editor. However, we use MagicaVoxel (.vox) models for importing files at runtime. All 3d models you'll find in the game are created using MagicaVoxel. We may add support for Qubicle.
 
 #### Discord
-I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/0y0wUVxU3om1tBCK
+I run a discord for anyone to join and chat. If you need help/support and you're not breaking any of the following rules, ask away. Here is the invite URL: https://discord.gg/86cjgcq
 
 1. Check the FAQ **before** joining and bugging me about the problem.
   * I will probably ignore you if its a question answered on the FAQ.
