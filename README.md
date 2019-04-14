@@ -49,6 +49,3 @@ Debugging and fixing issues found in the game can be difficult when you're also 
   * Tight single-line if statements and loops should usually be capture in a single line without braces, unless the resulting line is very long.
   * All member, variable and type names should be easy to read and understand. Local variable names are less important.
   * The english language only, please. Changes made that aren't in english probably won't be accepted in an official build.
-
-#### Issue Tracking
-I use Atlassian Jira to track my personal progress on the project. Every week I will update the issues page to be concurrent with my current issues in Jira. 
