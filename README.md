@@ -1,9 +1,6 @@
 ## Project-Cygnus
 Project Cygnus _was_ a code base that aimed to recreate the CubeWorld experience. The project's direction has changed drastically, however. Cygnus now aims to be its own game that draws details from games such as CubeWorld, Bloodborne, Diablo, Dark Souls, and even Minecraft.
 
-The game is entirely open source, but the code and content is under Copyright.
-If you're interested in using any of the code or content found in this project, please read the "Licensing" section.
-
 #### Dependencies
 1. The game is built around Unity3D. The project must be opened in a Unity3D environment of 5.3.4 or later in order to run and compile.
 2. At its current stage, the game uses VisionPunk's Ultimate FPS package for Unity, which is licensed software. Certain mechanics are built around UFPS such as playermovement and input management.
@@ -55,7 +52,3 @@ Debugging and fixing issues found in the game can be difficult when you're also 
 
 #### Issue Tracking
 I use Atlassian Jira to track my personal progress on the project. Every week I will update the issues page to be concurrent with my current issues in Jira. 
-
-## Licensing
-
-This project used to be under an non-commercial license. See LICENSE.md for the license used in the latest version of the code.
