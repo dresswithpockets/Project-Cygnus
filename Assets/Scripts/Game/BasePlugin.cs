@@ -10,7 +10,7 @@ public sealed class BasePlugin : Plugin {
 
 	public override string Author {
 		get {
-			return "Tristen Horton";
+			return "";
 		}
 	}
 
